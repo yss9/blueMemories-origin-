@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import {Helmet} from "react-helmet";
 
 const RegisterForm = () => {
     const [email, setEmail] = useState('');
@@ -27,6 +28,10 @@ const RegisterForm = () => {
 
     return (
         <div>
+            <Helmet>
+            <title>Register</title>
+            <meta name="description" content="BlueMemories Main App"/>
+            </Helmet>
             <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
             <input type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
