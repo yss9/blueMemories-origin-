@@ -51,3 +51,6 @@ bower_components
 psd
 thumb
 sketch
+
+package-lock.json
+package.json
