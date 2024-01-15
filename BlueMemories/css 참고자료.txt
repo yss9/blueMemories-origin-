@@ -1,2 +1,20 @@
 [styled component 사용법]
 https://sunho-doing.tistory.com/entry/Reactjs-Styled-Component
+
+[이미지 드래그 앤 드롭]
+https://inpa.tistory.com/entry/%EB%93%9C%EB%9E%98%EA%B7%B8-%EC%95%A4-%EB%93%9C%EB%A1%AD-Drag-Drop-%EA%B8%B0%EB%8A%A5
+
+[box-shadow]
+https://www.cssmatic.com/box-shadow
+
+[typescript->javascript로 변환]
+tsc 파일이름
+
+[background-image]
+https://developer.mozilla.org/ko/docs/Web/CSS/background-image
+
+[css flex 옵션]
+https://www.heropy.dev/p/Ha29GI
+
+[상하좌우 정렬]
+https://so4869.tistory.com/23
