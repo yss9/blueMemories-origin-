@@ -5,6 +5,7 @@ import './App.css';
 import MainPage from "./pages/main/MainPage";
 import RegisterPage from "./pages/register/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
+import IntroducePage from "./pages/introduce/IntroducePage";
 import {Helmet} from "react-helmet";
 
 function App() {
@@ -18,12 +19,14 @@ function App() {
                 <meta name="description" content="A BlueMemories application"/>
             </Helmet>
             <Routes>
-                {/* 웹 서비스 소개 페이지 */}
+                {/* main */}
                 <Route path="/" element={<MainPage />} />
                 {/* <SignIn /> */}
                 <Route path="/register" element={<RegisterPage />} />
                 {/* <LogIn /> */}
                 <Route path="/login" element={<LoginPage />} />
+                {/* <Introduce /> */}
+                <Route path="/introduce" element={<IntroducePage />} />
             </Routes>
         </BrowserRouter>
     );

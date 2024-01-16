@@ -2,14 +2,16 @@
 ['yarn start' 입력했을 때 Cannot find module 'react' 에러]
 >npm i react react-dom
 
+
 [처음 파일 받았을 때 기본으로 설치해야하는 라이브러리]
 1. helmet(웹 문서 header 부분 쉽게 변경해주는 라이브러리)
 >npm install --save react-helmet
 import {Helmet} from "react-helmet"; 로 사용 가능
 2. styled-components설치
 >npm i styled-components
-3.폰트 적용을 위한 styled-reset 설치
->npm i styled-reset
+3. 폰트 스타일 초기화 및 호환성을 위한 styled-reset 설치
+>yarn add styled-reset
+
 
 [window에서 yarn사용법]
 PowerShell
