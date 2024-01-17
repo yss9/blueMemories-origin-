@@ -4,8 +4,8 @@ const TitleContainer=styled.div`
     width: auto;
     height: auto;
     margin-top: 4.5%;
-    margin-left:10%;
-    margin-right:${(props)=>props.align || 'left'};
+    margin-left:${(props)=>props.left ||'7%'};
+    margin-right:${(props)=>props.right || '0%'};
     /*item 정렬*/
     display: flex;
     flex-direction: column;
@@ -24,6 +24,7 @@ const MovePageBtn=styled.button`
     border: none;
     border-radius: 30px;
     margin-top: 5%;
+    box-shadow: 0px 8px 6px -4px rgba(176,176,176,1);
     /*텍스트*/
     color:white;
     font-family:bokkbold;

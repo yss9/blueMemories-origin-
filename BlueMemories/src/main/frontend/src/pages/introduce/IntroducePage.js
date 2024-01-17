@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import {NavExport} from "../../components/NavigationBar";
 import { LogoText } from '../../components/LoginBtn';
 import {TitleContainer,Text,MovePageBtn} from './component/IntroduceText';
+import {BannerEvent} from './component/Banner';
 
 const Wrapper = styled.div`
     width:100%;
@@ -44,10 +45,11 @@ const TogetherDiaryImageContainer=styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 7%;
 `;
 const TogetherDiaryImage = styled.image`
-    width:70%;
-    height:60%;
+    width:80%;
+    height:70%;
     background-image: url("/resourcesPng/introducePage/introduce_togetherdiary_img.png");
     background-size: contain;
     background-repeat: no-repeat;
@@ -67,7 +69,7 @@ const BookBody = styled.div`
 
 const Footer = styled.div`
     width:100%;
-    height:15vh;
+    height:20vh;
     background-color: #081405;
     /*item 정렬*/
     display: flex;
@@ -85,24 +87,7 @@ const WhiteContainer=styled.div`
     align-self: center;
     display: flex;
 `;
-////////////////////이미지//////////////////////
-const ImageContainer=styled.div`
-    width: 50%;
-    height: 70%;
-    margin-top: 10%;
-    background-color: pink;
-    /*item 정렬*/
-    display: flex;
-    flex-direction: column;
-`;    
-const Image=styled.image`
-    width:70%;
-    height:60%;
-    background-image: url("/resourcesPng/introducePage/diary_image1.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-`;
-////////////////////////////////////////////////
+
 const IntroduceForm = () => {
     return (
         <div>
@@ -121,9 +106,7 @@ const IntroduceForm = () => {
                             <Text><LogoText text={"Blue memories는 일기를 분석해서 감정을 측정해줘요\n감정에 따라 다양한 색상의 스티커를 달력에 부착해 드리고,\n음악과 영상을 추천해 드려요\n\n일기를 작성하고 다양한 감정을 모으고\n음악을 추천받아보세요!"}></LogoText></Text>
                             <MovePageBtn>일기 작성하기</MovePageBtn>
                         </TitleContainer>
-                        <ImageContainer>
-                            <Image></Image>
-                        </ImageContainer>
+                        <BannerEvent></BannerEvent>
                     </WhiteContainer>
                 </DiaryBody>
             </Wrapper>
@@ -133,7 +116,7 @@ const IntroduceForm = () => {
                     <TogetherDiaryImageContainer>
                         <TogetherDiaryImage></TogetherDiaryImage>
                     </TogetherDiaryImageContainer>
-                    <TitleContainer align='right'>
+                    <TitleContainer align='right' left='0%' right='10%'>
                         <Text fontsize='2.5rem' fontfamily='bokkbold'>교환일기</Text>
                         <Text fontsize='1.7rem'>친구와 일기를 공유해 보세요</Text>
                         <Text><LogoText text={"오늘의 감정을 친구와 공유해보세요\n함께 일기를 작성하고 싶은 친구를 초대해 보세요\n친구와 경험을 공유해 보아요"}></LogoText></Text>
@@ -144,15 +127,13 @@ const IntroduceForm = () => {
             
            <BookBody>
                 <WhiteContainer>
-                    <TitleContainer>
+                    <TitleContainer left='9%' right='3%'>
                         <Text fontsize='3rem' fontfamily='bokkbold'>소설/그림책</Text>
                         <Text fontsize='2rem'>소설/그림책을 작성해 보세요</Text>
                         <Text><LogoText text={"Blue memories는 입력한 문장을 AI가 분석해줘요\n분석한 문장을 토대로 AI가 그림을 그려줍니다\n그림을 활용하여 책 표지를 만들거나,\n그림책의 장면으로 활용할 수 있습니다\n\n문장을 작성하여 나만의 책을 만들어 보세요!"}></LogoText></Text>
                         <MovePageBtn width='37%' btncolor='#6469D9'>책 작성하기</MovePageBtn>
                     </TitleContainer>
-                    <ImageContainer>
-                        <Image></Image>
-                    </ImageContainer>
+                    <BannerEvent></BannerEvent>
                 </WhiteContainer>
            </BookBody>
            <Footer></Footer>
