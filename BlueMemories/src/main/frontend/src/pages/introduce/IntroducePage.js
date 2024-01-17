@@ -3,6 +3,7 @@ import {Helmet} from "react-helmet";
 import styled from 'styled-components';
 import {NavExport} from "../../components/NavigationBar";
 import { LogoText } from '../../components/LoginBtn';
+import {TitleContainer,Text,MovePageBtn} from './component/IntroduceText';
 
 const Wrapper = styled.div`
     width:100%;
@@ -24,7 +25,7 @@ const DiaryBody = styled.div`
     justify-content:space-between;
 `;
 
-
+///////////교환 일기//////////////
 const TogetherDiaryBody = styled.div`
     width:100%;
     height:70vh;
@@ -36,7 +37,23 @@ const TogetherDiaryBody = styled.div`
     flex-direction:column-reverse;
     
 `;
+const TogetherDiaryImageContainer=styled.div`
+    width: 50%;
+    height: 100%;
+    /*item 정렬*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+const TogetherDiaryImage = styled.image`
+    width:70%;
+    height:60%;
+    background-image: url("/resourcesPng/introducePage/introduce_togetherdiary_img.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+`;
 
+///////////소설/그림책//////////////
 const BookBody = styled.div`
     width:100%;
     height:100vh;
@@ -68,19 +85,7 @@ const WhiteContainer=styled.div`
     align-self: center;
     display: flex;
 `;
-
-const TitleContainer=styled.div`
-    width: auto;
-    height: auto;
-    margin-top: 10%;
-    background-color: red;
-    /*item 정렬*/
-    display: flex;
-    flex-direction: column;
-`;
-const Text=styled.div`
-    font-size: ${(props) => props.fontsize || '2rem'};
-`;
+////////////////////이미지//////////////////////
 const ImageContainer=styled.div`
     width: 50%;
     height: 70%;
@@ -97,6 +102,7 @@ const Image=styled.image`
     background-size: contain;
     background-repeat: no-repeat;
 `;
+////////////////////////////////////////////////
 const IntroduceForm = () => {
     return (
         <div>
@@ -110,9 +116,10 @@ const IntroduceForm = () => {
                     <NavExport></NavExport>
                     <WhiteContainer>
                         <TitleContainer>
-                            <Text fontsize='4rem'>일기</Text>
-                            <Text fontsize='3rem'>오늘 하루를 기록해 보세요</Text>
+                            <Text fontsize='3rem' fontfamily='bokkbold'>일기</Text>
+                            <Text fontsize='2rem'>오늘 하루를 기록해 보세요</Text>
                             <Text><LogoText text={"Blue memories는 일기를 분석해서 감정을 측정해줘요\n감정에 따라 다양한 색상의 스티커를 달력에 부착해 드리고,\n음악과 영상을 추천해 드려요\n\n일기를 작성하고 다양한 감정을 모으고\n음악을 추천받아보세요!"}></LogoText></Text>
+                            <MovePageBtn>일기 작성하기</MovePageBtn>
                         </TitleContainer>
                         <ImageContainer>
                             <Image></Image>
@@ -122,11 +129,31 @@ const IntroduceForm = () => {
             </Wrapper>
             
             <TogetherDiaryBody>
-                <WhiteContainer></WhiteContainer>
+                <WhiteContainer>
+                    <TogetherDiaryImageContainer>
+                        <TogetherDiaryImage></TogetherDiaryImage>
+                    </TogetherDiaryImageContainer>
+                    <TitleContainer align='right'>
+                        <Text fontsize='2.5rem' fontfamily='bokkbold'>교환일기</Text>
+                        <Text fontsize='1.7rem'>친구와 일기를 공유해 보세요</Text>
+                        <Text><LogoText text={"오늘의 감정을 친구와 공유해보세요\n함께 일기를 작성하고 싶은 친구를 초대해 보세요\n친구와 경험을 공유해 보아요"}></LogoText></Text>
+                        <MovePageBtn width='46%' height='11%' btnalign='end'>교환일기 작성하기</MovePageBtn>
+                    </TitleContainer>
+                </WhiteContainer>
             </TogetherDiaryBody>
             
            <BookBody>
-                <WhiteContainer></WhiteContainer>
+                <WhiteContainer>
+                    <TitleContainer>
+                        <Text fontsize='3rem' fontfamily='bokkbold'>소설/그림책</Text>
+                        <Text fontsize='2rem'>소설/그림책을 작성해 보세요</Text>
+                        <Text><LogoText text={"Blue memories는 입력한 문장을 AI가 분석해줘요\n분석한 문장을 토대로 AI가 그림을 그려줍니다\n그림을 활용하여 책 표지를 만들거나,\n그림책의 장면으로 활용할 수 있습니다\n\n문장을 작성하여 나만의 책을 만들어 보세요!"}></LogoText></Text>
+                        <MovePageBtn width='37%' btncolor='#6469D9'>책 작성하기</MovePageBtn>
+                    </TitleContainer>
+                    <ImageContainer>
+                        <Image></Image>
+                    </ImageContainer>
+                </WhiteContainer>
            </BookBody>
            <Footer></Footer>
         </div>

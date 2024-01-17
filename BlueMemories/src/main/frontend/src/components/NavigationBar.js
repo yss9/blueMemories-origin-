@@ -26,7 +26,7 @@ const NavContainer=styled.div`
 const NavBtn=styled.button`
     /*스타일*/
     border: none;
-    font-size: 28px;
+    font-size: 2.5rem;
     font-family: gangwonedusaeeum;
     /*크기*/
     height: 2.5rem;
@@ -36,7 +36,7 @@ const NavBtn=styled.button`
 `;
 
 const LogoBtn = styled.button`
-    font-size: 3rem;
+    font-size: 2rem;
     font-family: inkfree;
     border:none;
     background: none;
