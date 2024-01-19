@@ -23,11 +23,5 @@ public class Member {
     @Column(nullable = false, length=20)
     private String name;
 
-    @Column(nullable = false, length=3)
-    private int age;
-
-    @Column(nullable = false)
-    private String gender;
-
 
 }

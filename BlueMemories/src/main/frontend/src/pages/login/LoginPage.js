@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Helmet} from "react-helmet";
 import styled from "styled-components";
 import {Body,LeftContainer,RightContainer,MessageContainer,WelcomeMassage,
     LoginContainer,LoginText,InputText,InputBox,ButtonBox,LoginButton,JoinButton} from "../../components/LoginJoin"
+import {useNavigate} from "react-router-dom";
 
 const LoginForm = () => {
+    const navigate = useNavigate();
+    const goRegister = () => {
+        navigate('/register');
+    }
     return (
         <div>
             <Helmet>
@@ -26,7 +31,7 @@ const LoginForm = () => {
                     </LoginContainer>
                     <ButtonBox>
                         <LoginButton>Login</LoginButton>
-                        <JoinButton>Join</JoinButton>
+                        <JoinButton onClick={goRegister}>Join</JoinButton>
                     </ButtonBox>
 
                 </RightContainer>

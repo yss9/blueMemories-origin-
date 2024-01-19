@@ -72,15 +72,11 @@ const Body=styled.div`
 
 ///////////////////////////////////////////////////
 const MainForm = () => {
-    const [text,setText] = useState('');
     const navigate = useNavigate();
     const goIntroduce = () => {
-        setText('Introduce 페이지 입니다.')
         navigate('/introduce');
     }
-    //const [text, setText] = useState('');
-     //<p>{text}</p>
-    
+
     return (
         <div>
             <Helmet>

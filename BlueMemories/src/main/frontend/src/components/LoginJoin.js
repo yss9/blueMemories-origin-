@@ -25,11 +25,12 @@ const RightContainer = styled.div`
 `;
 
 const MessageContainer=styled.div`
+    margin-top: ${(props)=>props.topmargin|| '20%'};
     margin-left: 15%;
 `;
 
 const LoginContainer=styled.div`
-    margin-top: 10%;
+    margin-top: ${(props)=>props.topmargin|| '10%'};
     margin-left: 15%;
 `;
 
@@ -44,7 +45,6 @@ const WelcomeMassage=styled(font)`
 `;
 
 const LoginText = styled(font)`
-    margin-top: 23%;
     font-size: 50px;
     color: #120240;
 `;
@@ -67,11 +67,14 @@ const InputBox=styled.input`
 `;
 
 const ButtonBox = styled.div`
-    margin-top: 50px;
+    display: flex;
+    margin-top:${(props)=>props.bbtMargin|| '5%'} ;
     margin-left: 15%;
+    flex-direction:${(props)=>props.flex|| 'row'} ;
 `;
 
 const LoginButton=styled.button`
+    margin-left: ${(props)=>props.lbmargin|| '0%'};
     font-family: "Ink Free";
     width: 25%;
     padding-top: 1%;
@@ -93,6 +96,11 @@ const JoinButton=styled.button`
     border-radius: 0; /* 테두리 반경을 없앰 */
     box-shadow: none; /* 그림자 효과를 없앰 */
     cursor: pointer;
+    text-decoration: underline;
+    text-underline-position : under;
+    text-underline-offset : 2px;
+    text-decoration-thickness: 1px;
+    text-decoration-color: #838383;
 `;
 
 export{Body,LeftContainer,RightContainer,MessageContainer,WelcomeMassage,
