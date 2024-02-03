@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import {Helmet} from "react-helmet";
 import styled from 'styled-components';
-import {LoginBtnExport,Logo,LogoText} from "../../components/LoginBtn";
+import {LogoBtn,LogoText,NotLoggedInBtn,LoggedInBtn} from "../../components/NavigationBar";
 
 
 const WrapperContainer= styled.div`
@@ -83,8 +83,6 @@ const MainForm = () => {
             <title>Main</title>
             <meta name="description" content="BlueMemories Main Page"/>
             </Helmet>
-            
-
             <WrapperContainer>
                 <MenuBox>
                     <MenuBtn onClick={goIntroduce}>서비스 소개</MenuBtn>
@@ -95,8 +93,8 @@ const MainForm = () => {
                 </MenuBox>
                 <Wrapper>
                     <Header>
-                        <LoginBtnExport></LoginBtnExport> 
-                        <Logo><LogoText text={"Blue\nMemories"}></LogoText></Logo>
+                        <NotLoggedInBtn top_margin='4%' right_margin='5%'></NotLoggedInBtn> 
+                        <LogoBtn fontSize='5vw' left_margin='10%' top_margin='3%'><LogoText text={"Blue\nMemories"}></LogoText></LogoBtn>
                     </Header>
                 </Wrapper>
                 

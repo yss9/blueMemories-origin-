@@ -6,6 +6,7 @@ import MainPage from "./pages/main/MainPage";
 import RegisterPage from "./pages/register/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
 import IntroducePage from "./pages/introduce/IntroducePage";
+import StorageNovelPage from "./pages/storageNovel/StorageNovelPage";
 import {Helmet} from "react-helmet";
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 {/* <Introduce /> */}
                 <Route path="/introduce" element={<IntroducePage />} />
+                {/* <StorageNovel /> */}
+                <Route path="/storageNovel" element={<StorageNovelPage />} />
             </Routes>
         </BrowserRouter>
     );

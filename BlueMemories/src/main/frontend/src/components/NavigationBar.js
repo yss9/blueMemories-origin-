@@ -1,12 +1,73 @@
 import styled from "styled-components";
 import React from 'react';
-import MainPage from "../pages/main/MainPage";
-import { Routes, Route, useNavigate } from "react-router-dom";
-import { useState } from 'react';
-import {LoginBtnExport,LogoText} from "./LoginBtn";
+import { useNavigate } from "react-router-dom";
 
+
+//로고 버튼
+const LogoBtn = styled.button`
+    font-size: ${(props)=>props.fontSize|| '2vw'};
+    font-family: inkfree;
+    border:none;
+    background: none;
+    text-align: left; 
+    margin-left: ${(props)=>props.left_margin||'3%'};
+    margin-top: ${(props)=>props.top_margin||'none'};
+`;
+//로고 텍스트
+const LogoText = ({text})=>{
+    return <div>
+        {text.split("\n").map((txt)=>(
+            <>
+            {txt}<br></br></>
+        ))}
+    </div>;
+}
+//-----------------------------------------------------------------
+//네비게이션
+const NavContainer=styled.div`
+    width:50%;
+     /*item 정렬*/
+    display: flex;
+    justify-content:space-around;
+`;
+const NavBtn=styled.button`
+    /*스타일*/
+    border: none;
+    font-size: 2.3vw;
+    font-family: gangwonedusaeeum;
+    /*크기*/
+    height: auto;
+    width: auto;
+    /*색상*/
+    background: none;
+`;
+//---------------------------------------------------------------------
+//로그인 및 회원가입 버튼(storage, profile)
+const LoginBtn = styled.button`
+    /*스타일*/
+    border: none;
+    border-radius: 9px;
+    font-size: 1.3vw;
+    font-family: inkfree;
+    /*크기*/
+    height: 2.5vw;
+    width: 6vw;
+    /*색상*/
+    background: #B3B3B350;
+`;
+const LoginBtnContainer=styled.div`
+    display: flex;
+    flex-direction:row-reverse;
+    height:auto;
+    gap:15px;
+    margin-right: ${(props)=>props.right_margin||'3%'};
+    margin-top: ${(props)=>props.top_margin||'none'};
+    align-items: center;
+`;
+//---------------------------------------------------------------------
+//전체 컨테이너
 const HeaderContainer=styled.div`
-    height:10%;
+    height:5vw;
     width: auto;
     display: flex;
     flex-direction:row;
@@ -15,67 +76,91 @@ const HeaderContainer=styled.div`
     margin-left:2.5%;
     margin-right:2.5%;
 `;
-
-const NavContainer=styled.div`
-    width:50%;
-     /*item 정렬*/
-    display: flex;
-    justify-content:space-around;
-`;
-
-const NavBtn=styled.button`
-    /*스타일*/
-    border: none;
-    font-size: 2.5rem;
-    font-family: gangwonedusaeeum;
-    /*크기*/
-    height: 2.5rem;
-    width: auto;
-    /*색상*/
-    background: none;
-`;
-
-const LogoBtn = styled.button`
-    font-size: 2rem;
-    font-family: inkfree;
-    border:none;
-    background: none;
-    text-align: left; 
-    
-`
-
-const NavExport=()=>{
-    const [text,setText] = useState('');
+//---------------------------------------------------------------------
+//로그인 회원가입 버튼 컨테이너
+const NotLoggedInBtn=({top_margin, right_margin})=>{
     const navigate = useNavigate();
-    const goMain = () => {
-        setText('Main 페이지 입니다.')
-        navigate('/');
+    const goToLogin=()=>{
+        navigate("/login");
     }
-    const goIntroduce = () => {
-        setText('Introduce 페이지 입니다.')
-        navigate('/introduce');
+    const goToRegister=()=>{
+        navigate("/register");
+    }
+    return(
+        <LoginBtnContainer top_margin={top_margin} right_margin={right_margin}>
+            <LoginBtn onClick={goToRegister}>Register</LoginBtn>
+            <LoginBtn onClick={goToLogin}>Login</LoginBtn>
+        </LoginBtnContainer>
+    );
+
+};
+//보관함 회원정보 버튼 컨테이너
+const LoggedInBtn=()=>{
+    const navigate = useNavigate();
+    const goToStorageNovel=()=>{
+        navigate("/storageNovel");
+    }
+    return(
+        <LoginBtnContainer>
+            <LoginBtn>Profile</LoginBtn>
+            <LoginBtn onClick={goToStorageNovel}>Storage</LoginBtn>
+        </LoginBtnContainer>
+    );
+
+};
+//-------------------------------------------------------------------------
+//로그인 했을 때 네비게이션 바
+const LoggedInNavigationBar=()=>{
+    const navigate = useNavigate();
+    const goToMain=()=>{
+        navigate("/");
+    }
+    const goToIntroduce=()=>{
+        navigate("/introduce");
+    }
+    const goToStorageNovel=()=>{
+        navigate("/storageNovel");
     }
     return (
-        <div>
-            <HeaderContainer>
-                        <LogoBtn onClick={goMain}><LogoText text={"Blue\nMemories"}></LogoText></LogoBtn>
-                        <NavContainer>
-                            <NavBtn>서비스 소개</NavBtn>
-                            <NavBtn>책 쓰기</NavBtn>
-                            <NavBtn>일기 쓰기</NavBtn>
-                            <NavBtn>FAQ</NavBtn>
-                            <NavBtn>고객센터</NavBtn>
-                        </NavContainer>
-                        <LoginBtnExport></LoginBtnExport>
-                    </HeaderContainer>
-
-            <Routes>
-                <Route path="../" element={<MainPage />}></Route>
-                
-            </Routes>
-        </div>
+        <HeaderContainer>
+            <LogoBtn onClick={goToMain}><LogoText text={"Blue\nMemories"}></LogoText></LogoBtn>
+            <NavContainer>
+                <NavBtn onClick={goToIntroduce}>서비스 소개</NavBtn>
+                <NavBtn onClick={goToStorageNovel}>책 쓰기</NavBtn>
+                <NavBtn>일기 쓰기</NavBtn>
+                <NavBtn>FAQ</NavBtn>
+                <NavBtn>고객센터</NavBtn>
+            </NavContainer>
+            <LoggedInBtn></LoggedInBtn>
+        </HeaderContainer>
         
     );
 };
+//로그인 안했을 때 네비게이션 바
+const NotLoggedInNavigationBar=()=>{
+    const navigate = useNavigate();
+    const goToMain=()=>{
+        navigate("/");
+    }
+    const goToIntroduce=()=>{
+        navigate("/introduce");
+    }
+    const goToLogin=()=>{
+        navigate("/login");
+    }
+    return (
+        <HeaderContainer>
+            <LogoBtn onClick={goToMain}><LogoText text={"Blue\nMemories"}></LogoText></LogoBtn>
+            <NavContainer>
+                <NavBtn onClick={goToIntroduce}>서비스 소개</NavBtn>
+                <NavBtn onClick={goToLogin}>책 쓰기</NavBtn>
+                <NavBtn onClick={goToLogin}>일기 쓰기</NavBtn>
+                <NavBtn>FAQ</NavBtn>
+                <NavBtn>고객센터</NavBtn>
+            </NavContainer>
+            <NotLoggedInBtn></NotLoggedInBtn>
+        </HeaderContainer>
+    );
+};
+export {LogoBtn,LogoText,NotLoggedInBtn,LoggedInBtn,LoggedInNavigationBar,NotLoggedInNavigationBar};
 
-export {NavExport};
