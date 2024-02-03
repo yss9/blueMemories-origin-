@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {Helmet} from "react-helmet";
 import styled from 'styled-components';
 import {LogoBtn,LogoText,NotLoggedInBtn,LoggedInBtn} from "../../components/NavigationBar";
-
+import {MenuBar}from "./components/MenuBar";
 
 const WrapperContainer= styled.div`
     display: flex;
@@ -26,40 +26,7 @@ const Header = styled.div`
     background-size: cover;
     `;
 
-const MenuBarContainer=styled.div`
-    height:260px;
-    width:160px;
-    /*item 정렬*/
-    display: flex;
-    flex-direction:column;
-    justify-content:space-around;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    /*위치*/
-    position:fixed;
-    top:40%;
-    right:2%;
-    /*스타일*/
-    background-color: #EDEDED;
-    border-radius: 10%;
-    box-shadow: 10px 10px 12px -6px rgba(123,157,181,1);
-`;
-const MenuBox=styled(MenuBarContainer)` 
-    
-`;
-const MenuBtn=styled.button`
-     /*스타일*/
-    border: none;
-    border-radius: 9px;
-    font-size: 28px;
-    font-family: gangwonedusaeeum;
-    /*크기*/
-    height: 2.5rem;
-    width: auto;
-    /*색상*/
-    background: none;
 
-`;
 
 ///////////////main2번째 페이지////////////////////
 const Body=styled.div`
@@ -72,11 +39,6 @@ const Body=styled.div`
 
 ///////////////////////////////////////////////////
 const MainForm = () => {
-    const navigate = useNavigate();
-    const goIntroduce = () => {
-        navigate('/introduce');
-    }
-
     return (
         <div>
             <Helmet>
@@ -84,13 +46,7 @@ const MainForm = () => {
             <meta name="description" content="BlueMemories Main Page"/>
             </Helmet>
             <WrapperContainer>
-                <MenuBox>
-                    <MenuBtn onClick={goIntroduce}>서비스 소개</MenuBtn>
-                    <MenuBtn>책 쓰기</MenuBtn>
-                    <MenuBtn>일기 쓰기</MenuBtn>
-                    <MenuBtn>FAQ</MenuBtn>
-                    <MenuBtn>고객센터</MenuBtn>
-                </MenuBox>
+                <MenuBar></MenuBar>
                 <Wrapper>
                     <Header>
                         <NotLoggedInBtn top_margin='4%' right_margin='5%'></NotLoggedInBtn> 
