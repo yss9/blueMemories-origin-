@@ -44,13 +44,22 @@ const MenuBar = () => {
     const goToStorageNovel = () => {
         navigate('/storageNovel');
     }
+    const goToStorageExchangeDiary=()=>{
+        navigate("/storageExchangeDiary");
+    }
+    const goToStorageDiary=()=>{
+        navigate("/storageDiary");
+    }
+    const goToStorageDrawBook=()=>{
+        navigate("/storageDrawBook");
+    }
     return (
         <MenuBox>
             <MenuBtn onClick={goToIntroduce}>서비스 소개</MenuBtn>
-            <MenuBtn>책 쓰기</MenuBtn>
-            <MenuBtn onClick={goToStorageNovel}>일기 쓰기</MenuBtn>
-            <MenuBtn>FAQ</MenuBtn>
-            <MenuBtn>고객센터</MenuBtn>
+            <MenuBtn onClick={goToStorageDiary}>일기</MenuBtn>
+            <MenuBtn onClick={goToStorageExchangeDiary}>교환일기</MenuBtn>
+            <MenuBtn onClick={goToStorageNovel}>소설</MenuBtn>
+            <MenuBtn onClick={goToStorageDrawBook}>그림책</MenuBtn>
         </MenuBox>
     );
 };

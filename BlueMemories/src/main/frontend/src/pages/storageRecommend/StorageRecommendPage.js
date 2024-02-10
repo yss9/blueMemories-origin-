@@ -1,7 +1,6 @@
 import {Helmet} from "react-helmet";
 import styled from 'styled-components';
 import { LoggedInNavigationBar } from '../../components/NavigationBar';
-import { BookListItemContainer } from '../../components/BookList';
 import { StoargeTextBtnContainer } from '../../components/StorageTextBtn';
 
 const Wrapper = styled.div`
@@ -33,20 +32,23 @@ const ListBackgroundImg=styled.div`
     align-items: center;
 `;
 
-const StorageNovelForm = () => {
+//<ListBackgroundImg>밑에다가 아이템들 넣으면 됨</ListBackgroundImg>
+const StorageRecommendForm = () => {
     return (
         <div>
             <Helmet>
-            <title>StorageNovel</title>
+            <title>StorageDrawBook</title>
             <meta name="description" content="BlueMemories Introduce Page"/>
             </Helmet>
 
             <Wrapper>
                 <LoggedInNavigationBar></LoggedInNavigationBar>
                 <ContentContainer>
-                    <StoargeTextBtnContainer></StoargeTextBtnContainer>
+                    <StoargeTextBtnContainer margin_top='99%'></StoargeTextBtnContainer>
                     <ListBackgroundImg>
-                        <BookListItemContainer></BookListItemContainer>
+                   
+
+                   
                     </ListBackgroundImg>
                 </ContentContainer>
             </Wrapper>
@@ -54,4 +56,4 @@ const StorageNovelForm = () => {
     );
 };
 
-export default StorageNovelForm;
+export default StorageRecommendForm;

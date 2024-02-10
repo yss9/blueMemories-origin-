@@ -77,7 +77,7 @@ const HeaderContainer=styled.div`
     margin-right:2.5%;
 `;
 //---------------------------------------------------------------------
-//로그인 회원가입 버튼 컨테이너
+//로그인-회원가입 버튼 컨테이너
 const NotLoggedInBtn=({top_margin, right_margin})=>{
     const navigate = useNavigate();
     const goToLogin=()=>{
@@ -94,16 +94,16 @@ const NotLoggedInBtn=({top_margin, right_margin})=>{
     );
 
 };
-//보관함 회원정보 버튼 컨테이너
+//보관함-회원정보 버튼 컨테이너
 const LoggedInBtn=()=>{
     const navigate = useNavigate();
-    const goToStorageNovel=()=>{
-        navigate("/storageNovel");
+    const goToStorageDiary=()=>{
+        navigate("/storageDiary");
     }
     return(
         <LoginBtnContainer>
             <LoginBtn>Profile</LoginBtn>
-            <LoginBtn onClick={goToStorageNovel}>Storage</LoginBtn>
+            <LoginBtn onClick={goToStorageDiary}>Storage</LoginBtn>
         </LoginBtnContainer>
     );
 
@@ -121,15 +121,24 @@ const LoggedInNavigationBar=()=>{
     const goToStorageNovel=()=>{
         navigate("/storageNovel");
     }
+    const goToStorageExchangeDiary=()=>{
+        navigate("/storageExchangeDiary");
+    }
+    const goToStorageDiary=()=>{
+        navigate("/storageDiary");
+    }
+    const goToStorageDrawBook=()=>{
+        navigate("/storageDrawBook");
+    }
     return (
         <HeaderContainer>
             <LogoBtn onClick={goToMain}><LogoText text={"Blue\nMemories"}></LogoText></LogoBtn>
             <NavContainer>
                 <NavBtn onClick={goToIntroduce}>서비스 소개</NavBtn>
-                <NavBtn onClick={goToStorageNovel}>책 쓰기</NavBtn>
-                <NavBtn>일기 쓰기</NavBtn>
-                <NavBtn>FAQ</NavBtn>
-                <NavBtn>고객센터</NavBtn>
+                <NavBtn onClick={goToStorageDiary}>일기</NavBtn>
+                <NavBtn onClick={goToStorageExchangeDiary}>교환일기</NavBtn>
+                <NavBtn onClick={goToStorageNovel}>소설</NavBtn>
+                <NavBtn onClick={goToStorageDrawBook}>그림책</NavBtn>
             </NavContainer>
             <LoggedInBtn></LoggedInBtn>
         </HeaderContainer>
@@ -153,10 +162,10 @@ const NotLoggedInNavigationBar=()=>{
             <LogoBtn onClick={goToMain}><LogoText text={"Blue\nMemories"}></LogoText></LogoBtn>
             <NavContainer>
                 <NavBtn onClick={goToIntroduce}>서비스 소개</NavBtn>
-                <NavBtn onClick={goToLogin}>책 쓰기</NavBtn>
                 <NavBtn onClick={goToLogin}>일기 쓰기</NavBtn>
-                <NavBtn>FAQ</NavBtn>
-                <NavBtn>고객센터</NavBtn>
+                <NavBtn onClick={goToLogin}>교환일기 쓰기</NavBtn>
+                <NavBtn onClick={goToLogin}>책 쓰기</NavBtn>
+                <NavBtn onClick={goToLogin}>그림책 쓰기</NavBtn>
             </NavContainer>
             <NotLoggedInBtn></NotLoggedInBtn>
         </HeaderContainer>

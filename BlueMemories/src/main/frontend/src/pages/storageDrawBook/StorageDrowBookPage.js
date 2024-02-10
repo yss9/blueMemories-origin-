@@ -33,18 +33,18 @@ const ListBackgroundImg=styled.div`
     align-items: center;
 `;
 
-const StorageNovelForm = () => {
+const StorageDrawBookForm = () => {
     return (
         <div>
             <Helmet>
-            <title>StorageNovel</title>
+            <title>StorageDrawBook</title>
             <meta name="description" content="BlueMemories Introduce Page"/>
             </Helmet>
 
             <Wrapper>
                 <LoggedInNavigationBar></LoggedInNavigationBar>
                 <ContentContainer>
-                    <StoargeTextBtnContainer></StoargeTextBtnContainer>
+                    <StoargeTextBtnContainer margin_top='166%'></StoargeTextBtnContainer>
                     <ListBackgroundImg>
                         <BookListItemContainer></BookListItemContainer>
                     </ListBackgroundImg>
@@ -54,4 +54,4 @@ const StorageNovelForm = () => {
     );
 };
 
-export default StorageNovelForm;
+export default StorageDrawBookForm;
