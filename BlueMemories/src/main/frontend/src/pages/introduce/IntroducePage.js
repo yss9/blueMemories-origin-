@@ -1,8 +1,7 @@
 import React from 'react';
 import {Helmet} from "react-helmet";
 import styled from 'styled-components';
-import {NavExport} from "../../components/NavigationBar";
-import { LogoText } from '../../components/LoginBtn';
+import {LogoText,LoggedInNavigationBar,NotLoggedInNavigationBar} from "../../components/NavigationBar";
 import {TitleContainer,Text,MovePageBtn} from './component/IntroduceText';
 import {BannerEvent} from './component/Banner';
 
@@ -98,7 +97,7 @@ const IntroduceForm = () => {
            
             <Wrapper>
                 <DiaryBody>
-                    <NavExport></NavExport>
+                    <LoggedInNavigationBar></LoggedInNavigationBar>
                     <WhiteContainer>
                         <TitleContainer>
                             <Text fontsize='3rem' fontfamily='bokkbold'>일기</Text>
