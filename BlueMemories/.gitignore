@@ -43,7 +43,6 @@ logs
 **/*.backup.*
 **/*.back.*
 
-node_modules
 bower_components
 
 *.sublime*
@@ -51,3 +50,5 @@ bower_components
 psd
 thumb
 sketch
+
+src/main/resources/application.properties
