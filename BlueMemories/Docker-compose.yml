@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   frontend:
     build:
@@ -16,7 +16,7 @@ services:
       context: ./nginx
     ports: 
       - "3000:80"
-      
+
   src:
     build:
       dockerfile: Dockerfile.dev
