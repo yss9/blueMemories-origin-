@@ -52,3 +52,5 @@ thumb
 sketch
 
 src/main/resources/application.properties
+src/node_modules
+mysql/mysql_data

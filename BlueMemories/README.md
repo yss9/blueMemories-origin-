@@ -1,26 +1,26 @@
+[실행]
+>docker-compose up
 
-['yarn start' 입력했을 때 Cannot find module 'react' 에러]
->npm i react react-dom
+[dockerfile 수정 후 재실행]
+>docker-compose up --build
 
+[error backend- ADD /build/libs/* /app.jar ]
+1) build/libs/snapshot.jar 파일이 있는지 확인한다.
+2) 없으면 터미널 창에 './gradlew build' 입력
+3) build/libs/snapshot.jar 파일이 생성되었다면 다시 docker-compose up --build
+4) 작동된다.
+(**.jar 파일은 용량이 커서 gitignore에 있기때문에 해당 파일을 처음 열면 없는게 맞다.**)
 
-[처음 파일 받았을 때 기본으로 설치해야하는 라이브러리]
-1. helmet(웹 문서 header 부분 쉽게 변경해주는 라이브러리)
->npm install --save react-helmet
-import {Helmet} from "react-helmet"; 로 사용 가능
-2. styled-components설치
->npm i styled-components
-3. 폰트 스타일 초기화 및 호환성을 위한 styled-reset 설치
->yarn add styled-reset
+[mysql 사용]
+docker ps
+docker exec -it <컨테이너아이디> bash
+mysql -u root -p
+1234
+show databases;
+use BlueMemories
+select database();
+show tables;
 
-
-[window에서 yarn사용법]
-PowerShell
->Get-ExecutionPolicy
-결과가 Restricted라면 
->Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-한뒤 다시
->Get-ExecutionPolicy
-결과가 RemoteSigned라면 사용 가능
 
 ----CSS 참고---
 [styled component 사용법]
