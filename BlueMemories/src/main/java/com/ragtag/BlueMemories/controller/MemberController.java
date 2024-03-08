@@ -17,6 +17,7 @@ public class MemberController {
     @PostMapping("/register")
     private void registerMember(@RequestBody Member member) {
         memberService.registerMember(member);
+
     }
 
 }
