@@ -1,41 +1,43 @@
-version: '3.9'
+version: '3'
 services:
   frontend:
     build:
       dockerfile: Dockerfile.dev
       context: ./frontend
+    container_name: frontend
     volumes:
       - "./frontend:/app"
       - "/app/node_modules"
     stdin_open: true
     
   nginx:
+    container_name: nginx
     restart: always
     build:
       dockerfile: Dockerfile
       context: ./nginx
     ports: 
       - "3000:80"
-    volumes:
-      - ./nginx/html:/usr/share/nginx/html
+    # volumes:
+    #   - ./nginx/html:/usr/share/nginx/html
 
   backend:
     build:
       dockerfile: Dockerfile.dev
       context: ./
-    container_name: blueMemories_backend
+    container_name: backend
     volumes:
       - /app/node_modules
       - ./src:/app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bluememories
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Bluememories
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 1234
 
   mysql:
     build: ./mysql
     restart: unless-stopped
-    container_name: blueMemories_mysql
+    container_name: mysql
     ports:
       - "3300:3306"
     volumes:
@@ -45,5 +47,4 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: BlueMemories
       MYSQL_ROOT_USER: root 
-      MYSQL_USER: root 
       MYSQL_PASSWORD: 1234
