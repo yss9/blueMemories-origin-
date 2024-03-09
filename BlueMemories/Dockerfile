@@ -6,6 +6,6 @@ EXPOSE 8080
 
 ADD /build/libs/* /app.jar
 
-COPY ./src ./src
+COPY ./src .
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]

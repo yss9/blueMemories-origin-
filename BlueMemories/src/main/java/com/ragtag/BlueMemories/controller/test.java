@@ -10,11 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class test {
     @GetMapping("/getTest")
     public String getTest() {
-        return "Hello World!";
+        return "change test !@!@!@";
     }
 
     @PostMapping("/postTest")
     public String postTest() {
-        return "Hello World!";
+        return "Hello World!  change test success!!!!";
+    }
+
+    @GetMapping("/gettt")
+    public String gettt() {
+        return "change test !@!@!@";
     }
 }

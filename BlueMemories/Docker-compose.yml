@@ -47,5 +47,4 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: BlueMemories
       MYSQL_ROOT_USER: root 
-      MYSQL_USER: root 
       MYSQL_PASSWORD: 1234
