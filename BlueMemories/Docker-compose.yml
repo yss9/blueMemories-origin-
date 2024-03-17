@@ -1,5 +1,6 @@
-version: '3'
+version: "3"
 services:
+
   frontend:
     build:
       dockerfile: Dockerfile.dev
@@ -9,7 +10,7 @@ services:
       - "./frontend:/app"
       - "/app/node_modules"
     stdin_open: true
-    
+
   nginx:
     container_name: nginx
     restart: always
@@ -21,30 +22,39 @@ services:
     # volumes:
     #   - ./nginx/html:/usr/share/nginx/html
 
-  backend:
+  spring:
     build:
-      dockerfile: Dockerfile.dev
-      context: ./
-    container_name: backend
-    volumes:
-      - /app/node_modules
-      - ./src:/app
+      context: ./spring
+      dockerfile: Dockerfile
+    container_name: spring
+    env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Bluememories
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
+      - ENV=development
+    restart: always
+    volumes:
+      - "./spring:/app" #usr/src/spring
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql # mysql이 실행되고 spring container가 실행됩니다.
 
   mysql:
-    build: ./mysql
-    restart: unless-stopped
+    # platform: linux/amd64 # m1칩일 경우
+    image: "mysql:8.0.21"
+    logging:
+      driver: none
+    restart: always
     container_name: mysql
     ports:
-      - "3300:3306"
+      - "3306:3306"
+    env_file:
+      - ./.env
     volumes:
-      - ./mysql/mysql_data:/var/lib/mysql
-      - ./mysql/sqls/:/docker-entrypoint-initdb.d/
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib//mysql # mysql/data에 데이터를 담을 때 사용 합니다.
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d #intidb.d의 create.sql을 실행
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: BlueMemories
-      MYSQL_ROOT_USER: root 
+      MYSQL_DATABASE: bluememories
+      MYSQL_USER: root
       MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1234
