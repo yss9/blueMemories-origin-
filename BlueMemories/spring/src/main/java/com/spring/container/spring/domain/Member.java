@@ -1,6 +1,6 @@
 package com.spring.container.spring.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

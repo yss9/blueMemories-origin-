@@ -1,0 +1,30 @@
+# 버전 관리 시스템 디렉토리
+.git/
+.gitignore
+
+# 노드 모듈 - 이미지 빌드 과정에서 별도로 설치됩니다
+node_modules/
+
+# 빌드 출력 디렉토리
+/build/
+
+# 로그 파일
+npm-debug.log
+yarn-error.log
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+
+# 환경 설정 파일
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE 설정
+.idea/
+.vscode/
+*.swp
+*.swo

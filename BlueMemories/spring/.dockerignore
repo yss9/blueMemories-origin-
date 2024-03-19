@@ -1,0 +1,37 @@
+# 버전 관리 시스템 디렉토리
+.git/
+.gitignore
+
+# Gradle 디렉토리
+.gradle/
+build/
+
+# 빌드 출력 디렉토리
+target/
+out/
+
+# 로그 파일
+*.log
+
+# Spring Boot 애플리케이션 설정 파일
+*.yml
+*.yaml
+*.properties
+
+# 시스템 파일
+.DS_Store
+Thumbs.db
+
+# IDE 설정
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+
+# 다른 임시 파일
+*.swp
+*.swo

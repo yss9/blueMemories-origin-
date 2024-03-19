@@ -3,6 +3,7 @@ package com.spring.container.spring.controllers;
 import com.spring.container.spring.domain.Member;
 import com.spring.container.spring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,10 +18,22 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    public String registerMember(@RequestBody Member member) {
+    private void registerMember(@RequestBody Member member) {
         memberService.registerMember(member);
-        return "hello";
-
     }
 
+     @GetMapping("/getTest")
+    public String getTest() {
+        return "change test lol!!!!!!!!!!!!!!!!";
+    }
+
+    @PostMapping("/postTest")
+    public String postTest() {
+        return "Hello World!  change test success!!!!";
+    }
+
+    @GetMapping("/gettt")
+    public String gettt() {
+        return "change test success";
+    }
 }

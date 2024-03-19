@@ -16,7 +16,7 @@ const RegisterForm = () => {
     }
 
     const handleRegister = () => {
-        axios.post('/register', {
+        axios.post('http://localhost:8080/register', {
             email: email,
             password: password,
             name : name

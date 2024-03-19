@@ -1,4 +1,4 @@
-FROM gradle:6.9-jdk11
+FROM gradle:jdk17
 
 WORKDIR /usr/src/spring
 COPY . /usr/src/spring
