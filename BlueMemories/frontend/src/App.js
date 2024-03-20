@@ -11,7 +11,11 @@ import StorageDrawBookPage from "./pages/storageDrawBook/StorageDrowBookPage";
 import StorageDiaryPage from "./pages/storageDiary/StorageDiaryPage";
 import StorageExchangeDiaryPage from './pages/storageExchangeDiary/StorageExchangeDiaryPage';
 import StorageRecommendPage from './pages/storageRecommend/StorageRecommendPage';
+import WriteNovelPage from "./pages/writeNovel/WriteNovelPage";
+import WriteDrawBookPage from './pages/writeDrawBook/WriteDrawBookPage';
+
 import {Helmet} from "react-helmet";
+
 
 function App() {
 
@@ -42,6 +46,10 @@ function App() {
                  <Route path="/storageExchangeDiary" element={<StorageExchangeDiaryPage />} />
                  {/* <StorageRecommend /> */}
                  <Route path="/storageRecommend" element={<StorageRecommendPage />} />
+                {/* <WriteNovel /> */}
+                <Route path="/WriteNovel" element={<WriteNovelPage />} />
+                {/* <WriteDrawBook /> */}
+                <Route path="/WriteDrawBook" element={<WriteDrawBookPage />} />
             </Routes>
         </BrowserRouter>
     );

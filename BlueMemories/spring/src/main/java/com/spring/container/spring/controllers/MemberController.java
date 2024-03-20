@@ -24,7 +24,7 @@ public class MemberController {
 
      @GetMapping("/getTest")
     public String getTest() {
-        return "change test lol!!!!!!!!!!!!!!!!";
+        return "change test ";
     }
 
     @PostMapping("/postTest")

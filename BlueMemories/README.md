@@ -2,7 +2,7 @@
 
 * `docker-compose up --build` //제일 처음 실행할 때 또는 docker관련 파일 수정했을 때
 * `docker-compose up` //그 외 실행
-<br><br
+<br><br>
 
 ## spring 컨테이너 db 확인
 
