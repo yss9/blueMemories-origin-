@@ -1,6 +1,5 @@
 package com.spring.container.spring.controllers;
 
-import com.spring.container.spring.domain.Member;
 import com.spring.container.spring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
