@@ -1,13 +1,12 @@
 package com.spring.container.spring.controllers;
 
 import com.spring.container.spring.domain.Member;
+import com.spring.container.spring.dto.UpdateMemberDto;
 import com.spring.container.spring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -17,22 +16,24 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    private void registerMember(@RequestBody Member member) {
-        memberService.registerMember(member);
+    private void createMember(@RequestBody Member member) {
+        memberService.createMember(member);
     }
 
-     @GetMapping("/getTest")
-    public String getTest() {
-        return "change test ";
+    @GetMapping("/member/{id}")
+    private Optional<Member> findMember(@PathVariable Long id){
+        return memberService.findMember(id);
     }
 
-    @PostMapping("/postTest")
-    public String postTest() {
-        return "Hello World!  change test success!!!!";
+    @PutMapping("/member/{id}/password")
+    private Member updateMember(@PathVariable Long id,@RequestBody UpdateMemberDto request){
+        return memberService.updateMember(id, request.getPassword());
     }
 
-    @GetMapping("/gettt")
-    public String gettt() {
-        return "change test success";
+    @DeleteMapping("/member/{id}")
+    private void deleteMember(@PathVariable Long id){
+        memberService.deleteMember(id);
     }
+
+
 }
