@@ -23,6 +23,8 @@ public class GeneralDiaryContent {
 
     private Integer pageNo = 1;
 
+    private String title;
+
     @Column(nullable = false, length = 300)
     private String content;
 
@@ -32,24 +34,9 @@ public class GeneralDiaryContent {
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
 
-    @Column(length = 20)
-    private String toDo1;
-
-    @Column(length = 20)
-    private String toDo2;
-
-    @Column(length = 20)
-    private String toDo3;
-
-    @Column(length = 20)
-    private String toDo4;
-
-    @Column(length = 20)
-    private String toDo5;
-
-    @Column(length = 100)
-    private String memo;
-
     private String sentiment;
 
+    private Double confidenceNegative;
+    private Double confidencePositive;
+    private Double confidenceNeutral;
 }
