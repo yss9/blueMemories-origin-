@@ -62,13 +62,14 @@ const AfterePageBtn = styled.button`
 `;
 
 const WriteContainer = styled.div`
-    width: 70%;
+    width: 90%;
     height: 40vw;
     /*item 정렬*/
     display: flex;
     position:relative;
     justify-content: center;/* 수평  정렬 */
     align-items: center; /* 수직 중앙 정렬 */
+    background-color: yellow;
 `;
 const WritePage = styled.div`
     background: url("/resourcesPng/writeNovelPage/whitePage.png") no-repeat center;
@@ -82,78 +83,79 @@ const WritePage = styled.div`
     position:absolute;
     z-index: 1;
 `;
-const ButtonStyled=styled.button`
-    background: url("/resourcesPng/writeNovelPage/addImageBtn.png") no-repeat;
-    background-size: contain;
-    /*스타일*/
-    border: none;
-    /*크기*/
-    height: 9%;
-    width: 6%;
-    /*레이어*/
-    position:absolute;
-    z-index: 3;
-    /*위치*/
-    top: 8%;
-    left: ${(props) => props.marginLeft ||'4.5%'};
-    /*마우스 HOVER 설정*/
-    cursor: pointer;
-`;
-const ImageCreateBtn = ({ isHidden, marginLeft, onClick }) => (
-    <ButtonStyled style={{
-        display: isHidden ? 'none' : 'block', marginLeft
-    }} onClick={onClick}/>
 
-);
-const TextareaStyled = styled.textarea`
-    width: 22.5vw;
-    height: 31vw;
-    /*스타일*/
-    border: none;
-    outline:none;
-    resize: none;
-    overflow: hidden; /* 스크롤바 숨김 */
-    /*텍스트 설정*/
-    font-size: 0.8vw;
-    font-family: BokkLight, sans-serif; //대체폰트
-    /*레이어*/
-    position:absolute;
-    z-index: 2;
-    /*위치*/
-    top:12%;
-    left: ${(props) => props.marginLeft || '5.3%'};
-    &:focus {
-        border: none; // 클릭했을 때 테두리 없앰
-        outline:none;
-        resize: none;
-        overflow: hidden; /* 스크롤바 숨김 */
-        /*텍스트 설정*/
-        font-size: 0.8vw;
-        font-family: BokkLight, sans-serif; //대체폰트
-    }
-`;
-// 사용자 입력에 따라 content 상태 업데이트
-const WriteTextarea = ({ content, setContent, setIsFocused,marginLeft,maxLength }) => {
-    //(textarea.scrollHeight > text.area.clientHeight)이면 setContent를 호출하지 않음
-    //=> 추가 입력 x
-    const handleChange = (e)=>{
-        const textarea = e.target;
-        if(textarea.scrollHeight <=textarea.clientHeight){
-            setContent(textarea.value);
-        }
-    };
-
-    return(
-        <TextareaStyled
-            value={content}
-            // onChange={(e) => setContent(e.target.value)}
-            onChange={handleChange}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            marginLeft={marginLeft}
-        />
-    );
-}
+// const ButtonStyled=styled.button`
+//     background: url("/resourcesPng/writeNovelPage/addImageBtn.png") no-repeat;
+//     background-size: contain;
+//     /*스타일*/
+//     border: none;
+//     /*크기*/
+//     height: 9%;
+//     width: 6%;
+//     /*레이어*/
+//     position:absolute;
+//     z-index: 3;
+//     /*위치*/
+//     top: 8%;
+//     left: ${(props) => props.marginLeft ||'4.5%'};
+//     /*마우스 HOVER 설정*/
+//     cursor: pointer;
+// `;
+// const ImageCreateBtn = ({ isHidden, marginLeft, onClick }) => (
+//     <ButtonStyled style={{
+//         display: isHidden ? 'none' : 'block', marginLeft
+//     }} onClick={onClick}/>
+//
+// );
+// const TextareaStyled = styled.textarea`
+//     width: 22.5vw;
+//     height: 31vw;
+//     /*스타일*/
+//     border: none;
+//     outline:none;
+//     resize: none;
+//     overflow: hidden; /* 스크롤바 숨김 */
+//     /*텍스트 설정*/
+//     font-size: 0.8vw;
+//     font-family: BokkLight, sans-serif; //대체폰트
+//     /*레이어*/
+//     position:absolute;
+//     z-index: 2;
+//     /*위치*/
+//     top:12%;
+//     left: ${(props) => props.marginLeft || '5.3%'};
+//     &:focus {
+//         border: none; // 클릭했을 때 테두리 없앰
+//         outline:none;
+//         resize: none;
+//         overflow: hidden; /* 스크롤바 숨김 */
+//         /*텍스트 설정*/
+//         font-size: 0.8vw;
+//         font-family: BokkLight, sans-serif; //대체폰트
+//     }
+// `;
+// // 사용자 입력에 따라 content 상태 업데이트
+// const WriteTextarea = ({ content, setContent, setIsFocused,marginLeft,maxLength }) => {
+//     //(textarea.scrollHeight > text.area.clientHeight)이면 setContent를 호출하지 않음
+//     //=> 추가 입력 x
+//     const handleChange = (e)=>{
+//         const textarea = e.target;
+//         if(textarea.scrollHeight <=textarea.clientHeight){
+//             setContent(textarea.value);
+//         }
+//     };
+//
+//     return(
+//         <TextareaStyled
+//             value={content}
+//             // onChange={(e) => setContent(e.target.value)}
+//             onChange={handleChange}
+//             onFocus={() => setIsFocused(true)}
+//             onBlur={() => setIsFocused(false)}
+//             marginLeft={marginLeft}
+//         />
+//     );
+// }
 const LeftPageNumber=styled.span`
     left:6%;
     bottom:5%;
@@ -215,20 +217,20 @@ const WriteNovelForm = () => {
                     <BeforePageBtn></BeforePageBtn>
                     <WriteContainer>
                         <WritePage></WritePage>
-                        <WriteTextarea
-                            content={a_content}
-                            setContent={a_setContent}
-                            setIsFocused={a_setIsTextareaFocused}
-                        />
-                        <WriteTextarea
-                            marginLeft="53.8%"
-                            maxLength="31vw"
-                            content={b_content}
-                            setContent={b_setContent}
-                            setIsFocused={b_setIsTextareaFocused}
-                        />
-                        <ImageCreateBtn onClick={toggleOverlay} isHidden={a_isButtonHidden} ></ImageCreateBtn>
-                        <ImageCreateBtn onClick={toggleOverlay} isHidden={b_isButtonHidden} marginLeft="49%"></ImageCreateBtn>
+                        {/*<WriteTextarea*/}
+                        {/*    content={a_content}*/}
+                        {/*    setContent={a_setContent}*/}
+                        {/*    setIsFocused={a_setIsTextareaFocused}*/}
+                        {/*/>*/}
+                        {/*<WriteTextarea*/}
+                        {/*    marginLeft="53.8%"*/}
+                        {/*    maxLength="31vw"*/}
+                        {/*    content={b_content}*/}
+                        {/*    setContent={b_setContent}*/}
+                        {/*    setIsFocused={b_setIsTextareaFocused}*/}
+                        {/*/>*/}
+                        {/*<ImageCreateBtn onClick={toggleOverlay} isHidden={a_isButtonHidden} ></ImageCreateBtn>*/}
+                        {/*<ImageCreateBtn onClick={toggleOverlay} isHidden={b_isButtonHidden} marginLeft="49%"></ImageCreateBtn>*/}
 
                         <LeftPageNumber>2</LeftPageNumber>
                         <RightPageNumber>3</RightPageNumber>
