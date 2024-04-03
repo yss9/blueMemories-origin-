@@ -184,7 +184,6 @@ const WriteDrawBookForm = () => {
         console.log('Registered Image URL:', imageUrl); // 콘솔 로그 추가
         setImage(imageUrl);
     }
-    //writetext높이 제한해야함 높이 지나면 더이상 글 안써지도록
     return (
         <div>
             <Helmet>

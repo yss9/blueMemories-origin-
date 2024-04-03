@@ -109,7 +109,7 @@ const ImageCreateBtn = styled.div`
         cursor:pointer;
     }
 `;
-const ImageOverlay=({visible, setVisible})=>{
+const ImageOverlay=({visible, setVisible, onImageRegister})=>{
     // 이미지 URL 상태 추가
     const [selectedImageUrl, setSelectedImageUrl] = useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
     // 이미지가 선택되었을 때 호출될 함수
@@ -120,6 +120,11 @@ const ImageOverlay=({visible, setVisible})=>{
     const handleClose = () => {
         setVisible(false);
     };
+    const handleImageUpdate=()=>{
+        if(onImageRegister)
+            onImageRegister(selectedImageUrl)
+        handleClose();
+    }
     return(
         <Overlay visible={visible}>
             <MakingImageLeftContainer>
@@ -137,7 +142,7 @@ const ImageOverlay=({visible, setVisible})=>{
                 </ImageShowContainer>
                 <ImageCreateBtnContainer>
                     <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>
-                    <ImageCreateBtn onClick={handleClose}>등록</ImageCreateBtn>
+                    <ImageCreateBtn onClick={handleImageUpdate}>등록</ImageCreateBtn>
                 </ImageCreateBtnContainer>
 
             </ImageRightContainer>

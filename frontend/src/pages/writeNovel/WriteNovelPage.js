@@ -1,6 +1,6 @@
 import {Helmet} from "react-helmet";
 import styled, {css} from 'styled-components';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { WriteMenuBar } from '../../components/WriteMenuBar';
 import ImageOverlay from "./components/ImageOverlay";
 import NovelCoverOverlay from "./components/NovelCoverOverlay";
@@ -66,16 +66,29 @@ const WriteContainer = styled.div`
     height: 40vw;
     /*item 정렬*/
     display: flex;
+    flex-direction: row;
     position:relative;
     justify-content: center;/* 수평  정렬 */
     align-items: center; /* 수직 중앙 정렬 */
-    background-color: yellow;
+`;
+const LeftImageCreateContainer=styled.div`
+    width: 9vw;
+    height: 10vw;
+    background: url("/resourcesPng/writeNovelPage/imageCreateBtnContainerLeft.png") no-repeat center;
+    background-size: contain;
+    position: absolute;
+    left: 2.5%;
+    top: 1.5%;
+    /*item*/
+    display: flex;
+    flex-direction: column;
 `;
 const WritePage = styled.div`
     background: url("/resourcesPng/writeNovelPage/whitePage.png") no-repeat center;
     background-size: contain;
     /*스타일*/
-    border: none;
+    border:none;
+    outline:none;
     /*크기*/
     width: 55vw;
     height: 40vw;
@@ -83,81 +96,80 @@ const WritePage = styled.div`
     position:absolute;
     z-index: 1;
 `;
+const WriteText = styled.textarea`
+    width: 22.5vw;
+    height: 32vw;
+    /*스타일*/
+    border: none;
+    outline:none;
+    resize: none;
+    overflow: hidden; /* 스크롤바 숨김 */
+    background-color: transparent;
+    /*텍스트 설정*/
+    font-size: 0.8vw;
+    font-family: BokkLight, sans-serif; //대체폰트
+    /*레이어*/
+    position:absolute;
+    z-index: 3;
+    /*위치*/
+    top:10%;
+    left: ${(props) => props.marginLeft || '15.2%'};
+    &:focus {
+        border: none; // 클릭했을 때 테두리 없앰
+        outline:none;
+        resize: none;
+        overflow: hidden; /* 스크롤바 숨김 */
+        /*텍스트 설정*/
+        font-size: 0.8vw;
+        font-family: BokkLight, sans-serif; //대체폰트
+    }
+`;
+const Image=styled.img`
+    width: 23vw;
+    height: 34vw;
+    border:none;
+    outline:none;
+    /*레이어*/
+    position:absolute;
+    z-index: 2;
+    left:${(props)=>props.marginLeft||'15%'};
+`;
+const RightImageCreateContainer=styled.div`
+    width: 9vw;
+    height: 10vw;
+    background: url("/resourcesPng/writeNovelPage/imageCreateBtnContainerRight.png") no-repeat center;
+    background-size: contain;
+    position: absolute;
+    right: 2.5%;
+    top: 1.5%;
+`;
+const CreateImageButton=styled.button`
+    width: 4vw;
+    height: 4vw;
+    background: url("/resourcesPng/writeNovelPage/addImageBtn.png") no-repeat center;
+    background-size: contain;
+    border:none;
+    margin-top: 5%;
+    margin-left: 30%;
+    &:hover{
+        cursor: pointer;
+    }
+`;
+const DeleteImageButton=styled.button`
+    width: 4vw;
+    height: 4vw;
+    background: url("/resourcesPng/writeNovelPage/deleteImageBtn.png") no-repeat center;
+    background-size: contain;
+    border:none;
+    margin-top: 12%;
+    margin-left: 30%;
+    &:hover{
+        cursor: pointer;
+    }
+`;
 
-// const ButtonStyled=styled.button`
-//     background: url("/resourcesPng/writeNovelPage/addImageBtn.png") no-repeat;
-//     background-size: contain;
-//     /*스타일*/
-//     border: none;
-//     /*크기*/
-//     height: 9%;
-//     width: 6%;
-//     /*레이어*/
-//     position:absolute;
-//     z-index: 3;
-//     /*위치*/
-//     top: 8%;
-//     left: ${(props) => props.marginLeft ||'4.5%'};
-//     /*마우스 HOVER 설정*/
-//     cursor: pointer;
-// `;
-// const ImageCreateBtn = ({ isHidden, marginLeft, onClick }) => (
-//     <ButtonStyled style={{
-//         display: isHidden ? 'none' : 'block', marginLeft
-//     }} onClick={onClick}/>
-//
-// );
-// const TextareaStyled = styled.textarea`
-//     width: 22.5vw;
-//     height: 31vw;
-//     /*스타일*/
-//     border: none;
-//     outline:none;
-//     resize: none;
-//     overflow: hidden; /* 스크롤바 숨김 */
-//     /*텍스트 설정*/
-//     font-size: 0.8vw;
-//     font-family: BokkLight, sans-serif; //대체폰트
-//     /*레이어*/
-//     position:absolute;
-//     z-index: 2;
-//     /*위치*/
-//     top:12%;
-//     left: ${(props) => props.marginLeft || '5.3%'};
-//     &:focus {
-//         border: none; // 클릭했을 때 테두리 없앰
-//         outline:none;
-//         resize: none;
-//         overflow: hidden; /* 스크롤바 숨김 */
-//         /*텍스트 설정*/
-//         font-size: 0.8vw;
-//         font-family: BokkLight, sans-serif; //대체폰트
-//     }
-// `;
-// // 사용자 입력에 따라 content 상태 업데이트
-// const WriteTextarea = ({ content, setContent, setIsFocused,marginLeft,maxLength }) => {
-//     //(textarea.scrollHeight > text.area.clientHeight)이면 setContent를 호출하지 않음
-//     //=> 추가 입력 x
-//     const handleChange = (e)=>{
-//         const textarea = e.target;
-//         if(textarea.scrollHeight <=textarea.clientHeight){
-//             setContent(textarea.value);
-//         }
-//     };
-//
-//     return(
-//         <TextareaStyled
-//             value={content}
-//             // onChange={(e) => setContent(e.target.value)}
-//             onChange={handleChange}
-//             onFocus={() => setIsFocused(true)}
-//             onBlur={() => setIsFocused(false)}
-//             marginLeft={marginLeft}
-//         />
-//     );
-// }
 const LeftPageNumber=styled.span`
-    left:6%;
+    left:15%;
     bottom:5%;
     //padding:2%;
     /*텍스트 설정*/
@@ -170,7 +182,7 @@ const LeftPageNumber=styled.span`
     
 `;
 const RightPageNumber=styled.span`
-    right:6%;
+    right:15%;
     bottom:5%;
     //padding:2%;
     /*텍스트 설정*/
@@ -183,28 +195,86 @@ const RightPageNumber=styled.span`
 `;
 
 const WriteNovelForm = () => {
-    // 초기값 빈 문자열
-    const [a_content, a_setContent] = useState('');
-    const [b_content, b_setContent] = useState('');
-    // Textarea의 포커스 상태 초기화
-    const [a_isTextareaFocused, a_setIsTextareaFocused] = useState(false);
-    const [b_isTextareaFocused, b_setIsTextareaFocused] = useState(false);
-    //textarea에 포커스가 있을때 && 내용이 적혀있을때 => 그림생성 버튼 hidden
-    const a_isButtonHidden = a_isTextareaFocused || a_content.length > 0;
-    const b_isButtonHidden = b_isTextareaFocused || b_content.length > 0;
 
-    //이미지 생성 background animation
+    //이미지 추가버튼 => 이미지 생성 overlay
     const [visible, setVisible] = useState(false);
     const toggleOverlay=()=> {
         setVisible(!visible);
     }
 
-    //책 표지 버튼(WriteMenuBar.js)눌렀을 때 콜백함수
+    //textarea 글자수 제한(높이가 기준)
+    const [textA, setTextA] = useState('');
+    const [textB, setTextB] = useState('');
+    const handleInput=(setText)=>(e)=>{
+        const textarea = e.target;
+        const isOverflowing = textarea.scrollHeight > textarea.clientHeight;
+        if(!isOverflowing){
+            setText(textarea.value);
+        }
+    };
+
+    //menubar 책 표지 버튼(WriteMenuBar.js)눌렀을 때 콜백함수
     const [coverVisible, setCoverVisible] = useState(false);
     const handleCoverBtnClick = (data) => {
         // WriteMenuBar 클릭 시 NovelCoverOverlay 보이도록 설정
         setCoverVisible(!coverVisible);
     };
+
+    //textarea, image, imageAddBtn, imageDeleteBtn 상태 관리
+    const [leftImage, setLeftImage] = useState(null);//imageL
+    const [rightImage, setRightImage] = useState(null);//imageR
+    const [leftDisabled, setLeftDisabled] = useState(false);//imageAddBtnL
+    const [rightDisabled, setRightDisabled] = useState(false);//imageAddBtnR
+
+    // 'left' 또는 'right' 값을 저장할 상태 설정
+    const [selectedButton, setSelectedButton] = useState(null);
+    // 왼쪽 버튼 클릭 핸들러
+    const handleLeftButtonClick = () => {
+        toggleOverlay();
+        setSelectedButton('left');
+        // 필요한 추가 로직
+    };
+    // 오른쪽 버튼 클릭 핸들러
+    const handleRightButtonClick = () => {
+        toggleOverlay();
+        setSelectedButton('right');
+        // 필요한 추가 로직
+    };
+    //생성된 이미지 가져와서 image에 적용
+    const handleImageRegister=(imageUrl)=>{
+        console.log('Registered Image URL:', imageUrl); // 콘솔 로그 추가
+        if(selectedButton==='left'){
+            setLeftImage(imageUrl);
+            setLeftDisabled(true);//등록된 이미지가 있음
+        }
+        else{//(selectedButton==='right')
+            setRightImage(imageUrl);
+            setRightDisabled(true);//등록된 이미지가 있음
+        }
+    }
+    // leftDisabled 상태에 따라 textArea 내용 초기화 및 hidden 설정
+    useEffect(() => {
+        if (leftDisabled) {//등록된 이미지가 있음
+            setTextA(''); // 왼쪽 textarea의 내용을 초기화
+        }
+    }, [leftDisabled]); // leftDisabled 상태에 의존
+
+    // rightDisabled 상태가 변경될 때마다 실행
+    useEffect(() => {
+        if (rightDisabled) {//등록된 이미지가 있음
+            setTextB(''); // 오른쪽 textarea의 내용을 초기화
+        }
+    }, [rightDisabled]); // rightDisabled 상태에 의존
+    //왼쪽 삭제 버튼
+    const LeftHandleDeleteImage=()=>{
+        setLeftDisabled(false);//등록된 이미지가 없음
+        setLeftImage('');//이미지 초기화
+    }
+    //오른쪽 삭제 버튼
+    const RightHandleDeleteImage=()=>{
+        setRightDisabled(false);//등록된 이미지가 없음
+        setRightImage('');//이미지 초기화
+    }
     return (
         <div>
             <Helmet>
@@ -216,28 +286,34 @@ const WriteNovelForm = () => {
                 <BodyContainer>
                     <BeforePageBtn></BeforePageBtn>
                     <WriteContainer>
+                        <LeftImageCreateContainer>
+                            <CreateImageButton onClick={handleLeftButtonClick}></CreateImageButton>
+                            <DeleteImageButton onClick={LeftHandleDeleteImage}></DeleteImageButton>
+                        </LeftImageCreateContainer>
                         <WritePage></WritePage>
-                        {/*<WriteTextarea*/}
-                        {/*    content={a_content}*/}
-                        {/*    setContent={a_setContent}*/}
-                        {/*    setIsFocused={a_setIsTextareaFocused}*/}
-                        {/*/>*/}
-                        {/*<WriteTextarea*/}
-                        {/*    marginLeft="53.8%"*/}
-                        {/*    maxLength="31vw"*/}
-                        {/*    content={b_content}*/}
-                        {/*    setContent={b_setContent}*/}
-                        {/*    setIsFocused={b_setIsTextareaFocused}*/}
-                        {/*/>*/}
-                        {/*<ImageCreateBtn onClick={toggleOverlay} isHidden={a_isButtonHidden} ></ImageCreateBtn>*/}
-                        {/*<ImageCreateBtn onClick={toggleOverlay} isHidden={b_isButtonHidden} marginLeft="49%"></ImageCreateBtn>*/}
-
+                        <WriteText
+                            placeholder="글을 작성하거나 그림을 생성해보세요"
+                            value={textA}
+                            onInput={handleInput(setTextA)}
+                            hidden={leftDisabled}></WriteText>
+                        {leftImage && <Image src={leftImage} alt="Selected Image" />}
+                        <WriteText
+                            placeholder="글을 작성하거나 그림을 생성해보세요"
+                            value={textB}
+                            onInput={handleInput(setTextB)}
+                            marginLeft={'53.2%'}
+                            hidden={rightDisabled}></WriteText>
+                        {rightImage && <Image marginLeft={'53.2%'} src={rightImage} alt="Selected Image" />}
+                        <RightImageCreateContainer>
+                            <CreateImageButton onClick={handleRightButtonClick}></CreateImageButton>
+                            <DeleteImageButton onClick={RightHandleDeleteImage}></DeleteImageButton>
+                        </RightImageCreateContainer>
                         <LeftPageNumber>2</LeftPageNumber>
                         <RightPageNumber>3</RightPageNumber>
                     </WriteContainer>
                     <AfterePageBtn></AfterePageBtn>
                 </BodyContainer>
-                <ImageOverlay  visible={visible} setVisible={setVisible}></ImageOverlay>
+                <ImageOverlay  visible={visible} setVisible={setVisible} onImageRegister={handleImageRegister}></ImageOverlay>
                 <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible}></NovelCoverOverlay>
             </Wrapper>
         </div>
