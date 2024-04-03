@@ -1,2 +1,4 @@
-package com.spring.container.spring.service;public class DiaryServiceImpl {
+package com.spring.container.spring.service;
+
+public class DiaryServiceImpl {
 }
