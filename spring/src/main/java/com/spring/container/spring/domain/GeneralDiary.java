@@ -17,7 +17,7 @@ public class GeneralDiary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long diaryNo;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -26,7 +26,5 @@ public class GeneralDiary {
     @OneToMany(mappedBy = "generalDiary", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GeneralDiaryContent> generalDiaryContents = new ArrayList<>();
 
-    @Column(nullable = false, length = 30)
-    private String title;
 
 }

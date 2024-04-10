@@ -16,7 +16,7 @@ public class CustomerInquiry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long inquiryNo;
+    private Long id;
 
     @Column(nullable = false, length=20)
     private String title;
