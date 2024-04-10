@@ -22,6 +22,7 @@ const RegisterForm = () => {
             name : name
         })
             .then(response => {
+                navigate('/login');
                 console.log(response.data);
             })
             .catch(error => {
@@ -54,7 +55,7 @@ const RegisterForm = () => {
                     </LoginContainer>
                     <ButtonBox flex={'column'} bbtMargin={"2%"}>
                         <JoinButton onClick={goLogin}>Login</JoinButton>
-                        <LoginButton lbmargin={'23%'}>Sign Up</LoginButton>
+                        <LoginButton onClick={handleRegister} lbmargin={'23%'}>Sign Up</LoginButton>
                     </ButtonBox>
 
                 </RightContainer>

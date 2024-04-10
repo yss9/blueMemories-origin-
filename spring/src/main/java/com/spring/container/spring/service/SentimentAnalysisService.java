@@ -13,9 +13,6 @@ import java.util.Map;
 @Service
 public class SentimentAnalysisService {
 
-    @Autowired
-    private DiaryRepository diaryRepository;
-
     private final WebClient webClient;
 
     public SentimentAnalysisService(WebClient.Builder webClientBuilder) {
