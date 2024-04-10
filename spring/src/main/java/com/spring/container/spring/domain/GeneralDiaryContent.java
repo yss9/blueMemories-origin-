@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -21,18 +20,17 @@ public class GeneralDiaryContent {
     @JoinColumn(name = "generalDiary_id")
     private GeneralDiary generalDiary;
 
-    private Integer pageNo = 1;
+    private String year;
+    private String month;
+    private String day;
 
     private String title;
+    private String weather;
 
     @Column(nullable = false, length = 300)
     private String content;
 
     private String image1;
-    private String image2;
-
-    private LocalDateTime writeDate;
-    private LocalDateTime updateDate;
 
     private String sentiment;
 

@@ -15,7 +15,7 @@ public class ExchangeDiaryContent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pageNo;
+    private Long id;
 
     private Long diaryNo;
 
