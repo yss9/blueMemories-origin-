@@ -17,8 +17,8 @@ public class GeneralDiaryContent {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "generalDiary_id")
-    private GeneralDiary generalDiary;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private String year;
     private String month;

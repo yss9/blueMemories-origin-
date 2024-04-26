@@ -23,8 +23,5 @@ public class GeneralDiary {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "generalDiary", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GeneralDiaryContent> generalDiaryContents = new ArrayList<>();
-
 
 }

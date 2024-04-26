@@ -5,7 +5,6 @@ import com.spring.container.spring.dto.SentimentResult;
 import com.spring.container.spring.repository.DiaryRepository;
 import com.spring.container.spring.service.SentimentAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,13 +18,12 @@ public class DiaryController {
     private SentimentAnalysisService sentimentAnalysisService;
     @PostMapping("/analysis")
     public SentimentResult processSentiment(@RequestBody String content) {
-        // Mono<SentimentResult>를 블로킹 호출로 처리하여 SentimentResult를 동기적으로 반환
         return sentimentAnalysisService.analyzeSentiment(content).block();
     }
 
     @PostMapping("/{id}/posting")
-    public void saveDiaryContent(@PathVariable Long id, @RequestBody GeneralDiaryContent generalDiaryContent){
-
+    public GeneralDiaryContent saveDiaryContent(@RequestBody GeneralDiaryContent generalDiaryContent, Long id){
+        return sentimentAnalysisService.createDiaryContent(id,generalDiaryContent);
     }
 
     @GetMapping("/{id}/diarys")

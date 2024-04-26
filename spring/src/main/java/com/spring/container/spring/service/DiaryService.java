@@ -9,9 +9,6 @@ import java.util.Optional;
 
 public interface DiaryService {
 
-    GeneralDiary createDiary(Member member, GeneralDiary generalDiary, GeneralDiaryContent generalDiaryContent);
-    GeneralDiaryContent getDiaryContent(Long id, GeneralDiaryContent generalDiaryContent);
 
-    void deleteDiaryContent(Long id);
 
 }
