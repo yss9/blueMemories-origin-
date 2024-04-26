@@ -16,5 +16,4 @@ public class DiaryServiceImpl {
     private DiaryListRepository diaryListRepository;
 
 
-
 }

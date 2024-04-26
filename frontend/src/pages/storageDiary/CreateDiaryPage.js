@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 import axios from 'axios';
 import {useLocation} from "react-router";
-import 'react-resizable/css/styles.css';
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
 
@@ -342,37 +341,3 @@ function GeneralDiaryForm() {
 }
 
 export default GeneralDiaryForm;
-
-// <div>
-//     <label>Title</label>
-//     <TextAreaContainer value={title} onChange={(e) => setTitle(e.target.value)}></TextAreaContainer>
-// </div>
-//
-// {/* Content */
-// }
-// <div>
-//     <label>Content</label>
-//     <TextAreaContainer value={content} onChange={(e) => setContent(e.target.value)}></TextAreaContainer>
-// </div>
-//
-// {/* Images */
-// }
-// <div>
-//     <label>Image 1</label>
-//     <input type="file" onChange={(e) => setImage1(e.target.files[0])}/>
-// </div>
-// <div>
-//     <label>Image 2</label>
-//     <input type="file" onChange={(e) => setImage2(e.target.files[0])}/>
-// </div>
-//
-//
-// {/* Submit button */
-// }
-// <div>
-//     <button onClick={handleDiaryCreate}>Submit Diary</button>
-// </div>
-//
-// <div>
-//     <lable> Year : {year} , Month: {month} Day: {day} WeekDay:{weekdayIndex}</lable>
-// </div>
