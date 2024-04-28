@@ -6,9 +6,9 @@ import {Body,LeftContainer,RightContainer,MessageContainer,WelcomeMassage,
 import {useNavigate} from "react-router-dom";
 
 const RegisterForm = () => {
-    const [email, setEmail] = useState('');
+    const [memberId, setMemberId] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
+    const [nickname, setNickname] = useState('');
 
     const navigate = useNavigate();
     const goLogin = () => {
@@ -16,10 +16,10 @@ const RegisterForm = () => {
     }
 
     const handleRegister = () => {
-        axios.post('http://localhost:8080/register', {
-            email: email,
+        axios.post('http://localhost:8080/api/register', {
+            memberId: memberId,
             password: password,
-            name : name
+            nickname : nickname
         })
             .then(response => {
                 navigate('/login');
@@ -45,9 +45,9 @@ const RegisterForm = () => {
                     </MessageContainer>
                     <LoginContainer topmargin={'10%'}>
                         <InputText>Name</InputText>
-                        <InputBox type="text" placeholder="Enter your name" onChange={(e) => setName(e.target.value)}></InputBox>
+                        <InputBox type="text" placeholder="Enter your nickname" onChange={(e) => setNickname(e.target.value)}></InputBox>
                         <InputText>Email</InputText>
-                        <InputBox type="email" placeholder="Enter your email"  onChange={(e) => setEmail(e.target.value)}></InputBox>
+                        <InputBox type="text" placeholder="Enter your id"  onChange={(e) => setMemberId(e.target.value)}></InputBox>
                         <InputText>Password</InputText>
                         <InputBox type="text" placeholder="Enter your password" onChange={(e) => setPassword(e.target.value)}></InputBox>
                         <InputText>Password check</InputText>

@@ -44,25 +44,36 @@ public class SentimentAnalysisService implements DiaryService {
 
 
 
-    public GeneralDiaryContent createDiaryContent(Long id, GeneralDiaryContent generalDiaryContent) {
+    public GeneralDiaryContent createDiaryContent(GeneralDiaryContent generalDiaryContent) {
+        // 내용 추출
         String content = generalDiaryContent.getContent();
-        sentimentResult = analyzeSentiment(content).block();
+
+        // 감정 분석 결과 받기
+        SentimentResult sentimentResult = analyzeSentiment(content).block();
         String sentiment = sentimentResult.getDocument().getSentiment();
         Double confidenceNegative = sentimentResult.getDocument().getConfidence().getNegative();
-        Double confidencePositive =  sentimentResult.getDocument().getConfidence().getPositive();
-        Double confidenceNeutral =  sentimentResult.getDocument().getConfidence().getNeutral();
+        Double confidencePositive = sentimentResult.getDocument().getConfidence().getPositive();
+        Double confidenceNeutral = sentimentResult.getDocument().getConfidence().getNeutral();
 
-        Optional<Member> result = memberRepository.findById(id);
+        // GeneralDiaryContent 객체에서 Member ID 추출
+        Long memberId = generalDiaryContent.getMember().getId();
+        Optional<Member> result = memberRepository.findById(memberId);
+        if (!result.isPresent()) {
+            throw new RuntimeException("Member not found with id: " + memberId);
+        }
         Member member = result.get();
 
-        generalDiaryContent.setMember(member);
+        // 일기 내용 설정
+        generalDiaryContent.setMember(member); // 이미 설정된 멤버 객체를 재확인하거나 업데이트
         generalDiaryContent.setSentiment(sentiment);
         generalDiaryContent.setConfidenceNegative(confidenceNegative);
         generalDiaryContent.setConfidenceNeutral(confidenceNeutral);
         generalDiaryContent.setConfidencePositive(confidencePositive);
 
+        // 저장 후 결과 반환
         return diaryListRepository.save(generalDiaryContent);
     }
+
 
 
 

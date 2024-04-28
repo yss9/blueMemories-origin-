@@ -1,9 +1,12 @@
 package com.spring.container.spring.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class Member {
     private String nickname;
 
     @Column(nullable = false)
+    @ColumnDefault("0.0")
     private Double experienceRate = 0.0;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
