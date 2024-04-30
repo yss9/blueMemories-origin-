@@ -21,9 +21,9 @@ public class DiaryController {
         return sentimentAnalysisService.analyzeSentiment(content).block();
     }
 
-    @PostMapping("/{id}/posting")
-    public GeneralDiaryContent saveDiaryContent(@RequestBody GeneralDiaryContent generalDiaryContent, Long id){
-        return sentimentAnalysisService.createDiaryContent(id,generalDiaryContent);
+    @PostMapping("/posting")
+    public GeneralDiaryContent saveDiaryContent(@RequestBody GeneralDiaryContent generalDiaryContent){
+        return sentimentAnalysisService.createDiaryContent(generalDiaryContent);
     }
 
     @GetMapping("/{id}/diarys")
