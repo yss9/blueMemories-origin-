@@ -125,14 +125,16 @@ const WriteText = styled.textarea`
     }
 `;
 const Image=styled.img`
-    width: 23vw;
-    height: 34vw;
+    width: 25vw;
+    height: 37vw;
     border:none;
     outline:none;
     /*레이어*/
     position:absolute;
     z-index: 2;
-    left:${(props)=>props.marginLeft||'15%'};
+    left:${(props)=>props.marginLeft||'13.5%'};
+    opacity:0.9;
+    object-fit: cover;
 `;
 const RightImageCreateContainer=styled.div`
     width: 9vw;
@@ -303,7 +305,7 @@ const WriteNovelForm = () => {
                             onInput={handleInput(setTextB)}
                             marginLeft={'53.2%'}
                             hidden={rightDisabled}></WriteText>
-                        {rightImage && <Image marginLeft={'53.2%'} src={rightImage} alt="Selected Image" />}
+                        {rightImage && <Image marginLeft={'51.7%'} src={rightImage} alt="Selected Image" />}
                         <RightImageCreateContainer>
                             <CreateImageButton onClick={handleRightButtonClick}></CreateImageButton>
                             <DeleteImageButton onClick={RightHandleDeleteImage}></DeleteImageButton>

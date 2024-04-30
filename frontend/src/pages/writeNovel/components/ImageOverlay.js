@@ -5,6 +5,8 @@ import ImageUploader from "./imageFileInput";
 import DragAndDrop from "./ImageDragAndDrop";
 import React, {useState} from "react";
 
+import axios from "axios";
+
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
     background-size: contain;
@@ -80,13 +82,14 @@ const ImageShowContainer = styled.div`
     background-size: contain;
     width:26vw;
     height: 40vw;
-    padding:5px;
+    padding:10px;
 `;
 //*왼쪽의 이미지가 보여지는 부분 --> ImageShowContainer위에 얹짐*///
 const Image = styled.img`
     width: 26vw;
     height: 38.7vw;
     object-fit: contain;
+    opacity:0.9;
 `;
 const ImageCreateBtnContainer=styled.div`
     width: 30%;
@@ -124,7 +127,40 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
         if(onImageRegister)
             onImageRegister(selectedImageUrl)
         handleClose();
-    }
+    };
+    //stableDiffusion API formData
+    const loadImageFromApi = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('prompt', 'Rabbit family having a picnic');
+            formData.append('style','anime');
+            formData.append('aspect_ratio','9:16');
+            formData.append('output_format', 'jpeg');
+
+            const response = await axios.post(
+                'https://api.stability.ai/v2beta/stable-image/generate/sd3',
+                formData,
+                {
+                    headers: {
+                        'Authorization': process.env.REACT_APP_API_KEY,
+                        'Accept': 'image/*',
+                    },
+                    responseType: 'arraybuffer'
+                }
+            );
+
+            if (response.status === 200) {
+                const blob = new Blob([response.data], { type: 'image/jpeg' });
+                const imageUrl = URL.createObjectURL(blob);
+                setSelectedImageUrl(imageUrl);
+            } else {
+                new Error(`Failed to load image: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Error loading image:', error);
+        }
+    };
+
     return(
         <Overlay visible={visible}>
             <MakingImageLeftContainer>
@@ -134,7 +170,7 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
                     <ImageUploader onImageSelected={handleImageSelected}></ImageUploader>
                     <DragAndDrop onImageSelected={handleImageSelected}></DragAndDrop>
                 </ImagePromptContainer>
-                <ImageCreateButton>AI 그림 생성하기</ImageCreateButton>
+                <ImageCreateButton onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateButton>
             </MakingImageLeftContainer>
             <ImageRightContainer>
                 <ImageShowContainer>
@@ -146,7 +182,7 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
                 </ImageCreateBtnContainer>
 
             </ImageRightContainer>
-            
+
         </Overlay>
     );
 };
