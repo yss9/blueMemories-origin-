@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import {Context} from "../../Context/Context";
+import {useContext, useState} from "react";
 
 const ImagePromptTextContainer= styled.div`
     width:99%;
@@ -56,10 +58,17 @@ const PromptTextarea = styled.textarea`
     }
 `;
 const ImagePrompt=()=>{
+    const {stablePrompt, setStablePrompt} = useContext(Context);
+    const handlePrompt = (event) => {
+        const value=event.target.value;
+        setStablePrompt(value); // 선택된 텍스트로 상태 업데이트
+    };
     return(
         <ImagePromptTextContainer>
             <PromptTitle>Prompt</PromptTitle>
-            <PromptTextarea></PromptTextarea>
+            <PromptTextarea
+                value={stablePrompt}
+                onChange={handlePrompt} />
         </ImagePromptTextContainer>
     )
 

@@ -16,45 +16,48 @@ import WriteDrawBookPage from './pages/writeDrawBook/WriteDrawBookPage';
 
 import {Helmet} from "react-helmet";
 import CreateDiaryPage from "./pages/storageDiary/CreateDiaryPage";
-
+import {StyleProvider} from "./pages/Context/Context";
 
 function App() {
 
     return (
-        <BrowserRouter>
-            <Helmet 
-                titleTemplate='%s - BlueMemories'
-                defaultTitle='BlueMemories'
-            >
-                <meta name="description" content="A BlueMemories application"/>
-            </Helmet>
-            <Routes>
-                {/* main */}
-                <Route path="/" element={<MainPage />} />
-                {/* <SignIn /> */}
-                <Route path="/register" element={<RegisterPage />} />
-                {/* <LogIn /> */}
-                <Route path="/login" element={<LoginPage />} />
-                {/* <Introduce /> */}
-                <Route path="/introduce" element={<IntroducePage />} />
-                {/* <StorageNovel /> */}
-                <Route path="/storageNovel" element={<StorageNovelPage />} />
-                {/* <StorageDrawBook /> */}
-                <Route path="/storageDrawBook" element={<StorageDrawBookPage />} />
-                {/* <StorageDiary /> */}
-                <Route path="/storageDiary" element={<StorageDiaryPage />} />
-                 {/* <StorageExchangeDiary /> */}
-                 <Route path="/storageExchangeDiary" element={<StorageExchangeDiaryPage />} />
-                 {/* <StorageRecommend /> */}
-                 <Route path="/storageRecommend" element={<StorageRecommendPage />} />
-                {/* <WriteNovel /> */}
-                <Route path="/WriteNovel" element={<WriteNovelPage />} />
-                {/* <WriteDrawBook /> */}
-                <Route path="/WriteDrawBook" element={<WriteDrawBookPage />} />
-                {/* <DiaryTest /> */}
-                <Route path="/diaryWrite" element={<CreateDiaryPage />} />
-            </Routes>
-        </BrowserRouter>
+        <StyleProvider>
+            <BrowserRouter>
+                <Helmet
+                    titleTemplate='%s - BlueMemories'
+                    defaultTitle='BlueMemories'
+                >
+                    <meta name="description" content="A BlueMemories application"/>
+                </Helmet>
+                <Routes>
+                    {/* main */}
+                    <Route path="/" element={<MainPage />} />
+                    {/* <SignIn /> */}
+                    <Route path="/register" element={<RegisterPage />} />
+                    {/* <LogIn /> */}
+                    <Route path="/login" element={<LoginPage />} />
+                    {/* <Introduce /> */}
+                    <Route path="/introduce" element={<IntroducePage />} />
+                    {/* <StorageNovel /> */}
+                    <Route path="/storageNovel" element={<StorageNovelPage />} />
+                    {/* <StorageDrawBook /> */}
+                    <Route path="/storageDrawBook" element={<StorageDrawBookPage />} />
+                    {/* <StorageDiary /> */}
+                    <Route path="/storageDiary" element={<StorageDiaryPage />} />
+                    {/* <StorageExchangeDiary /> */}
+                    <Route path="/storageExchangeDiary" element={<StorageExchangeDiaryPage />} />
+                    {/* <StorageRecommend /> */}
+                    <Route path="/storageRecommend" element={<StorageRecommendPage />} />
+                    {/* <WriteNovel /> */}
+                    <Route path="/WriteNovel" element={<WriteNovelPage />} />
+                    {/* <WriteDrawBook /> */}
+                    <Route path="/WriteDrawBook" element={<WriteDrawBookPage />} />
+                    {/* <DiaryTest /> */}
+                    <Route path="/diaryWrite" element={<CreateDiaryPage />} />
+                </Routes>
+            </BrowserRouter>
+        </StyleProvider>
+
     );
 }
 

@@ -3,9 +3,9 @@ import ImageStyleDropDown from "./imageStyle";
 import ImagePrompt from "./imagePrompt";
 import ImageUploader from "./imageFileInput";
 import DragAndDrop from "./ImageDragAndDrop";
-import React, {useState} from "react";
-
-import axios from "axios";
+import React, {useContext, useState} from "react";
+import {Context} from "../../Context/Context";
+import {loadImageFromBackend} from "../../API/stableApi";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
@@ -49,7 +49,7 @@ const ImagePromptContainer = styled.div`
     justify-content: center;
     flex-direction: column;
 `;
-const ImageCreateButton=styled.button`
+const ImageCreateAiBtn=styled.button`
     width:30.5vw;
     height: 3.2vw;
     margin-top:0.5vw;
@@ -65,8 +65,10 @@ const ImageCreateButton=styled.button`
     border: none;
     box-shadow: 0 2px 3px 2px rgba(16, 56, 38, 0.65);
     cursor: pointer;
+    outline: none;
     &:active{
         background-color: #204830;
+        outline: none;
     }
 `;
 //////*오른쪽 컨테이너*//////
@@ -119,48 +121,39 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
     const handleImageSelected = (imageUrl) => {
         setSelectedImageUrl(imageUrl);
     };
-    //창닫기
-    const handleClose = () => {
-        setVisible(false);
-    };
-    const handleImageUpdate=()=>{
-        if(onImageRegister)
-            onImageRegister(selectedImageUrl)
-        handleClose();
-    };
+
+    //contextAPI: style-preset
+    const {stableStyle, setStableStyle}=useContext(Context);
+    // const encodedStyle = encodeURIComponent(stableStyle);
+    //contextAPI: prompt
+    const {stablePrompt, setStablePrompt} = useContext(Context);
+    const encodedPrompt = encodeURIComponent(stablePrompt);
     //stableDiffusion API formData
     const loadImageFromApi = async () => {
         try {
-            const formData = new FormData();
-            formData.append('prompt', 'Rabbit family having a picnic');
-            formData.append('style','anime');
-            formData.append('aspect_ratio','9:16');
-            formData.append('output_format', 'jpeg');
-
-            const response = await axios.post(
-                'https://api.stability.ai/v2beta/stable-image/generate/sd3',
-                formData,
-                {
-                    headers: {
-                        'Authorization': process.env.REACT_APP_API_KEY,
-                        'Accept': 'image/*',
-                    },
-                    responseType: 'arraybuffer'
-                }
-            );
-
-            if (response.status === 200) {
-                const blob = new Blob([response.data], { type: 'image/jpeg' });
-                const imageUrl = URL.createObjectURL(blob);
-                setSelectedImageUrl(imageUrl);
-            } else {
-                new Error(`Failed to load image: ${response.status}`);
-            }
+            const url = await loadImageFromBackend(encodedPrompt,stableStyle);//encodedPrompt,stableStyle
+            setSelectedImageUrl(url); // 생성된 이미지 URL 상태에 저장
         } catch (error) {
             console.error('Error loading image:', error);
         }
     };
 
+    //취소 버튼 -> 초기화 -> 창닫기
+    const handleClose = () => {
+        setVisible(false);
+        // 2초 후에 나머지 설정을 실행하도록 setTimeout 사용
+        setTimeout(() => {
+            setStableStyle('fantasy-art');
+            setStablePrompt('');
+            setSelectedImageUrl('/resourcesPng/writeNovelPage/imageShowPanel.png');
+        }, 2000); // 2000 밀리초(2초)
+    };
+    //등록 버튼 -> 값 update -> 창닫기
+    const handleImageUpdate=()=>{
+        if(onImageRegister)
+            onImageRegister(selectedImageUrl)
+        handleClose();
+    };
     return(
         <Overlay visible={visible}>
             <MakingImageLeftContainer>
@@ -170,7 +163,7 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
                     <ImageUploader onImageSelected={handleImageSelected}></ImageUploader>
                     <DragAndDrop onImageSelected={handleImageSelected}></DragAndDrop>
                 </ImagePromptContainer>
-                <ImageCreateButton onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateButton>
+                <ImageCreateAiBtn onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateAiBtn>
             </MakingImageLeftContainer>
             <ImageRightContainer>
                 <ImageShowContainer>
