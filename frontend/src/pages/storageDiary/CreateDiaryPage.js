@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import {useLocation} from "react-router";
 import styled from "styled-components";
@@ -168,6 +168,7 @@ const WriteDiaryBox=styled.textarea`
     
 `;
 
+
 const RightWriteDiaryBox=styled.textarea`
     background-image:url("/resourcesPng/writeDiaryPage/diaryWriteLine.png") ;
     background-size: cover;
@@ -175,13 +176,22 @@ const RightWriteDiaryBox=styled.textarea`
     border: none;
     outline: none;
     resize: none;
-    font-size:3.7vh;
+    overflow: hidden;
+    font-size:3.3vh;
     font-family: GangwonEduSaeeum;
     color: #9C876E;
     width: 100%;
-    height: 100%;
+    height: 56%;
     
 `;
+
+const ImageBox=styled.div`
+    width: 95%;
+    height: 40%;
+    margin-left: 3%;
+    background-size: cover;
+    
+`
 
 const WeekdayContainer = styled.div`
     display: flex;
@@ -204,32 +214,41 @@ function GeneralDiaryForm() {
     const [title, setTitle] = useState('');
     const [content1,setContent1] = useState('');
     const [content2 ,setContent2]=useState('');
-    const [image1, setImage1] = useState(null);
+    const [file, setFile] = useState(null);
     const [weather, setWeather] = useState('');
     const [response, setResponse] = useState('');
     const {year, month, day, weekdayIndex} = location.state || {}; // 넘겨받은 상태가 없는 경우를 대비해 기본값 설정
     const fileInputRef = useRef(null);
+    const [previewUrl, setPreviewUrl] = useState("/resourcesPng/writeDiaryPage/imageReload.png");
 
-    const handleInput=(setContent)=>(e)=>{
+
+    const handleInput = (setContent) => (e) => {
         const textarea = e.target;
         const isOverflowing = textarea.scrollHeight > textarea.clientHeight;
-        if(!isOverflowing){
+        if (!isOverflowing) {
             setContent(textarea.value);
         }
     };
 
 
+
     const handleDiaryCreate = () => {
 
         const content = content1 + '\n' + content2;
-
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
         formData.append('weather', weather);
-        if (image1) formData.append('image1', image1);
+        formData.append('year',[year]);
+        formData.append('month',[month]);
+        formData.append('day',[day]);
+        formData.append('weekdayIndex',[weekdayIndex]);
 
-        axios.post('http://localhost:8080/api/{id}/posting', formData, {
+        if (file){
+            formData.append('file', file);
+        }
+
+        axios.post('http://localhost:8080/api/posting', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -237,7 +256,7 @@ function GeneralDiaryForm() {
             .then(res => {
                 setResponse(res.data);
                 console.log(response);
-                navigate('/login');
+                navigate('/storageDiary');
             })
             .catch(error => {
                 console.error('Error during diary creation:', error);
@@ -257,8 +276,15 @@ function GeneralDiaryForm() {
     // 파일이 선택되었을 때 실행될 핸들러
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        console.log(file); // 선택된 파일 로그 출력
-        // 파일 처리 로직 작성
+        if (file) {
+            setFile(file); // 상태 업데이트
+            const reader = new FileReader();
+
+            reader.onloadend = () =>{
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
 
@@ -330,6 +356,11 @@ function GeneralDiaryForm() {
                             </FileUploadBox>
                         </FileUploadContainer>
                         <RightDiaryTextContainer>
+                            <ImageBox>
+                                {previewUrl && (
+                                 <img src={previewUrl} alt="Preview" style={{width:'100%', height:'95%',marginTop:"1.5%"}}/>
+                                )}
+                            </ImageBox>
                             <RightWriteDiaryBox value={content2} onInput={handleInput(setContent2)} onChange={(e) => setContent2(e.target.value)}>
                             </RightWriteDiaryBox>
                         </RightDiaryTextContainer>
@@ -341,3 +372,7 @@ function GeneralDiaryForm() {
 }
 
 export default GeneralDiaryForm;
+export {Container, Head, Body, LeftContainer, RightContainer, DateContainer, FileUploadContainer, LeftDiaryTextContainer,
+    RightDiaryTextContainer, DateBox, WeekBox, TitleWeatherContainer, TitleBox, WeatherBox, LeftDiaryWriteContainer,
+    WriteDiaryBox, RightWriteDiaryBox, ImageBox, WeekdayContainer, Day, TextAreaContainer, HeadNavButton, FileUploadBox,
+    ImageUploadButton };

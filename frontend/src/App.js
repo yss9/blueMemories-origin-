@@ -16,6 +16,7 @@ import WriteDrawBookPage from './pages/writeDrawBook/WriteDrawBookPage';
 
 import {Helmet} from "react-helmet";
 import CreateDiaryPage from "./pages/storageDiary/CreateDiaryPage";
+import WrittenDiaryForm from "./pages/storageDiary/WrittenDiaryPage";
 
 
 function App() {
@@ -51,8 +52,10 @@ function App() {
                 <Route path="/WriteNovel" element={<WriteNovelPage />} />
                 {/* <WriteDrawBook /> */}
                 <Route path="/WriteDrawBook" element={<WriteDrawBookPage />} />
-                {/* <DiaryTest /> */}
+                {/* <DiaryForm /> */}
                 <Route path="/diaryWrite" element={<CreateDiaryPage />} />
+                {/* <WrittenDiary /> */}
+                <Route path="/writtenDiary" element={<WrittenDiaryForm />} />
             </Routes>
         </BrowserRouter>
     );
