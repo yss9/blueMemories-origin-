@@ -15,6 +15,9 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 
 @Service
 public class SentimentAnalysisService implements DiaryService {
@@ -28,6 +31,12 @@ public class SentimentAnalysisService implements DiaryService {
     @Autowired
     private DiaryListRepository diaryListRepository;
 
+    @Value("${api.key}")
+    private String apiKey;
+
+    @Value("${api.key_id}")
+    private String apiKeyID;
+
     public SentimentAnalysisService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("https://naveropenapi.apigw.ntruss.com").build();
     }
@@ -35,8 +44,8 @@ public class SentimentAnalysisService implements DiaryService {
     public Mono<SentimentResult> analyzeSentiment(String content) {
         return webClient.post()
                 .uri("/sentiment-analysis/v1/analyze")
-                .header("X-NCP-APIGW-API-KEY-ID", "1jg34vs7ou")
-                .header("X-NCP-APIGW-API-KEY", "zdtxTJPClHFRvzb87Kngv9pITYoC1QYeeqChAEwo")
+                .header("X-NCP-APIGW-API-KEY-ID", apiKeyID)
+                .header("X-NCP-APIGW-API-KEY", apiKey)
                 .bodyValue(Map.of("content", content))
                 .retrieve()
                 .bodyToMono(SentimentResult.class);
