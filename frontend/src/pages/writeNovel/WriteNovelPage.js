@@ -35,16 +35,9 @@ const BeforePageBtn = styled.button`
     width: 2.5vw;
     /*마우스 HOVER 설정*/
     cursor: pointer;
-    &:active {
-        background: url("/resourcesPng/writeNovelPage/beforePageBtnActive.png") no-repeat;
-        background-size: contain;
-        /*크기*/
-        height: 2.5vw;
-        width: 2.5vw;
-    }
 `;
 const AfterePageBtn = styled.button`
-    background: url("/resourcesPng/writeNovelPage/afterPageBtn.png") no-repeat;
+    background: url(${props => props.isActive ? "/resourcesPng/writeNovelPage/afterPageBtn.png" : "/resourcesPng/writeNovelPage/disabledAfterPageBtn.png"}) no-repeat;
     background-size: contain;
     /*스타일*/
     border: none;
@@ -52,14 +45,7 @@ const AfterePageBtn = styled.button`
     height: 2.5vw;
     width: 2.5vw;
     /*마우스 HOVER 설정*/
-    cursor: pointer;
-    &:active {
-        background: url("/resourcesPng/writeNovelPage/afterPageBtnActive.png") no-repeat;
-        background-size: contain;
-        /*크기*/
-        height: 2.5vw;
-        width: 2.5vw;
-    }
+    cursor: ${props => (props.disabled ? 'default' : 'pointer')};
 `;
 
 const WriteContainer = styled.div`
@@ -200,10 +186,22 @@ const RightPageNumber=styled.span`
 const WriteNovelForm = () => {
 
     //이미지 추가버튼 => 이미지 생성 overlay
+    //해당 페이지에 글자가 적혀있을 경우 그림 생성 x
     const {novelOverlayState, setNovelOverlayState}=useContext(Context);
-    const toggleOverlay=()=> {
-        setNovelOverlayState(true);
-    }
+    const toggleOverlayA=()=> {//왼쪽 페이지 글자 유무 확인
+        if(textA.trim()==='')//글자가 없을때만 이미지 추가 오버레이 내림
+            setNovelOverlayState(true);
+        else{
+            alert('텍스트를 지우고 다시 시도해주세요.');
+        }
+    };
+    const toggleOverlayB=()=> {//오른쪽 페이지 글자 유무 확인
+        if(textB.trim()==='')//글자가 없을때만 이미지 추가 오버레이 내림
+            setNovelOverlayState(true);
+        else{
+            alert('텍스트를 지우고 다시 시도해주세요.');
+        }
+    };
 
     //textarea 글자수 제한(높이가 기준)
     const [textA, setTextA] = useState('');
@@ -221,27 +219,44 @@ const WriteNovelForm = () => {
     const handleCoverBtnClick = (data) => {
         // WriteMenuBar 클릭 시 NovelCoverOverlay 보이도록 설정
         setCoverVisible(!coverVisible);
+        //이미지 생성 화면이 출력돼있을 경우 올라감
+        setNovelOverlayState(false);
     };
 
     //textarea, image, imageAddBtn, imageDeleteBtn 상태 관리
     const [leftImage, setLeftImage] = useState(null);//imageL
     const [rightImage, setRightImage] = useState(null);//imageR
+    const [leftImagePrompt, setLeftPrompt] = useState(null);//promptL
+    const [rightImagePrompt, setRightImagePrompt] = useState(null);//promptR
+    const [leftImageStyle, setLeftImageStyle] = useState(null);//styleL
+    const [rightImageStyle, setRightImageStyle] = useState(null);//styleR
     const [leftDisabled, setLeftDisabled] = useState(false);//imageAddBtnL
     const [rightDisabled, setRightDisabled] = useState(false);//imageAddBtnR
-
+    //imageOverlayItem 상태 관리
+    const {setStableStyle}=useContext(Context);//contextAPI: style-preset
+    const {setStablePrompt} = useContext(Context);//contextAPI: prompt
+    const {setStableImage} = useContext(Context);//contextAPI: prompt
     // 'left' 또는 'right' 값을 저장할 상태 설정
     const [selectedButton, setSelectedButton] = useState(null);
-    // 왼쪽 버튼 클릭 핸들러
+    // 왼쪽 이미지 생성 버튼 클릭 핸들러
     const handleLeftButtonClick = () => {
-        toggleOverlay();
+        toggleOverlayA();//글자 유무 확인
         setSelectedButton('left');
-        // 필요한 추가 로직
+        // 왼쪽 이미지의 style, prompt, img 를 overlay에 전달
+        settingImageOverlayItem(leftImageStyle,leftImagePrompt,leftImage);
     };
-    // 오른쪽 버튼 클릭 핸들러
+    // 오른쪽 이미지 생성 버튼 클릭 핸들러
     const handleRightButtonClick = () => {
-        toggleOverlay();
+        toggleOverlayB();
         setSelectedButton('right');
-        // 필요한 추가 로직
+        // 오른쪽 이미지의 style, prompt, img 를 overlay에 전달
+        settingImageOverlayItem(rightImageStyle,rightImagePrompt,rightImage);
+    };
+    //이미지의 style, prompt, imageUrl 를 왼/오 페이지 값으로 전환
+    const settingImageOverlayItem=(style,prompt,imageUrl)=>{
+        setStableStyle(style);
+        setStablePrompt(prompt);
+        setStableImage(imageUrl);
     };
     //생성된 이미지 가져와서 image에 적용
     const handleImageRegister=(imageUrl)=>{
@@ -272,12 +287,30 @@ const WriteNovelForm = () => {
     const LeftHandleDeleteImage=()=>{
         setLeftDisabled(false);//등록된 이미지가 없음
         setLeftImage('');//이미지 초기화
+        setTextA('');//텍스트 초기화
     }
     //오른쪽 삭제 버튼
     const RightHandleDeleteImage=()=>{
         setRightDisabled(false);//등록된 이미지가 없음
         setRightImage('');//이미지 초기화
+        setTextB('');//텍스트 초기화
     }
+    //두 페이지 내용 우뮤 확인 후 다음 장 버튼 비/활성화
+    const [nextPageBtnActive, setNextPageBtnActive] = useState(false);
+    useEffect(() => {
+        if (rightDisabled||textB.trim()!=='') {//왼쪽 페이지에 등록된 이미지가 있거나 글자가 있을 경우
+            if(leftDisabled||textA.trim()!==''){
+                //다음 페이지 넘김 버튼 활성화
+                setNextPageBtnActive(true);
+            }
+            else{
+                setNextPageBtnActive(false);
+            }
+        }
+        else{
+            setNextPageBtnActive(false);
+        }
+    }, [rightDisabled,textB,leftDisabled,textA]); // rightDisabled 상태에 의존
     return (
         <div>
             <Helmet>
@@ -298,6 +331,7 @@ const WriteNovelForm = () => {
                             placeholder="글을 작성하거나 그림을 생성해보세요"
                             value={textA}
                             onInput={handleInput(setTextA)}
+                            onChange={(e)=>setTextA(e.target.value)}
                             hidden={leftDisabled}></WriteText>
                         {leftImage && <Image src={leftImage} alt="Selected Image" />}
                         <WriteText
@@ -305,6 +339,7 @@ const WriteNovelForm = () => {
                             value={textB}
                             onInput={handleInput(setTextB)}
                             marginLeft={'53.2%'}
+                            onChange={(e)=>setTextB(e.target.value)}
                             hidden={rightDisabled}></WriteText>
                         {rightImage && <Image marginLeft={'51.7%'} src={rightImage} alt="Selected Image" />}
                         <RightImageCreateContainer>
@@ -314,9 +349,13 @@ const WriteNovelForm = () => {
                         <LeftPageNumber>2</LeftPageNumber>
                         <RightPageNumber>3</RightPageNumber>
                     </WriteContainer>
-                    <AfterePageBtn></AfterePageBtn>
+                    <AfterePageBtn isActive={nextPageBtnActive} disabled={!nextPageBtnActive}></AfterePageBtn>
                 </BodyContainer>
-                <ImageOverlay  visible={novelOverlayState} setVisible={setNovelOverlayState} onImageRegister={handleImageRegister}></ImageOverlay>
+                <ImageOverlay
+                    visible={novelOverlayState}
+                    setVisible={setNovelOverlayState}
+                    onImageRegister={handleImageRegister}
+                ></ImageOverlay>
                 <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible}></NovelCoverOverlay>
             </Wrapper>
         </div>

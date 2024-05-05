@@ -4,11 +4,11 @@ export const Context = createContext(undefined);
 
 export const StyleProvider = ({ children }) => {
     const [stableStyle, setStableStyle] = useState('fantasy-art'); //기본 style:fantasy
+    const [stableImage, setStableImage]=useState('');
     const [stablePrompt, setStablePrompt]=useState('');
     const [novelOverlayState, setNovelOverlayState]=useState(false);
-
     return (
-        <Context.Provider value={{ stableStyle, setStableStyle, stablePrompt, setStablePrompt,novelOverlayState, setNovelOverlayState}}>
+        <Context.Provider value={{ stableStyle, setStableStyle,stableImage, setStableImage, stablePrompt, setStablePrompt,novelOverlayState, setNovelOverlayState}}>
             {children}
         </Context.Provider>
     );

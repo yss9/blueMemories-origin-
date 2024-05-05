@@ -90,7 +90,7 @@ const ImageShowContainer = styled.div`
 const Image = styled.img`
     width: 26vw;
     height: 38.7vw;
-    object-fit: contain;
+    object-fit: cover;
     opacity:0.9;
 `;
 const ImageCreateBtnContainer=styled.div`
@@ -114,7 +114,7 @@ const ImageCreateBtn = styled.div`
         cursor:pointer;
     }
 `;
-const ImageOverlay=({visible, setVisible, onImageRegister})=>{
+const ImageOverlay=({visible, setVisible})=>{
     // 이미지 URL 상태 추가
     const [selectedImageUrl, setSelectedImageUrl] = useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
     // 이미지가 선택되었을 때 호출될 함수
@@ -124,7 +124,6 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
 
     //contextAPI: style-preset
     const {stableStyle, setStableStyle}=useContext(Context);
-    // const encodedStyle = encodeURIComponent(stableStyle);
     //contextAPI: prompt
     const {stablePrompt, setStablePrompt} = useContext(Context);
     const encodedPrompt = encodeURIComponent(stablePrompt);
@@ -149,8 +148,9 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
         }, 2000); // 2000 밀리초(2초)
     };
     //등록 버튼 -> 값 update -> 창닫기
+    //이미지 생성한거 없는 상태에서 등록 버튼 누르면 변화 x
     const handleImageUpdate=()=>{
-        if(onImageRegister)
+        if(selectedImageUrl!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
             onImageRegister(selectedImageUrl)
         handleClose();
     };
