@@ -1,9 +1,10 @@
 import {Helmet} from "react-helmet";
 import styled, {css} from 'styled-components';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { WriteMenuBar } from '../../components/WriteMenuBar';
 import ImageOverlay from "./components/ImageOverlay";
 import NovelCoverOverlay from "./components/NovelCoverOverlay";
+import {Context} from "../Context/Context";
 
 const Wrapper = styled.div`
     width:100%;
@@ -199,9 +200,9 @@ const RightPageNumber=styled.span`
 const WriteNovelForm = () => {
 
     //이미지 추가버튼 => 이미지 생성 overlay
-    const [visible, setVisible] = useState(false);
+    const {novelOverlayState, setNovelOverlayState}=useContext(Context);
     const toggleOverlay=()=> {
-        setVisible(!visible);
+        setNovelOverlayState(true);
     }
 
     //textarea 글자수 제한(높이가 기준)
@@ -315,7 +316,7 @@ const WriteNovelForm = () => {
                     </WriteContainer>
                     <AfterePageBtn></AfterePageBtn>
                 </BodyContainer>
-                <ImageOverlay  visible={visible} setVisible={setVisible} onImageRegister={handleImageRegister}></ImageOverlay>
+                <ImageOverlay  visible={novelOverlayState} setVisible={setNovelOverlayState} onImageRegister={handleImageRegister}></ImageOverlay>
                 <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible}></NovelCoverOverlay>
             </Wrapper>
         </div>

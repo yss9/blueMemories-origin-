@@ -8,7 +8,7 @@ export const StyleProvider = ({ children }) => {
     const [novelOverlayState, setNovelOverlayState]=useState(false);
 
     return (
-        <Context.Provider value={{ stableStyle, setStableStyle, stablePrompt, setStablePrompt}}>
+        <Context.Provider value={{ stableStyle, setStableStyle, stablePrompt, setStablePrompt,novelOverlayState, setNovelOverlayState}}>
             {children}
         </Context.Provider>
     );
