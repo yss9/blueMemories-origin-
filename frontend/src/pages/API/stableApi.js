@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-export const loadImageFromBackend = async (prompt,style)=>{
+export const loadImageFromBackend = async (prompt,style,aspect_ratio)=>{
     try{
         // FormData 객체 생성
         const formData = new FormData();
         formData.append('prompt', prompt);
         formData.append('style_preset', style);
+        formData.append('aspect_ratio', aspect_ratio);
 
         const response = await axios.post(
             'http://localhost:8080/api/generate-image',

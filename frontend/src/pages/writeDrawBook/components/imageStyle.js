@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import styled from 'styled-components';
+import {Context} from "../../Context/Context";
 
 //style prompt//
 const ImageStyleContainer= styled.div`
@@ -103,25 +104,27 @@ const DropdownContent = styled.div`
 
 const ImageStyleDropDown=()=>{
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedText, setSelectedText] = useState('Choose Style'); // 초기 텍스트
+    const {stableStyle, setStableStyle}=useContext(Context);
     // 드롭다운 항목 선택 핸들러
     const handleSelect = (text) => {
-        setSelectedText(text); // 선택된 텍스트로 상태 업데이트
+        setStableStyle(text); // 선택된 텍스트로 상태 업데이트
         setIsOpen(false); // 드롭다운 닫기
     };
-
+    // DropdownTextButton에 표시할 값
+    const displayedStyle = stableStyle.replace('-art', '');
     return (
         <ImageStyleContainer>
             <StyleTitle>Style</StyleTitle>
             <DropdownContainer>
-                <DropdownTextButton onClick={() => setIsOpen(!isOpen)}>{selectedText}</DropdownTextButton>
+                <DropdownTextButton onClick={() => setIsOpen(!isOpen)}>{displayedStyle}</DropdownTextButton>
                 <DropdownIconButton onClick={() => setIsOpen(!isOpen)}></DropdownIconButton>
                 <DropdownContent isOpen={isOpen}>
-                    <a onClick={() => handleSelect('anime')}>anime</a>
+                    <a onClick={() => handleSelect('fantasy-art')}>fantasy</a>
+                    <a onClick={() => handleSelect('digital-art')}>digital</a>
                     <a onClick={() => handleSelect('photographic')}>photographic</a>
-                    <a onClick={() => handleSelect('digital')}>digital</a>
-                    <a onClick={() => handleSelect('fantasy')}>fantasy</a>
+                    <a onClick={() => handleSelect('anime')}>anime</a>
                     <a onClick={() => handleSelect('cinematic')}>cinematic</a>
+                    <a onClick={() => handleSelect('pixel-art')}>pixel</a>
                 </DropdownContent>
             </DropdownContainer>
         </ImageStyleContainer>

@@ -114,24 +114,24 @@ const ImageCreateBtn = styled.div`
         cursor:pointer;
     }
 `;
-const ImageOverlay=({visible, setVisible})=>{
-    // 이미지 URL 상태 추가
-    const [selectedImageUrl, setSelectedImageUrl] = useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
+const ImageOverlay=({visible, setVisible,onImageRegister})=>{
+    //contextAPI: style-preset
+    const {stableImage, setStableImage}=useContext(Context);
     // 이미지가 선택되었을 때 호출될 함수
     const handleImageSelected = (imageUrl) => {
-        setSelectedImageUrl(imageUrl);
+        setStableImage(imageUrl);
     };
 
     //contextAPI: style-preset
-    const {stableStyle, setStableStyle}=useContext(Context);
+    const {stableStyle}=useContext(Context);
     //contextAPI: prompt
-    const {stablePrompt, setStablePrompt} = useContext(Context);
+    const {stablePrompt} = useContext(Context);
     const encodedPrompt = encodeURIComponent(stablePrompt);
     //stableDiffusion API formData
     const loadImageFromApi = async () => {
         try {
-            const url = await loadImageFromBackend(encodedPrompt,stableStyle);//encodedPrompt,stableStyle
-            setSelectedImageUrl(url); // 생성된 이미지 URL 상태에 저장
+            const url = await loadImageFromBackend(encodedPrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
+            setStableImage(url); // 생성된 이미지 URL 상태에 저장
         } catch (error) {
             console.error('Error loading image:', error);
         }
@@ -141,17 +141,17 @@ const ImageOverlay=({visible, setVisible})=>{
     const handleClose = () => {
         setVisible(false);
         // 2초 후에 나머지 설정을 실행하도록 setTimeout 사용
-        setTimeout(() => {
-            setStableStyle('fantasy-art');
-            setStablePrompt('');
-            setSelectedImageUrl('/resourcesPng/writeNovelPage/imageShowPanel.png');
-        }, 2000); // 2000 밀리초(2초)
+        // setTimeout(() => {
+        //     setStableStyle('fantasy-art');
+        //     setStablePrompt('');
+        //     setStableImage('/resourcesPng/writeNovelPage/imageShowPanel.png');
+        // }, 2000); // 2000 밀리초(2초)
     };
     //등록 버튼 -> 값 update -> 창닫기
     //이미지 생성한거 없는 상태에서 등록 버튼 누르면 변화 x
     const handleImageUpdate=()=>{
-        if(selectedImageUrl!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
-            onImageRegister(selectedImageUrl)
+        if(stableImage!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
+            onImageRegister(stableImage)
         handleClose();
     };
     return(
@@ -167,7 +167,7 @@ const ImageOverlay=({visible, setVisible})=>{
             </MakingImageLeftContainer>
             <ImageRightContainer>
                 <ImageShowContainer>
-                    <Image src={selectedImageUrl} alt="Selected Image"></Image>
+                    <Image src={stableImage} alt="Selected Image"></Image>
                 </ImageShowContainer>
                 <ImageCreateBtnContainer>
                     <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>

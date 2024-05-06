@@ -88,7 +88,7 @@ const ImageShowContainer = styled.div`
 const CoverImage = styled.img`
     height:98.5%;
     width:97.5%;
-    object-fit: contain;
+    object-fit: cover;
     position: absolute;
     z-index: 1;
     padding:5px;

@@ -24,8 +24,8 @@ public class ImageController {
     }
 
     @PostMapping("/generate-image")
-    public Mono<ResponseEntity<ByteArrayResource>> generateImage(@RequestPart("prompt") String prompt, @RequestPart("style_preset") String style) {
-        return imageService.generateImage(prompt, style)
+    public Mono<ResponseEntity<ByteArrayResource>> generateImage(@RequestPart("prompt") String prompt, @RequestPart("style_preset") String style,@RequestPart("aspect_ratio") String aspect_ratio) {
+        return imageService.generateImage(prompt, style, aspect_ratio)
                 .map(image -> ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_JPEG)
                         .body(image))

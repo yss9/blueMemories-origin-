@@ -22,10 +22,10 @@ public class ImageGenerationService {
         this.webClient = webClientBuilder.baseUrl("https://api.stability.ai").build();
     }
 
-    public Mono<ByteArrayResource> generateImage(String prompt, String style) {
+    public Mono<ByteArrayResource> generateImage(String prompt, String style, String aspect_ratio) {
         MultiValueMap<String, HttpEntity<?>> parts = new LinkedMultiValueMap<>();
         parts.add("prompt", new HttpEntity<>(prompt));
-        parts.add("aspect_ratio", new HttpEntity<>("9:16"));
+        parts.add("aspect_ratio", new HttpEntity<>(aspect_ratio));
         parts.add("style_preset", new HttpEntity<>(style));
         parts.add("output_format", new HttpEntity<>("jpeg"));
 

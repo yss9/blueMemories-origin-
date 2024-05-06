@@ -3,7 +3,9 @@ import ImageStyleDropDown from "./imageStyle";
 import ImagePrompt from "./imagePrompt";
 import ImageUploader from "./imageFileInput";
 import DragAndDrop from "./ImageDragAndDrop";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
+import {Context} from "../../Context/Context";
+import {loadImageFromBackend} from "../../API/stableApi";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
@@ -86,7 +88,7 @@ const ImageShowContainer = styled.div`
 const Image = styled.img`
     width: 40vw;
     height: 25vw;
-    object-fit: contain;
+    object-fit: cover;
 `;
 const ImageCreateBtnContainer=styled.div`
     width: 25%;
@@ -110,21 +112,38 @@ const ImageCreateBtn = styled.div`
     }
 `;
 const ImageOverlay=({visible, setVisible, onImageRegister})=>{
-    // 이미지 URL 상태 추가
-    const [selectedImageUrl, setSelectedImageUrl] = useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
+    //contextAPI: style-preset
+    const {stableImage, setStableImage}=useContext(Context);
     // 이미지가 선택되었을 때 호출될 함수
     const handleImageSelected = (imageUrl) => {
-        setSelectedImageUrl(imageUrl);
+        setStableImage(imageUrl);
     };
-    //창닫기
+
+    //contextAPI: style-preset
+    const {stableStyle}=useContext(Context);
+    //contextAPI: prompt
+    const {stablePrompt} = useContext(Context);
+    const encodedPrompt = encodeURIComponent(stablePrompt);
+    //stableDiffusion API formData
+    const loadImageFromApi = async () => {
+        try {
+            const url = await loadImageFromBackend(encodedPrompt,stableStyle,"16:9");//encodedPrompt,stableStyle
+            setStableImage(url); // 생성된 이미지 URL 상태에 저장
+        } catch (error) {
+            console.error('Error loading image:', error);
+        }
+    };
+    //취소 버튼 -> 초기화 -> 창닫기
     const handleClose = () => {
         setVisible(false);
     };
+    //등록 버튼 -> 값 update -> 창닫기
+    //이미지 생성한거 없는 상태에서 등록 버튼 누르면 변화 x
     const handleImageUpdate=()=>{
-        if(onImageRegister)
-            onImageRegister(selectedImageUrl)
+        if(stableImage!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
+            onImageRegister(stableImage)
         handleClose();
-    }
+    };
 
     return(
         <Overlay visible={visible}>
@@ -135,11 +154,11 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
                     <ImageUploader onImageSelected={handleImageSelected}></ImageUploader>
                     <DragAndDrop onImageSelected={handleImageSelected}></DragAndDrop>
                 </ImagePromptContainer>
-                <ImageCreateButton>AI 그림 생성하기</ImageCreateButton>
+                <ImageCreateButton onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateButton>
             </MakingImageLeftContainer>
             <ImageRightContainer>
                 <ImageShowContainer>
-                    <Image src={selectedImageUrl} alt="Selected Image"></Image>
+                    <Image src={stableImage} alt="Selected Image"></Image>
                 </ImageShowContainer>
                 <ImageCreateBtnContainer>
                     <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>

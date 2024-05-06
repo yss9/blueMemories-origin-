@@ -168,7 +168,7 @@ const LeftPageNumber=styled.span`
     position:absolute;
     z-index: 4;
     align-content: center;
-    
+
 `;
 const RightPageNumber=styled.span`
     right:15%;
@@ -222,20 +222,20 @@ const WriteNovelForm = () => {
         //이미지 생성 화면이 출력돼있을 경우 올라감
         setNovelOverlayState(false);
     };
-
+    //imageOverlayItem 상태 관리
+    const {stableStyle,setStableStyle}=useContext(Context);//contextAPI: style-preset
+    const {stablePrompt,setStablePrompt} = useContext(Context);//contextAPI: prompt
+    const {setStableImage} = useContext(Context);//contextAPI: prompt
     //textarea, image, imageAddBtn, imageDeleteBtn 상태 관리
-    const [leftImage, setLeftImage] = useState(null);//imageL
-    const [rightImage, setRightImage] = useState(null);//imageR
-    const [leftImagePrompt, setLeftPrompt] = useState(null);//promptL
-    const [rightImagePrompt, setRightImagePrompt] = useState(null);//promptR
-    const [leftImageStyle, setLeftImageStyle] = useState(null);//styleL
-    const [rightImageStyle, setRightImageStyle] = useState(null);//styleR
+    const [leftImage, setLeftImage] = useState('');//imageL
+    const [rightImage, setRightImage] = useState('');//imageR
+    const [leftImagePrompt, setLeftImagePrompt] = useState(stablePrompt);//promptL
+    const [rightImagePrompt, setRightImagePrompt] = useState(stablePrompt);//promptR
+    const [leftImageStyle, setLeftImageStyle] = useState(stableStyle);//styleL
+    const [rightImageStyle, setRightImageStyle] = useState(stableStyle);//styleR
     const [leftDisabled, setLeftDisabled] = useState(false);//imageAddBtnL
     const [rightDisabled, setRightDisabled] = useState(false);//imageAddBtnR
-    //imageOverlayItem 상태 관리
-    const {setStableStyle}=useContext(Context);//contextAPI: style-preset
-    const {setStablePrompt} = useContext(Context);//contextAPI: prompt
-    const {setStableImage} = useContext(Context);//contextAPI: prompt
+
     // 'left' 또는 'right' 값을 저장할 상태 설정
     const [selectedButton, setSelectedButton] = useState(null);
     // 왼쪽 이미지 생성 버튼 클릭 핸들러
@@ -254,19 +254,30 @@ const WriteNovelForm = () => {
     };
     //이미지의 style, prompt, imageUrl 를 왼/오 페이지 값으로 전환
     const settingImageOverlayItem=(style,prompt,imageUrl)=>{
+        if(imageUrl===''){
+            setStableImage('/resourcesPng/writeNovelPage/imageShowPanel.png');
+        }else{
+            setStableImage(imageUrl);
+        }
         setStableStyle(style);
         setStablePrompt(prompt);
-        setStableImage(imageUrl);
+
     };
+
     //생성된 이미지 가져와서 image에 적용
     const handleImageRegister=(imageUrl)=>{
-        console.log('Registered Image URL:', imageUrl); // 콘솔 로그 추가
         if(selectedButton==='left'){
+            //context 값 저장
             setLeftImage(imageUrl);
+            setLeftImagePrompt(stablePrompt);
+            setLeftImageStyle(stableStyle);
             setLeftDisabled(true);//등록된 이미지가 있음
         }
         else{//(selectedButton==='right')
+            //context 값 저장
             setRightImage(imageUrl);
+            setRightImagePrompt(stablePrompt);
+            setRightImageStyle(stableStyle);
             setRightDisabled(true);//등록된 이미지가 있음
         }
     }
@@ -286,14 +297,18 @@ const WriteNovelForm = () => {
     //왼쪽 삭제 버튼
     const LeftHandleDeleteImage=()=>{
         setLeftDisabled(false);//등록된 이미지가 없음
-        setLeftImage('');//이미지 초기화
         setTextA('');//텍스트 초기화
+        setLeftImage('');//이미지 초기화
+        setLeftImageStyle('fantasy-art');
+        setLeftImagePrompt('');
     }
     //오른쪽 삭제 버튼
     const RightHandleDeleteImage=()=>{
         setRightDisabled(false);//등록된 이미지가 없음
-        setRightImage('');//이미지 초기화
         setTextB('');//텍스트 초기화
+        setRightImage('');//이미지 초기화
+        setRightImageStyle('fantasy-art');
+        setRightImagePrompt('');
     }
     //두 페이지 내용 우뮤 확인 후 다음 장 버튼 비/활성화
     const [nextPageBtnActive, setNextPageBtnActive] = useState(false);
@@ -363,3 +378,4 @@ const WriteNovelForm = () => {
 };
 
 export default WriteNovelForm;
+
