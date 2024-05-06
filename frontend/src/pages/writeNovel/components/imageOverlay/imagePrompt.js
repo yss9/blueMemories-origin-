@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import {useContext} from "react";
-import {Context} from "../../Context/Context";
+import {Context} from "../../../Context/Context";
+import {useContext, useState} from "react";
 
 const ImagePromptTextContainer= styled.div`
     width:99%;

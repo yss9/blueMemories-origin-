@@ -1,11 +1,13 @@
 import styled from 'styled-components';
-import ImageStyleDropDown from "./imageStyle";
-import ImagePrompt from "./imagePrompt";
-import ImageUploader from "./imageFileInput";
-import DragAndDrop from "./ImageDragAndDrop";
+import ImageStyleDropDown from "./coverStyle";
+import ImagePrompt from "./coverPrompt";
+import ImageUploader from "../imageFileInput";
+import DragAndDrop from "../ImageDragAndDrop";
 import TitlePrompt from "./TitleTextInput";
 import TitleSize from "./TitleSizeControl";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {Context} from "../../../Context/Context";
+import {loadImageFromBackend} from "../../../API/stableApi";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
@@ -90,7 +92,7 @@ const ImageShowContainer = styled.div`
 const CoverImage = styled.img`
     height:97%;
     width:98%;
-    object-fit: contain;
+    object-fit: cover;
     position: absolute;
     z-index: 1;
 `;
@@ -162,27 +164,40 @@ const ImageCreateBtn = styled.div`
         cursor:pointer;
     }
 `;
-const NovelCoverOverlay=({visible,setVisible})=>{
-    // 이미지 URL 상태 추가
-    const [selectedCoverImageUrl, setSelectedCoverImageUrl] = useState(null);
+const DrawBookCoverOverlay=({visible,setVisible})=>{
+    //contextAPI: style-preset
+    const {stableCoverImage, setStableCoverImage}=useContext(Context);
     // 이미지가 선택되었을 때 호출될 함수
     const handleImageSelected = (imageUrl) => {
-        setSelectedCoverImageUrl(imageUrl);
+        setStableCoverImage(imageUrl);
     };
-    useEffect(() => {
-        console.log('Component re-rendered with image URL:', selectedCoverImageUrl);
-    }, [selectedCoverImageUrl]);
+
+    //contextAPI: style-preset
+    const {stableCoverStyle}=useContext(Context);
+    //contextAPI: prompt
+    const {stableCoverPrompt} = useContext(Context);
+    const encodedCoverPrompt = encodeURIComponent(stableCoverPrompt);
+    //stableDiffusion API formData
+    const loadImageFromApi = async () => {
+        try {
+            const url = await loadImageFromBackend(encodedCoverPrompt,stableCoverStyle,"16:9");//encodedPrompt,stableStyle
+            setStableCoverImage(url); // 생성된 이미지 URL 상태에 저장
+        } catch (error) {
+            console.error('Error loading image:', error);
+        }
+    };
+
     // 제목 동기화
-    const [title, setTitle] = useState('');
+    const {coverTitle, setCoverTitle}=useContext(Context);
     const handleTitleChange = (newTitle) => {
         // 입력된 제목으로 상태 업데이트
-        setTitle(newTitle);
+        setCoverTitle(newTitle);
     };
 
     // 스크롤러 값에 따른 제목 크기 변경
-    const [TitlePxSize, setTitlePxSize]=useState('50px');
+    const {coverTitlePxSize, setCoverTitlePxSize}=useContext(Context);
     const handleTitlePxSize = (newSize)=>{
-      setTitlePxSize(newSize);
+        setCoverTitlePxSize(newSize);
     };
 
     //제목 위치 이동
@@ -191,7 +206,7 @@ const NovelCoverOverlay=({visible,setVisible})=>{
     //드래그 상태 ->true는 드래그중, false는 드래그 아님
     const [dragging, setDragging] = useState(false);
     //드래그가 시작된 지점의 위치
-    const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
+    const {coverTitleStartPosition, setCoverTitleStartPosition}=useContext(Context);
     //제목 컨테이너 참조
     const titleContainerRef = useRef(null);
     //제목 컨테이너 참조
@@ -200,7 +215,7 @@ const NovelCoverOverlay=({visible,setVisible})=>{
         if (event.target === event.currentTarget){
             setDragging(true);
             //마우스 위치 계산
-            setStartPosition({
+            setCoverTitleStartPosition({
                 x:event.clientX-position.x,
                 y:event.clientY-position.y
             });
@@ -215,8 +230,8 @@ const NovelCoverOverlay=({visible,setVisible})=>{
             const titleBounds = titleRef.current.getBoundingClientRect();
 
             // 마우스 포인터의 위치에서 시작 위치를 뺀 값입니다.
-            let newX = event.clientX - startPosition.x;
-            let newY = event.clientY - startPosition.y;
+            let newX = event.clientX - coverTitleStartPosition.x;
+            let newY = event.clientY - coverTitleStartPosition.y;
 
             // newX와 newY가 TitleContainer 내에 있는지 확인하고 조정합니다.
             // TitleContainer의 왼쪽 또는 상단 경계를 넘지 않도록 합니다.
@@ -250,11 +265,10 @@ const NovelCoverOverlay=({visible,setVisible})=>{
                     <ImageUploader key="secondImageUploader" onImageSelected={handleImageSelected}></ImageUploader>
                     <DragAndDrop onImageSelected={handleImageSelected}></DragAndDrop>
                 </ImagePromptContainer>
-                <ImageCreateButton>AI 그림 생성하기</ImageCreateButton>
+                <ImageCreateButton onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateButton>
             </LeftContainer>
             <ImageShowContainer>
-                {selectedCoverImageUrl && <CoverImage src={selectedCoverImageUrl} alt="Selected Image" />}
-                {/*<CoverImage src={selectedCoverImageUrl} alt="Selected Image"></CoverImage>*/}
+                {stableCoverImage && <CoverImage src={stableCoverImage} alt="Selected Image" />}
                 <TitleContainer
                     ref={titleContainerRef}
                     onMouseUp={handleMouseUp}
@@ -266,13 +280,13 @@ const NovelCoverOverlay=({visible,setVisible})=>{
                         onMouseMove={handleMouseMove}
                         onMouseDown={handleMouseDown}
                         style={{
-                            fontSize:`${TitlePxSize}vw`,
+                            fontSize:`${coverTitlePxSize}vw`,
                             overflow:`hidden`,
                             cursor:`move`,
                             left: `${position.x}px`,
                             top:`${position.y}px`,
                             position:`absolute`
-                    }}>{title}</Title>
+                    }}>{coverTitle}</Title>
                 </TitleContainer>
             </ImageShowContainer>
             <RightContainer>
@@ -289,4 +303,4 @@ const NovelCoverOverlay=({visible,setVisible})=>{
     );
 };
 
-export default NovelCoverOverlay;
+export default DrawBookCoverOverlay ;

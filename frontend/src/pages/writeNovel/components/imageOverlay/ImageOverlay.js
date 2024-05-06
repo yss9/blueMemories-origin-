@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import ImageStyleDropDown from "./imageStyle";
 import ImagePrompt from "./imagePrompt";
-import ImageUploader from "./imageFileInput";
-import DragAndDrop from "./ImageDragAndDrop";
+import ImageUploader from "../imageFileInput";
+import DragAndDrop from "../ImageDragAndDrop";
 import React, {useContext, useState} from "react";
-import {Context} from "../../Context/Context";
-import {loadImageFromBackend} from "../../API/stableApi";
+import {Context} from "../../../Context/Context";
+import {loadImageFromBackend} from "../../../API/stableApi";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;

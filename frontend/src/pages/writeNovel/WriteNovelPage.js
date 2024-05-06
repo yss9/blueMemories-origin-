@@ -2,8 +2,8 @@ import {Helmet} from "react-helmet";
 import styled, {css} from 'styled-components';
 import React, {useState, useEffect, useContext} from 'react';
 import { WriteMenuBar } from '../../components/WriteMenuBar';
-import ImageOverlay from "./components/ImageOverlay";
-import NovelCoverOverlay from "./components/NovelCoverOverlay";
+import ImageOverlay from "./components/imageOverlay/ImageOverlay";
+import NovelCoverOverlay from "./components/coverOverlay/NovelCoverOverlay";
 import {Context} from "../Context/Context";
 
 const Wrapper = styled.div`

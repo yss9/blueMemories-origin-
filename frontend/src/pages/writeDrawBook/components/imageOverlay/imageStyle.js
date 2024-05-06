@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import styled from 'styled-components';
-import {Context} from "../../Context/Context";
+import {Context} from "../../../Context/Context";
 
 //style prompt//
 const ImageStyleContainer= styled.div`
@@ -49,10 +49,10 @@ const DropdownTextButton = styled.div`
     margin-left: 5%;
     cursor: pointer;
     position: absolute;
-    top:5px;
+    top:10px;
     z-index: 1;
     /*텍스트 스타일*/
-    font-size: 2.5vw;
+    font-size: 2vw;
     font-family: gangwonedusaeeum, sans-serif; //대체폰트
     color: #80A691;
     user-select: none;
@@ -112,7 +112,6 @@ const ImageStyleDropDown=()=>{
     };
     // DropdownTextButton에 표시할 값
     const displayedStyle = stableStyle.replace('-art', '');
-
     return (
         <ImageStyleContainer>
             <StyleTitle>Style</StyleTitle>
