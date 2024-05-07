@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import styled from 'styled-components';
+import {Context} from "../../../Context/Context";
 
 //style prompt//
 const ImageStyleContainer= styled.div`
@@ -48,10 +49,10 @@ const DropdownTextButton = styled.div`
     margin-left: 5%;
     cursor: pointer;
     position: absolute;
-    top:5px;
+    top:10px;
     z-index: 1;
     /*텍스트 스타일*/
-    font-size: 2.5vw;
+    font-size: 2vw;
     font-family: gangwonedusaeeum, sans-serif; //대체폰트
     color: #80A691;
     user-select: none;
@@ -103,25 +104,27 @@ const DropdownContent = styled.div`
 
 const ImageStyleDropDown=()=>{
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedText, setSelectedText] = useState('Choose Style'); // 초기 텍스트
+    const {stableCoverStyle, setStableCoverStyle}=useContext(Context);
     // 드롭다운 항목 선택 핸들러
     const handleSelect = (text) => {
-        setSelectedText(text); // 선택된 텍스트로 상태 업데이트
+        setStableCoverStyle(text); // 선택된 텍스트로 상태 업데이트
         setIsOpen(false); // 드롭다운 닫기
     };
-
+    // DropdownTextButton에 표시할 값
+    const displayedCoverStyle = stableCoverStyle.replace('-art', '');
     return (
         <ImageStyleContainer>
             <StyleTitle>Style</StyleTitle>
             <DropdownContainer>
-                <DropdownTextButton onClick={() => setIsOpen(!isOpen)}>{selectedText}</DropdownTextButton>
+                <DropdownTextButton onClick={() => setIsOpen(!isOpen)}>{displayedCoverStyle}</DropdownTextButton>
                 <DropdownIconButton onClick={() => setIsOpen(!isOpen)}></DropdownIconButton>
                 <DropdownContent isOpen={isOpen}>
-                    <a onClick={() => handleSelect('anime')}>anime</a>
+                    <a onClick={() => handleSelect('fantasy-art')}>fantasy</a>
+                    <a onClick={() => handleSelect('digital-art')}>digital</a>
                     <a onClick={() => handleSelect('photographic')}>photographic</a>
-                    <a onClick={() => handleSelect('digital')}>digital</a>
-                    <a onClick={() => handleSelect('fantasy')}>fantasy</a>
+                    <a onClick={() => handleSelect('anime')}>anime</a>
                     <a onClick={() => handleSelect('cinematic')}>cinematic</a>
+                    <a onClick={() => handleSelect('pixel-art')}>pixel</a>
                 </DropdownContent>
             </DropdownContainer>
         </ImageStyleContainer>

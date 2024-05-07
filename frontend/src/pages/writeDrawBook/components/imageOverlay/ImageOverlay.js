@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import ImageStyleDropDown from "./imageStyle";
 import ImagePrompt from "./imagePrompt";
-import ImageUploader from "./imageFileInput";
-import DragAndDrop from "./ImageDragAndDrop";
-import React, {useState} from "react";
+import ImageUploader from "../imageFileInput";
+import DragAndDrop from "../ImageDragAndDrop";
+import React, {useContext, useState} from "react";
+import {Context} from "../../../Context/Context";
+import {loadImageFromBackend} from "../../../API/stableApi";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
@@ -69,30 +71,30 @@ const ImageCreateButton=styled.button`
 `;
 //////*오른쪽 컨테이너*//////
 const ImageRightContainer =styled.div`
-    width:26vw;
-    height:39vw;
+    width:40vw;
+    height:25vw;
     margin-left:3vw;
     margin-top:2vw;
     position: relative;
 `;
 const ImageShowContainer = styled.div`
-    background: url("/resourcesPng/writeNovelPage/imageShowPanel.png") no-repeat;
-    background-size: contain;
-    width:26vw;
-    height: 40vw;
-    padding:5px;
+    background-color: #80A691;
+    border-radius: 1%;
+    width:100%;
+    height: 100%;
+    padding:6px;
 `;
 //*왼쪽의 이미지가 보여지는 부분 --> ImageShowContainer위에 얹짐*///
 const Image = styled.img`
-    width: 26vw;
-    height: 38.7vw;
-    object-fit: contain;
+    width: 40vw;
+    height: 25vw;
+    object-fit: cover;
 `;
 const ImageCreateBtnContainer=styled.div`
-    width: 30%;
+    width: 25%;
     height: 3vw;
     position: absolute;
-    bottom:-3.5vw;
+    bottom:-4.5vw;
     right:1vw;
     /*item 설정*/
     display: flex;
@@ -110,21 +112,38 @@ const ImageCreateBtn = styled.div`
     }
 `;
 const ImageOverlay=({visible, setVisible, onImageRegister})=>{
-    // 이미지 URL 상태 추가
-    const [selectedImageUrl, setSelectedImageUrl] = useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
+    //contextAPI: style-preset
+    const {stableImage, setStableImage}=useContext(Context);
     // 이미지가 선택되었을 때 호출될 함수
     const handleImageSelected = (imageUrl) => {
-        setSelectedImageUrl(imageUrl);
+        setStableImage(imageUrl);
     };
-    //창닫기
+
+    //contextAPI: style-preset
+    const {stableStyle}=useContext(Context);
+    //contextAPI: prompt
+    const {stablePrompt} = useContext(Context);
+    //stableDiffusion API formData
+    const loadImageFromApi = async () => {
+        try {
+            const url = await loadImageFromBackend(stablePrompt,stableStyle,"16:9");//encodedPrompt,stableStyle
+            setStableImage(url); // 생성된 이미지 URL 상태에 저장
+        } catch (error) {
+            console.error('Error loading image:', error);
+        }
+    };
+    //취소 버튼 -> 초기화 -> 창닫기
     const handleClose = () => {
         setVisible(false);
     };
+    //등록 버튼 -> 값 update -> 창닫기
+    //이미지 생성한거 없는 상태에서 등록 버튼 누르면 변화 x
     const handleImageUpdate=()=>{
-        if(onImageRegister)
-            onImageRegister(selectedImageUrl)
+        if(stableImage!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
+            onImageRegister(stableImage)
         handleClose();
-    }
+    };
+
     return(
         <Overlay visible={visible}>
             <MakingImageLeftContainer>
@@ -134,11 +153,11 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
                     <ImageUploader onImageSelected={handleImageSelected}></ImageUploader>
                     <DragAndDrop onImageSelected={handleImageSelected}></DragAndDrop>
                 </ImagePromptContainer>
-                <ImageCreateButton>AI 그림 생성하기</ImageCreateButton>
+                <ImageCreateButton onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateButton>
             </MakingImageLeftContainer>
             <ImageRightContainer>
                 <ImageShowContainer>
-                    <Image src={selectedImageUrl} alt="Selected Image"></Image>
+                    <Image src={stableImage} alt="Selected Image"></Image>
                 </ImageShowContainer>
                 <ImageCreateBtnContainer>
                     <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>
@@ -146,7 +165,7 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
                 </ImageCreateBtnContainer>
 
             </ImageRightContainer>
-            
+
         </Overlay>
     );
 };
