@@ -17,6 +17,7 @@ import WriteDrawBookPage from './pages/writeDrawBook/WriteDrawBookPage';
 import {Helmet} from "react-helmet";
 import CreateDiaryPage from "./pages/storageDiary/CreateDiaryPage";
 import {StyleProvider} from "./pages/Context/Context";
+import WrittenDiaryForm from "./pages/storageDiary/WrittenDiaryPage";
 
 function App() {
 
@@ -57,7 +58,6 @@ function App() {
                 </Routes>
             </BrowserRouter>
         </StyleProvider>
-
     );
 }
 
