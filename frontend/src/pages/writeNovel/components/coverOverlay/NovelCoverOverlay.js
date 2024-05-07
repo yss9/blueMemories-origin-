@@ -175,11 +175,10 @@ const NovelCoverOverlay=({visible,setVisible})=>{
     const {stableCoverStyle}=useContext(Context);
     //contextAPI: prompt
     const {stableCoverPrompt} = useContext(Context);
-    const encodedCoverPrompt = encodeURIComponent(stableCoverPrompt);
     //stableDiffusion API formData
     const loadImageFromApi = async () => {
         try {
-            const url = await loadImageFromBackend(encodedCoverPrompt,stableCoverStyle,"9:16");//encodedPrompt,stableStyle
+            const url = await loadImageFromBackend(stableCoverPrompt,stableCoverStyle,"9:16");//encodedPrompt,stableStyle
             setStableCoverImage(url); // 생성된 이미지 URL 상태에 저장
         } catch (error) {
             console.error('Error loading image:', error);

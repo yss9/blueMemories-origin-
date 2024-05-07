@@ -126,11 +126,11 @@ const ImageOverlay=({visible, setVisible,onImageRegister})=>{
     const {stableStyle}=useContext(Context);
     //contextAPI: prompt
     const {stablePrompt} = useContext(Context);
-    const encodedPrompt = encodeURIComponent(stablePrompt);
+    // const encodedPrompt = encodeURIComponent(stablePrompt);//구글 번역api 안거치고 바로 stable diffusion api사용할때는 encoding값 넘겨야한다.
     //stableDiffusion API formData
     const loadImageFromApi = async () => {
         try {
-            const url = await loadImageFromBackend(encodedPrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
+            const url = await loadImageFromBackend(stablePrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
             setStableImage(url); // 생성된 이미지 URL 상태에 저장
         } catch (error) {
             console.error('Error loading image:', error);

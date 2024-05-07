@@ -123,11 +123,10 @@ const ImageOverlay=({visible, setVisible, onImageRegister})=>{
     const {stableStyle}=useContext(Context);
     //contextAPI: prompt
     const {stablePrompt} = useContext(Context);
-    const encodedPrompt = encodeURIComponent(stablePrompt);
     //stableDiffusion API formData
     const loadImageFromApi = async () => {
         try {
-            const url = await loadImageFromBackend(encodedPrompt,stableStyle,"16:9");//encodedPrompt,stableStyle
+            const url = await loadImageFromBackend(stablePrompt,stableStyle,"16:9");//encodedPrompt,stableStyle
             setStableImage(url); // 생성된 이미지 URL 상태에 저장
         } catch (error) {
             console.error('Error loading image:', error);
