@@ -101,7 +101,7 @@ public class SentimentAnalysisService implements DiaryService {
         return diaryListRepository.save(generalDiaryContent);
     }
 
-
+    // test code
 
 
 }
