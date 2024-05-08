@@ -3,15 +3,19 @@ package com.spring.container.spring.service;
 import com.spring.container.spring.domain.GeneralDiary;
 import com.spring.container.spring.domain.GeneralDiaryContent;
 import com.spring.container.spring.domain.Member;
+import com.spring.container.spring.domain.RecommendHistory;
 import com.spring.container.spring.dto.SentimentResult;
 import com.spring.container.spring.repository.DiaryListRepository;
 import com.spring.container.spring.repository.DiaryRepository;
 import com.spring.container.spring.repository.MemberRepository;
+import com.spring.container.spring.repository.RecommendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,10 +35,13 @@ public class SentimentAnalysisService implements DiaryService {
     @Autowired
     private DiaryListRepository diaryListRepository;
 
-    @Value("${api.key}")
+    @Autowired
+    private RecommendRepository recommendRepository;
+
+    @Value("${sentiment_api.key}")
     private String apiKey;
 
-    @Value("${api.key_id}")
+    @Value("${sentiment_api.key_id}")
     private String apiKeyID;
 
     public SentimentAnalysisService(WebClient.Builder webClientBuilder) {
@@ -79,6 +86,17 @@ public class SentimentAnalysisService implements DiaryService {
         generalDiaryContent.setConfidenceNeutral(confidenceNeutral);
         generalDiaryContent.setConfidencePositive(confidencePositive);
 
+        LocalDate today = LocalDate.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String formattedDate = today.format(formatter);
+
+        RecommendHistory recommendHistory = new RecommendHistory();
+        recommendHistory.setGeneralDiaryContent(generalDiaryContent);
+        recommendHistory.setLocalDate(formattedDate);
+
+        recommendRepository.save(recommendHistory);
         // 저장 후 결과 반환
         return diaryListRepository.save(generalDiaryContent);
     }
