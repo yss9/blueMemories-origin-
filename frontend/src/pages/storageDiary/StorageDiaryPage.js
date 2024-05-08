@@ -27,18 +27,14 @@ const ContentContainer=styled.div`
 
 //가운데 아이템 컨테이너 베이지배경
 const ListBackgroundImg=styled.div`
-    width:47%;
+    width: 47%;
     height: 34vw;
-    background-image: url("/resourcesPng/storagePage/storage_list_background.png");
+    background-image: url("/resourcesPng/storagePage/storageDiary/calendarBackground.png");
     background-size: contain;
-    background-position: center;
     background-repeat: no-repeat;
-    align-items: center;
+    display: flex;
+    justify-content: center; /* 가로 가운데 정렬 */
 `;
-
-
-//<ListBackgroundImg>밑에다가 아이템들 넣으면 됨</ListBackgroundImg>
-
 function CustomNavigationLabel({ date }) {
     const monthNumber = date.getMonth() + 1; // getMonth() returns 0 for January, 1 for February, etc.
     if(monthNumber<10){
@@ -89,14 +85,15 @@ const StorageDiaryForm = () => {
     return (
         <div>
             <Helmet>
-            <title>StorageDrawBook</title>
-            <meta name="description" content="BlueMemories Introduce Page"/>
+                <title>StorageDrawBook</title>
+                <meta name="description" content="BlueMemories Introduce Page"/>
             </Helmet>
 
             <Wrapper>
                 <LoggedInNavigationBar></LoggedInNavigationBar>
                 <ContentContainer>
                     <StoargeTextBtnContainer margin_top='33%'></StoargeTextBtnContainer>
+                    <ListBackgroundImg>
                         <Calendar
                             onChange={handleDateClick}
                             value={value}
@@ -106,6 +103,8 @@ const StorageDiaryForm = () => {
                             showNeighboringMonth={false}
                             navigationLabel={({ date, label }) => <CustomNavigationLabel date={date} />}
                         />
+                    </ListBackgroundImg>
+
                 </ContentContainer>
             </Wrapper>
         </div>

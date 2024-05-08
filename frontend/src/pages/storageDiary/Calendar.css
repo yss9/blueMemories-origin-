@@ -1,25 +1,25 @@
 .react-calendar {
-    width:47%;
-    height: 34vw;
-    background: #FEF7EA;
+    width: 90%;
+    margin-top:6%;
     border: none;
-    font-family: 'GangwonEduSaeeum';
-    line-height: 1.125em;
-    opacity: 0.95;
+    font-family: gangwonedusaeeum, sans-serif;
+    font-size:1.5vw;
+    line-height: 2.125em;
+    user-select: none;
 }
 
 .react-calendar--doubleView {
-    width: 100%;
+    width: 700px;
 }
 
 .react-calendar--doubleView .react-calendar__viewContainer {
     display: flex;
-    margin: 0em;
+    margin: -0.5em;
 }
 
 .react-calendar--doubleView .react-calendar__viewContainer > * {
     width: 50%;
-    margin: 0em;
+    margin: 0.5em;
 }
 
 .react-calendar,
@@ -31,90 +31,151 @@
     box-sizing: border-box;
 }
 
+/*년도, 월, 날짜, 달력 이동 버튼*/
 .react-calendar button {
-    margin: 0;
+    /*margin: 0;*/
     border: 0;
     outline: none;
+    /*font-family: gangwonedusaeeum, sans-serif;*/
+    /*font-size:2.6vw;*/
 }
 
 .react-calendar button:enabled:hover {
     cursor: pointer;
 }
 
-.react-calendar__navigation {
-    display: flex;
-    height: 44px;
-    margin-bottom: 1em;
+/* 이전달 버튼 */
+.react-calendar__navigation__prev-button {
+    color: #6B8172; /* 아이콘 색상 */
+}
+/* 다음달 버튼 */
+.react-calendar__navigation__next-button {
+    color: #6B8172; /* 아이콘 색상 */
+}
+/* 버튼 호버 스타일 */
+.react-calendar__navigation button:enabled:hover {
+    background-color: #ccc; /* 호버 시 배경색 */
+}
+/* 이전년도 버튼 */
+.react-calendar__navigation__prev2-button {
+    color: #6B8172; /* 아이콘 색상 */
+}
+/* 다음년도 버튼 */
+.react-calendar__navigation__next2-button {
+    color: #6B8172; /* 아이콘 색상 */
 }
 
+.react-calendar__navigation {
+    display: flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬, 필요 시 */
+    margin: 0 auto; /* 부모 요소 내 중앙 정렬 */
+    height: 8%;
+    width: 40%;
+}
+/*년도, 월 좌우 버튼 스타일 옵션*/
 .react-calendar__navigation button {
-    min-width: 44px;
+    display: flex; /* 아이콘 가운데 정렬을 위한 플렉스 설정 */
+    align-items: center; /* 수직 방향 중앙 정렬 */
+    justify-content: center; /* 수평 방향 중앙 정렬 */
     background: none;
+    font-size: 200%; /* 아이콘의 크기 조정 */
 }
 
 .react-calendar__navigation button:disabled {
     background-color: #f0f0f0;
 }
-
-/*.react-calendar__navigation button:enabled:hover,*/
-/*.react-calendar__navigation button:enabled:focus {*/
-/*    background-color: #e6e6e6;*/
-/*}*/
-
+/*좌우 년도 선택 버튼 클릭할때 색상 변화*/
+/*.react-calendar__navigation button:enabled:focus*/
+.react-calendar__navigation button:enabled:hover{
+    /*달력 년도랑 년도 선택하는 버튼 부분 hover, focus일 때 배경색 지우기*/
+    background-color: transparent;
+    color:#516959;
+}
+.react-calendar__navigation__label {
+    pointer-events: none; /* 클릭 이벤트 비활성화 */
+    display: none; /* 버튼 숨김 */
+}
+/* 현재 연도의 텍스트 스타일 지정 */
+.react-calendar__navigation__label__labelText {
+    font-size: 100%; /* 원하는 크기로 변경 */
+    font-family: gangwonedusaeeum, sans-serif; /* 원하는 폰트로 변경 */
+    color: #43614D; /* 원하는 색상으로 변경 */
+    line-height: 140%;
+    margin-top: 43%;
+}
+/*text 옵션 (일, 월, 화, 수, 목, 금)*/
 .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
-    font: inherit;
-    font-size: 1.25em;
-
+    font-size: 2.1vw;
+    font-family: gangwonedusaeeum, sans-serif;
+    margin-top: 1%;
 }
-
+/* 평일 (월, 화, 수, 목, 금) */
 .react-calendar__month-view__weekdays__weekday {
+    padding-top: 9%;
     color:#96A997;
-    padding: 0.5em;
 }
-
-.react-calendar__month-view__weekdays__weekday abbr{
-    text-decoration: none;
+/* 주말 (토, 일) */
+.react-calendar__month-view__weekdays__weekday--weekend {
+    padding-top: 9%;
+    color: #D8B893; /* 원하는 색상으로 변경 */
 }
-
-.react-calendar__month-view__weekdays .react-calendar__month-view__weekdays__weekday--weekend {
-    color: #E5C491;
+/*밑줄 제거 (일, 월, 화, 수, 목, 금)*/
+.react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none; /* 밑줄 제거 */
 }
 
 .react-calendar__month-view__weekNumbers .react-calendar__tile {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'GangwonEduSaeeum';
-    font-size: 0.75em;
-    font-weight: bold;
 }
-
+/* 평일 날짜 타일 색상 변경 */
+.react-calendar__tile {
+    padding: 10px 6.6667px;
+    border-radius: 50%;
+    background: none;
+    text-align: center;
+    line-height: 2.5vw;
+    color: #81B499; /* 원하는 글자 색상으로 변경 */
+    font-family: gangwonedusaeeum, sans-serif;
+    font-size: 130%;
+}
+/* 주말 날짜 타일 색상 변경 */
+.react-calendar__month-view__days__day--weekend {
+    color: #E5C491;
+    font-family: gangwonedusaeeum, sans-serif;
+    font-size: 130%;
+}
+/*오늘 날짜*/
+.react-calendar__tile--now {
+    background: #F1E0B5;
+}
+/*사용자가 선택한 날짜*/
+.react-calendar__tile--active {
+    background: #F1E0B5;
+    color: white;
+}
 .react-calendar__month-view__days__day--neighboringMonth,
 .react-calendar__decade-view__years__year--neighboringDecade,
 .react-calendar__century-view__decades__decade--neighboringCentury {
     color: #757575;
 }
 
+/*월 선택 타일*/
+.react-calendar__year-view{
+    margin-top: 16%;
+}
+/*월 선택 타일 개별 옵션*/
 .react-calendar__year-view .react-calendar__tile,
 .react-calendar__decade-view .react-calendar__tile,
 .react-calendar__century-view .react-calendar__tile {
-    padding: 2em 0.5em;
+    padding: 3% 2%;
 }
-
-.react-calendar__tile {
-    max-width: 100%;
-    padding: 10px 6.6667px;
-    background: none;
-    text-align: center;
-    line-height: 16px;
-    color: #81B499;
-    font-family: 'GangwonEduSaeeum';
-    font-size: 1.25em;
-}
-.react-calendar__month-view__days__day--weekend {
-    color: #E5C491;
+.react-calendar__year-view__years__year {
+    margin-top: 16%;
 }
 .react-calendar__tile:disabled {
     background-color: #f0f0f0;
@@ -126,84 +187,31 @@
 .react-calendar__century-view__decades__decade--neighboringCentury:disabled {
     color: #cdcdcd;
 }
-
-/*.react-calendar__tile:enabled:hover,*/
-.react-calendar__tile:enabled:hover {
-    background-color: #e6e6e6;
+/*날짜 타일 hober,focus 스타일 옵션*/
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+    background-color: #F1EBD9;
 }
-
-.react-calendar__tile--now {
-    background: #ffeebf;
+/*날짜 타일에서 현재 날짜 타일 hover,focus 스타일 옵션*/
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+    background: #E5D2A3;
 }
-
-/*.react-calendar__tile--now:enabled:hover,*/
-/*.react-calendar__tile--now:enabled:focus {*/
-/*    background: #ffffa9;*/
-/*}*/
-
-/*.react-calendar__tile--hasActive {*/
-/*    background: #76baff;*/
-/*}*/
-
-/*.react-calendar__tile--hasActive:enabled:hover,*/
-/*.react-calendar__tile--hasActive:enabled:focus {*/
-/*    background: #a9d4ff;*/
-/*}*/
-
-/*.react-calendar__tile--active {*/
-/*    background: #006edc;*/
-/*    color: white;*/
-/*}*/
-
-/*.react-calendar__tile--active:enabled:hover,*/
-/*.react-calendar__tile--active:enabled:focus {*/
-/*    background: #1087ff;*/
-/*}*/
-
 .react-calendar--selectRange .react-calendar__tile--hover {
     background-color: #e6e6e6;
 }
-
-.react-calendar__navigation {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    padding: 0.5em;
+/*월 선택 (현재 월 선택 타일 스타일)*/
+.react-calendar__tile--hasActive {
+    background: #F1E0B5;
+    color:white;
 }
-
-.react-calendar__navigation button {
-    background: none;
-    border: none;
-    font-size: 1.25em;
+/*월 선택 (현재 월 선택 타일 스타일) hover, focus*/
+.react-calendar__tile--hasActive:enabled:hover,
+.react-calendar__tile--hasActive:enabled:focus {
+    background: #E5D2A3;
 }
-
-.react-calendar__navigation {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    padding: 0.5em;
-}
-
-.react-calendar__navigation button {
-    background: none;
-    border: none;
-    font-size: 1.25em;
-}
-
-.react-calendar__navigation__label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'GangwonEduSaeeum'; /* 폰트 패밀리 변경 */
-    color: #43614D; /* 색상 변경 */
-}
-
-.react-calendar__navigation__label > .react-calendar__navigation__label__labelText {
-    font-size: 1.0em; /* '2024' 폰트 크기 */
-    font-weight: bold; /* 폰트 굵기 */
-}
-
-.react-calendar__navigation__label > .month-number {
-    font-size: 1.0em; /* '4' 폰트 크기 */
-    color: #ff0000; /* '4' 색상 변경 */
+/*월 선택 (현재 월 선택 타일 스타일) hover, focus*/
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+    background: #E5D2A3;
 }
