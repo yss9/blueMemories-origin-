@@ -2,6 +2,7 @@ import {Helmet} from "react-helmet";
 import styled from 'styled-components';
 import { LoggedInNavigationBar } from '../../components/NavigationBar';
 import { StoargeTextBtnContainer } from '../../components/StorageTextBtn';
+import YouTube from "react-youtube";
 
 const Wrapper = styled.div`
     width:100%;
@@ -32,8 +33,33 @@ const ListBackgroundImg=styled.div`
     align-items: center;
 `;
 
+const YouTubeBox = styled.div`
+    margin-top: 10%;
+    margin-left: 5%;
+    display: inline-block;
+`;
+
+
 //<ListBackgroundImg>밑에다가 아이템들 넣으면 됨</ListBackgroundImg>
 const StorageRecommendForm = () => {
+
+    const videoId = "dQw4w9WgXcQ"; // YouTube 동영상 ID (예: Rick Astley's "Never Gonna Give You Up")
+
+    const opts = {
+        height: '250',
+        width: '400',
+
+        playerVars: {
+            autoplay: 0,
+        },
+    };
+
+    const onReady = (event) => {
+        // API에 접근하기 위해 event 객체를 사용
+        event.target.pauseVideo();
+    };
+
+
     return (
         <div>
             <Helmet>
@@ -46,9 +72,10 @@ const StorageRecommendForm = () => {
                 <ContentContainer>
                     <StoargeTextBtnContainer margin_top='99%'></StoargeTextBtnContainer>
                     <ListBackgroundImg>
-                   
-
-                   
+                        <YouTubeBox><YouTube videoId={videoId} opts={opts} onReady={onReady}/></YouTubeBox>
+                        <YouTubeBox><YouTube videoId={videoId} opts={opts} onReady={onReady}/></YouTubeBox>
+                        <YouTubeBox><YouTube videoId={videoId} opts={opts} onReady={onReady}/></YouTubeBox>
+                        <YouTubeBox><YouTube videoId={videoId} opts={opts} onReady={onReady}/></YouTubeBox>
                     </ListBackgroundImg>
                 </ContentContainer>
             </Wrapper>

@@ -24,6 +24,7 @@ public class DiaryController {
     @Autowired
     private MemberServiceImpl memberService;
 
+
     @PostMapping("/posting")
     public GeneralDiaryContent saveDiaryContent(
             @RequestParam("file") MultipartFile file,
@@ -49,6 +50,8 @@ public class DiaryController {
         generalDiaryContent.setDay(day);
         generalDiaryContent.setWeather(weather);
         generalDiaryContent.setImage1(filePath); // 저장된 이미지 파일 경로 설정
+
+
 
         // 감정 분석 후 일기 내용 저장
         return sentimentAnalysisService.createDiaryContent(generalDiaryContent);

@@ -37,4 +37,10 @@ public class GeneralDiaryContent {
     private Double confidenceNegative;
     private Double confidencePositive;
     private Double confidenceNeutral;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="recommendHistory_id", referencedColumnName = "id")
+    private RecommendHistory recommendHistory;
+
 }
