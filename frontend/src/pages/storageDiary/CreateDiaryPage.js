@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useLocation} from "react-router";
 import styled from "styled-components";
 import {useNavigate} from "react-router-dom";
+import WrittenComponent from "./WrittenComponent";
 
 
 const TextAreaContainer = styled.textarea`
@@ -222,14 +223,21 @@ function GeneralDiaryForm() {
     const [previewUrl, setPreviewUrl] = useState("/resourcesPng/writeDiaryPage/imageReload.png");
 
 
-    const handleInput = (setContent) => (e) => {
+    //textarea 글자수 제한(높이가 기준)
+    const [text, setText] = useState('');
+    const handleInput = (setText) => (e) => {
         const textarea = e.target;
+        //[배경line이랑 글자 줄 맞출때]
+        // 만약 배경 line보다 글자가 한줄 덜 써지면(글자 한줄만 더쓰면 줄이 딱맞는다! 할때)
+        //textarea.clientHeight+20; (개수제한 늘림)
         const isOverflowing = textarea.scrollHeight > textarea.clientHeight;
-        if (!isOverflowing) {
-            setContent(textarea.value);
+        console.log("textarea.scrollHeight: "+textarea.scrollHeight);
+        console.log("textarea.clientHeight: "+textarea.clientHeight);
+        console.log("isOverflowing: "+isOverflowing);
+        if(!isOverflowing){
+            setText(textarea.value);
         }
     };
-
 
 
     const handleDiaryCreate = () => {
@@ -338,8 +346,10 @@ function GeneralDiaryForm() {
                                 </WeatherBox>
                             </TitleWeatherContainer>
                             <LeftDiaryWriteContainer>
-                                <WriteDiaryBox value={content1} onInput={handleInput(setContent1)} onChange={(e) => setContent1(e.target.value)}>
-                                </WriteDiaryBox>
+                                <WriteDiaryBox
+                                    value={text}
+                                    onInput={handleInput(setText)}/>
+                                {/*<WrittenComponent></WrittenComponent>*/}
                             </LeftDiaryWriteContainer>
                         </LeftDiaryTextContainer>
                     </LeftContainer>
