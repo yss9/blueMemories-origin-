@@ -6,6 +6,7 @@ import {Helmet} from "react-helmet";
 import styled from 'styled-components';
 import {LogoBtn,LogoText,NotLoggedInBtn,LoggedInBtn} from "../../components/NavigationBar";
 import {MenuBar}from "./components/MenuBar";
+import { useAuth } from '../Context/AuthContext';
 
 const WrapperContainer= styled.div`
     display: flex;
@@ -39,8 +40,10 @@ const Body=styled.div`
 
 ///////////////////////////////////////////////////
 const MainForm = () => {
+    const { user } = useAuth();
     return (
         <div>
+            {user ? <p>Welcome!</p> : <p>You are not logged in.</p>}
             <Helmet>
             <title>Main</title>
             <meta name="description" content="BlueMemories Main Page"/>
