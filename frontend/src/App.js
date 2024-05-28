@@ -23,7 +23,6 @@ import WrittenDiaryForm from "./pages/storageDiary/WrittenDiaryPage";
 function App() {
 
     return (
-        <AuthProvider>
             <StyleProvider>
                 <BrowserRouter>
                     <Helmet
@@ -60,8 +59,6 @@ function App() {
                     </Routes>
                 </BrowserRouter>
             </StyleProvider>
-        </AuthProvider>
-
     );
 }
 

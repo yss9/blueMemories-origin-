@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import {Helmet} from "react-helmet";
 import styled from 'styled-components';
-import {LogoBtn,LogoText,NotLoggedInBtn,LoggedInBtn} from "../../components/NavigationBar";
+import {LogoBtn, LogoText, NotLoggedInBtn, LoggedInBtn, LoggedInNavigationBar} from "../../components/NavigationBar";
 import {MenuBar}from "./components/MenuBar";
 import { useAuth } from '../Context/AuthContext';
 
@@ -43,7 +43,7 @@ const MainForm = () => {
     const { user } = useAuth();
     return (
         <div>
-            {user ? <p>Welcome!</p> : <p>You are not logged in.</p>}
+
             <Helmet>
             <title>Main</title>
             <meta name="description" content="BlueMemories Main Page"/>
@@ -52,7 +52,8 @@ const MainForm = () => {
                 <MenuBar></MenuBar>
                 <Wrapper>
                     <Header>
-                        <NotLoggedInBtn top_margin='4%' right_margin='5%'></NotLoggedInBtn> 
+                        {user ? <LoggedInBtn top_margin='4%' right_margin='5%'/> : <NotLoggedInBtn top_margin='4%' right_margin='5%'/>}
+
                         <LogoBtn fontSize='5vw' left_margin='10%' top_margin='3%'><LogoText text={"Blue\nMemories"}></LogoText></LogoBtn>
                     </Header>
                 </Wrapper>

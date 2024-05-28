@@ -25,8 +25,11 @@ public class MemberController {
         //member.get().getPassword().equals(loginRequest.getPassword())
         //: 실제 member객제의 비밀번호와 사용자가 로그인 요청 시 제공한 비밀번호가 같은지 비교
         if (member.isPresent() && member.get().getPassword().equals(loginRequest.getPassword())) {
+            // 로그인 성공 시, 사용자 정보를 포함하여 응답 반환
+            Member loggedInMember = member.get();
+            return ResponseEntity.ok(loggedInMember);
             // JSON 객체로 성공 메시지 반환
-            return ResponseEntity.ok(Collections.singletonMap("message", "Login successful"));
+//            return ResponseEntity.ok(Collections.singletonMap("message", "Login successful"));
         } else {
             // JSON 객체로 에러 메시지 반환
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Invalid member ID or password"));

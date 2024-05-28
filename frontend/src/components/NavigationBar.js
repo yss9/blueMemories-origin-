@@ -12,6 +12,7 @@ const LogoBtn = styled.button`
     text-align: left; 
     margin-left: ${(props)=>props.left_margin||'3%'};
     margin-top: ${(props)=>props.top_margin||'none'};
+    user-select: none;
 `;
 //로고 텍스트
 const LogoText = ({text})=>{
@@ -54,6 +55,8 @@ const LoginBtn = styled.button`
     width: 6vw;
     /*색상*/
     background: #B3B3B350;
+    cursor:pointer;
+    user-select: none;
 `;
 const LoginBtnContainer=styled.div`
     display: flex;
@@ -95,13 +98,13 @@ const NotLoggedInBtn=({top_margin, right_margin})=>{
 
 };
 //보관함-회원정보 버튼 컨테이너
-const LoggedInBtn=()=>{
+const LoggedInBtn=({top_margin, right_margin})=>{
     const navigate = useNavigate();
     const goToStorageDiary=()=>{
         navigate("/storageDiary");
     }
     return(
-        <LoginBtnContainer>
+        <LoginBtnContainer top_margin={top_margin} right_margin={right_margin}>
             <LoginBtn>Profile</LoginBtn>
             <LoginBtn onClick={goToStorageDiary}>Storage</LoginBtn>
         </LoginBtnContainer>

@@ -1,28 +1,32 @@
 import styled from "styled-components";
 import React from 'react';
+import HorizontalScrollComponent from "./HorizontalScrollComponent";
+import NewAddHorizontalScrollComponent from "./NewAddHorizontalScrollComponent";
 
 const ListContainer=styled.div`
     width:90%;
     height: 90%;
-    margin-left: 5%;
+    margin-left: 3%;
     margin-top: 4%;
-   //background-color: blue;
+    //background-color: blue;
     /*item정렬*/
     display: flex;
     flex-direction: column;
+    
 `;
 
 const ListStateText=styled.text`
     font-size: 1.7vw;
     color: #436052;
     font-family: gangwonedusaeeum;
-    margin-left:2%;
+    margin-left:8%;
     margin-top: 1%;
     /*밑줄 옵션*/
     text-decoration: underline;
     text-decoration-thickness: 4%;
     text-underline-position:under;
 `;
+
 const BookListContainer=styled.div`
     width: ${(props)=>props.width||'100%'};
     height: ${(props)=>props.height||'30%'};
@@ -61,43 +65,20 @@ const BookListNextBtn=styled.button`
     border: none;
 `;
 
+const items = [
+    'Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5',
+    'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10',
+    'Item 11', 'Item 12', 'Item 13', 'Item 14', 'Item 15',
+];
 //소설 보관함 작성한 책 list item
 const BookListItemContainer=()=>{
 
     return (
     <ListContainer>
         <ListStateText>작성 중</ListStateText>
-        <BookListContainer>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <BookListNextBtn></BookListNextBtn>
-        </BookListContainer>
-        <BookListContainer width='92%' height='15%' margin_top='0%'>
-            <BookItemTitle></BookItemTitle>
-            <BookItemTitle>비밀의 정원</BookItemTitle>
-            <BookItemTitle>노르웨이숲의 비밀 사건</BookItemTitle>
-            <BookItemTitle></BookItemTitle>
-            <BookItemTitle></BookItemTitle>
-        </BookListContainer>
+        <NewAddHorizontalScrollComponent items={items} />
         <ListStateText>작성 완료</ListStateText>
-        <BookListContainer>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <AddBookItem></AddBookItem>
-            <BookListNextBtn></BookListNextBtn>
-        </BookListContainer>
-        <BookListContainer width='92%' height='15%' margin_top='0%'>
-            <BookItemTitle></BookItemTitle>
-            <BookItemTitle>비밀의 정원</BookItemTitle>
-            <BookItemTitle>노르웨이숲의 비밀 사건</BookItemTitle>
-            <BookItemTitle></BookItemTitle>
-            <BookItemTitle></BookItemTitle>
-        </BookListContainer>
+        <HorizontalScrollComponent items={items} />
     </ListContainer>
     );
 };

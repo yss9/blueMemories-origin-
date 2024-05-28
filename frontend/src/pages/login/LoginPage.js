@@ -8,7 +8,7 @@ import {useAuth} from "../Context/AuthContext";
 
 const LoginForm = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { user, login } = useAuth();
     //로그인 상태 설정
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,8 +23,8 @@ const LoginForm = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                console.log('Login successful:', data);
                 login(data);
+                console.log('Login successful:', data.id);
                 navigate('/'); // 로그인 성공 후 리디렉션
             } else {
                 console.error('Failed to login:', data);

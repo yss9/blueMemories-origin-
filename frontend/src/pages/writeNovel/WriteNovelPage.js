@@ -326,6 +326,9 @@ const WriteNovelForm = () => {
             setNextPageBtnActive(false);
         }
     }, [rightDisabled,textB,leftDisabled,textA]); // rightDisabled 상태에 의존
+
+
+
     return (
         <div>
             <Helmet>
