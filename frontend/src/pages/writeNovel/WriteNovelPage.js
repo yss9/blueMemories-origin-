@@ -5,6 +5,7 @@ import { WriteMenuBar } from '../../components/WriteMenuBar';
 import ImageOverlay from "./components/imageOverlay/ImageOverlay";
 import NovelCoverOverlay from "./components/coverOverlay/NovelCoverOverlay";
 import {Context} from "../Context/Context";
+import {useLocation} from "react-router";
 
 const Wrapper = styled.div`
     width:100%;
@@ -314,14 +315,8 @@ const WriteNovelForm = () => {
     const [tempText,setTempText]=useState("");
     const [tempImage, setTempImage]=useState();
     const [saveTimeout,setSaveTimeout]=useState(null);
-
-    // const handleInput=(setText)=>(e)=>{
-    //     const textarea = e.target;
-    //     const isOverflowing = textarea.scrollHeight > textarea.clientHeight;
-    //     if(!isOverflowing){
-    //         setText(textarea.value);
-    //     }
-    // };
+    const location = useLocation();
+    const { novelId } = location.state || { novelId: null }; // NewAddHorizontalScrollComponent.js에서 소설 생성되면서 전달된 novelId 가져옴
     /**
      * textarea에 글자가 변경되면
      * 내용 임시 저장 배열에 text 저장
@@ -422,19 +417,38 @@ const WriteNovelForm = () => {
             setRightDisabled(true);
         }
     }, [currentPageIndex]);
-    // useEffect(() => {
-    //     if (pages[currentPageIndex]) {
-    //         setTextA(pages[currentPageIndex].text);
-    //         setLeftImage(pages[currentPageIndex].image);
-    //     }
-    //     if (pages[currentPageIndex + 1]) {
-    //         setTextB(pages[currentPageIndex + 1].text);
-    //         setRightImage(pages[currentPageIndex + 1].image);
-    //     }
-    // }, [currentPageIndex]);
+
+    //이전 버튼 누르면 prevIndex -2
     const handlePrevPage = () => {
         setCurrentPageIndex(prevIndex => Math.max(prevIndex - 2, 0));
         console.log("PrevPage_currentPageIndex: "+currentPageIndex);
+    };
+
+    const handleSave = async () => {
+        try {
+            const novelContents = pages.map(page => ({
+                novel: { id: novelId }, // novelId를 포함한 객체, // 소설 ID를 포함한 객체
+                pageNumber: page.pageNumber,
+                textContent: page.text,
+                image: page.image,
+            }));
+            console.log("novelContents: "+ novelContents[0].novelId + novelContents[0].textContent+ novelContents[0].image);
+            const response = await fetch(`http://localhost:8080/api/novelContents/replace?novelId=${novelId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(novelContents),
+            });
+
+            if (response.ok) {
+                console.log('Novel contents saved successfully');
+            } else {
+                console.error('Failed to save novel contents');
+            }
+        } catch (error) {
+            console.error('Error saving novel contents:', error);
+        }
     };
 
     return (
@@ -444,7 +458,7 @@ const WriteNovelForm = () => {
                 <meta name="description" content="BlueMemories WriteNovel Page"/>
             </Helmet>
             <Wrapper>
-                <WriteMenuBar onClick={handleCoverBtnClick}></WriteMenuBar>
+                <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave}></WriteMenuBar>
                 <BodyContainer>
                     <BeforePageBtn onClick={handlePrevPage}></BeforePageBtn>
                     <WriteContainer>

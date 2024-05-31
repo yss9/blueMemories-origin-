@@ -1,5 +1,7 @@
 package com.spring.container.spring.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,11 +36,13 @@ public class Novel {
     private NovelStatus status=NovelStatus.IN_COMPLETED;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
+    @JsonBackReference
     private Member member;
 
     // NovelContent와 1:N 관계 설정
     @OneToMany(mappedBy = "novel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<NovelContent> contents = new ArrayList<>();
 }
 

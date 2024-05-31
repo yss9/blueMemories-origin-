@@ -94,7 +94,7 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
             if (response.ok) {
                 setNovelId(data.id); // 생성된 소설 ID로 업데이트
                 console.log('Novel created with ID:', data.id);
-                navigate('/writeNovel'); // 소설 작성 페이지로 리디렉션
+                navigate('/writeNovel', { state: { novelId: data.id } }); // 소설 작성 페이지로 리디렉션 (생성된 novel id 넘겨줌)
             } else {
                 console.error('Failed to create novel:', data);
             }

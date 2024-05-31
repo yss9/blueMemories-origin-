@@ -1,5 +1,6 @@
 package com.spring.container.spring.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class NovelContent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "novel_id", nullable = false)
+    @JsonBackReference
     private Novel novel;
 
     @Column(nullable = false)

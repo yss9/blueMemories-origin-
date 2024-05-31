@@ -60,23 +60,8 @@ const MenuItem = styled.button`
     
 `;
 //로그인 했을 때 네비게이션 바
-const WriteMenuBar=({onClick})=>{
+const WriteMenuBar=({onClick, onSave})=>{
 
-    //내용 저장
-    const handleSave = async () => {
-        // try {
-        //     const response = await axios.post('/api/novelContents', {
-        //         novel: { id: novelId },
-        //         pageNumber: page,
-        //         textContent: textContent,
-        //         image: '' // 필요 시 이미지 URL 설정
-        //     });
-        //     console.log('Novel content saved:', response.data);
-        //     // 상태 초기화 또는 다른 로직 추가
-        // } catch (error) {
-        //     console.error('Error saving novel content:', error);
-        // }
-    };
     return (
         <ImageContainer>
             <TopImage></TopImage>
@@ -84,10 +69,10 @@ const WriteMenuBar=({onClick})=>{
                 <MenuGroup>
                     <MenuItem>책 완성</MenuItem>
                     <MenuItem onClick={onClick}>책 표지</MenuItem>
-                    <MenuItem>임시저장</MenuItem>
+                    <MenuItem onClick={onSave}>임시저장</MenuItem>
                 </MenuGroup>
                 <MenuGroup>
-                    <MenuItem onClick={handleSave}>저장하고 나가기</MenuItem>
+                    <MenuItem onClick={onSave}>저장하고 나가기</MenuItem>
                 </MenuGroup>
             </MenuBarContainer>
         </ImageContainer>
