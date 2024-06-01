@@ -6,6 +6,7 @@ import ImageOverlay from "./components/imageOverlay/ImageOverlay";
 import NovelCoverOverlay from "./components/coverOverlay/NovelCoverOverlay";
 import {Context} from "../Context/Context";
 import {useLocation} from "react-router";
+import axios from "axios";
 
 const Wrapper = styled.div`
     width:100%;
@@ -220,7 +221,7 @@ const WriteNovelForm = () => {
     //imageOverlayItem 상태 관리
     const {stableStyle,setStableStyle}=useContext(Context);//contextAPI: style-preset
     const {stablePrompt,setStablePrompt} = useContext(Context);//contextAPI: prompt
-    const {setStableImage} = useContext(Context);//contextAPI: prompt
+    const {setImageUrl} = useContext(Context);//contextAPI: prompt
     //textarea, image, imageAddBtn, imageDeleteBtn 상태 관리
     const [leftImage, setLeftImage] = useState('');//imageL
     const [rightImage, setRightImage] = useState('');//imageR
@@ -250,9 +251,9 @@ const WriteNovelForm = () => {
     //이미지의 style, prompt, imageUrl 를 왼/오 페이지 값으로 전환
     const settingImageOverlayItem=(style,prompt,imageUrl)=>{
         if(imageUrl===''){
-            setStableImage('/resourcesPng/writeNovelPage/imageShowPanel.png');
+            setImageUrl('/resourcesPng/writeNovelPage/imageShowPanel.png');
         }else{
-            setStableImage(imageUrl);
+            setImageUrl(imageUrl);
         }
         setStableStyle(style);
         setStablePrompt(prompt);
@@ -350,19 +351,20 @@ const WriteNovelForm = () => {
      * 내용 임시 저장 배열에 image 저장
      * 저장된 text는 초기화
      **/
-    const handleImageRegister=(imageUrl)=>{
+    const handleImageRegister=(file,url)=>{
+        // const imageUrl=URL.createObjectURL(file);
         //배열에 이미지 저장
         setPages(prevPages => {
             const updatedPages = [...prevPages];
             const pageIndex = selectedButton === 'left' ? currentPageIndex : currentPageIndex + 1;
-            updatedPages[pageIndex].image = imageUrl;
+            updatedPages[pageIndex].image = file;
             updatedPages[pageIndex].text = ''; // 이미지가 등록되면 텍스트 초기화
             return updatedPages;
         });
         //왼쪽 페이지 이미지 적용
         if(selectedButton==='left'){
             //context 값 저장
-            setLeftImage(imageUrl);
+            setLeftImage(url);
             setLeftImagePrompt(stablePrompt);
             setLeftImageStyle(stableStyle);
             setLeftDisabled(true);//등록된 이미지가 있음
@@ -370,7 +372,7 @@ const WriteNovelForm = () => {
         //오른쪽 페이지 이미지 적용
         else{//(selectedButton==='right')
             //context 값 저장
-            setRightImage(imageUrl);
+            setRightImage(url);
             setRightImagePrompt(stablePrompt);
             setRightImageStyle(stableStyle);
             setRightDisabled(true);//등록된 이미지가 있음
@@ -426,30 +428,62 @@ const WriteNovelForm = () => {
 
     const handleSave = async () => {
         try {
-            const novelContents = pages.map(page => ({
-                novel: { id: novelId }, // novelId를 포함한 객체, // 소설 ID를 포함한 객체
-                pageNumber: page.pageNumber,
-                textContent: page.text,
-                image: page.image,
-            }));
-            console.log("novelContents: "+ novelContents[0].novelId + novelContents[0].textContent+ novelContents[0].image);
-            const response = await fetch(`http://localhost:8080/api/novelContents/replace?novelId=${novelId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(novelContents),
-            });
+            for (const page of pages) {
+                const formData = new FormData();
+                formData.append('novelId', novelId);
+                // formData.append('pageNumber', page.pageNumber);
+                // formData.append('textContent', page.text);
+                // formData.append('image', page.image ? page.image : new Blob([]));
+                pages.forEach((page, index) => {
+                    formData.append('pageNumber', page.pageNumber);
+                    formData.append('textContent', page.text);
+                    formData.append('image', page.image || new Blob([]));
+                });
 
-            if (response.ok) {
-                console.log('Novel contents saved successfully');
-            } else {
-                console.error('Failed to save novel contents');
+
+                const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                if (response.status !== 200) {
+                    throw new Error('Failed to save novel contents');
+                }
             }
+
+            console.log('Novel contents saved successfully');
         } catch (error) {
             console.error('Error saving novel contents:', error);
         }
     };
+
+    // const handleSave = async () => {
+    //     try {
+    //         const novelContents = pages.map(page => ({
+    //             novel: { id: novelId }, // novelId를 포함한 객체, // 소설 ID를 포함한 객체
+    //             pageNumber: page.pageNumber,
+    //             textContent: page.text,
+    //             image: page.image,
+    //         }));
+    //         console.log("novelContents: "+ novelContents[0].novelId + novelContents[0].textContent+ novelContents[0].image);
+    //         const response = await fetch(`http://localhost:8080/api/novelContents/replace?novelId=${novelId}`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(novelContents),
+    //         });
+    //
+    //         if (response.ok) {
+    //             console.log('Novel contents saved successfully');
+    //         } else {
+    //             console.error('Failed to save novel contents');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error saving novel contents:', error);
+    //     }
+    // };
 
     return (
         <div>

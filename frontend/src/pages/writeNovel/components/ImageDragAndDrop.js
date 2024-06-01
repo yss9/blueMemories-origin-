@@ -44,9 +44,11 @@ const DragAndDrop = ({onImageSelected}) => {
         const files = e.dataTransfer.files; // 드롭한 파일 목록
         if (files && files.length > 0) {
             const file = files[0];
-            setImage(URL.createObjectURL(file)); // 파일을 미리보기 가능한 URL로 변환
+            // setImage(URL.createObjectURL(file)); // 파일을 미리보기 가능한 URL로 변환
+            setImage(file);
             if(onImageSelected) {
-                onImageSelected(URL.createObjectURL(file));
+                // onImageSelected(URL.createObjectURL(file));
+                onImageSelected(file);
             }
         }
     };

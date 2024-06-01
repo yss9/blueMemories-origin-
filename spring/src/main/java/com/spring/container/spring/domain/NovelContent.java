@@ -26,5 +26,7 @@ public class NovelContent {
     @Lob
     private String textContent;
 
-    private String image;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] image;
 }

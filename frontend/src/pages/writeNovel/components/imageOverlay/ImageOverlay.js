@@ -116,10 +116,13 @@ const ImageCreateBtn = styled.div`
 `;
 const ImageOverlay=({visible, setVisible,onImageRegister})=>{
     //contextAPI: style-preset
-    const {stableImage, setStableImage}=useContext(Context);
+    const {imageUrl, setImageUrl}=useContext(Context);
+    const [imageFile,setImageFile]=useState(null);
     // 이미지가 선택되었을 때 호출될 함수
-    const handleImageSelected = (imageUrl) => {
-        setStableImage(imageUrl);
+    const handleImageSelected = (file) => {
+        const imageFile=URL.createObjectURL(file);
+        setImageUrl(imageFile);
+        setImageFile(file);
     };
 
     //contextAPI: style-preset
@@ -130,8 +133,10 @@ const ImageOverlay=({visible, setVisible,onImageRegister})=>{
     //stableDiffusion API formData
     const loadImageFromApi = async () => {
         try {
-            const url = await loadImageFromBackend(stablePrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
-            setStableImage(url); // 생성된 이미지 URL 상태에 저장
+            const file = await loadImageFromBackend(stablePrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
+            const imageFile=URL.createObjectURL(file);
+            setImageUrl(imageFile);
+            setImageFile(file);
         } catch (error) {
             console.error('Error loading image:', error);
         }
@@ -150,8 +155,8 @@ const ImageOverlay=({visible, setVisible,onImageRegister})=>{
     //등록 버튼 -> 값 update -> 창닫기
     //이미지 생성한거 없는 상태에서 등록 버튼 누르면 변화 x
     const handleImageUpdate=()=>{
-        if(stableImage!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
-            onImageRegister(stableImage)
+        if(imageUrl!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
+            onImageRegister(imageFile,imageUrl)
         handleClose();
     };
     return(
@@ -167,7 +172,7 @@ const ImageOverlay=({visible, setVisible,onImageRegister})=>{
             </MakingImageLeftContainer>
             <ImageRightContainer>
                 <ImageShowContainer>
-                    <Image src={stableImage} alt="Selected Image"></Image>
+                    <Image src={imageUrl} alt="Selected Image"></Image>
                 </ImageShowContainer>
                 <ImageCreateBtnContainer>
                     <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>
