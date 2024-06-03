@@ -2,8 +2,10 @@ package com.spring.container.spring.controllers;
 
 import com.spring.container.spring.domain.Novel;
 import com.spring.container.spring.domain.NovelStatus;
+import com.spring.container.spring.dto.NovelDTO;
 import com.spring.container.spring.service.NovelService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,13 +27,22 @@ public class NovelController {
         return novelService.getNovelsByMemberId(memberId);
     }
 
-    @GetMapping("/member/{memberId}/status/{status}")
-    public List<Novel> getNovelsByMemberIdAndStatus(@PathVariable Long memberId, @PathVariable NovelStatus status) {
-        return novelService.getNovelsByMemberIdAndStatus(memberId, status);
+//    @GetMapping("/complete/{id}")
+//    public ResponseEntity<List<Novel>> getAllNovelsById(@PathVariable Long id) {
+//        List<Novel> novels = novelService.getAllNovelsById(id);
+//        if (!novels.isEmpty()) {
+//            return ResponseEntity.ok(novels);
+//        } else {
+//            return ResponseEntity.noContent().build();
+//        }
+//    }
+@GetMapping("/complete/{id}")
+public ResponseEntity<List<NovelDTO>> getAllNovelsById(@PathVariable Long id) {
+    List<NovelDTO> novelDTOs = novelService.getAllNovelsById(id);
+    if (!novelDTOs.isEmpty()) {
+        return ResponseEntity.ok(novelDTOs);
+    } else {
+        return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/{novelId}/status")
-    public Novel updateNovelStatus(@PathVariable Long novelId, @RequestBody NovelStatus status) {
-        return novelService.updateNovelStatus(novelId, status);
-    }
+}
 }

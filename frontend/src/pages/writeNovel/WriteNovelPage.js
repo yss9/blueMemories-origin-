@@ -431,9 +431,6 @@ const WriteNovelForm = () => {
             for (const page of pages) {
                 const formData = new FormData();
                 formData.append('novelId', novelId);
-                // formData.append('pageNumber', page.pageNumber);
-                // formData.append('textContent', page.text);
-                // formData.append('image', page.image ? page.image : new Blob([]));
                 pages.forEach((page, index) => {
                     formData.append('pageNumber', page.pageNumber);
                     formData.append('textContent', page.text);
@@ -458,32 +455,6 @@ const WriteNovelForm = () => {
         }
     };
 
-    // const handleSave = async () => {
-    //     try {
-    //         const novelContents = pages.map(page => ({
-    //             novel: { id: novelId }, // novelId를 포함한 객체, // 소설 ID를 포함한 객체
-    //             pageNumber: page.pageNumber,
-    //             textContent: page.text,
-    //             image: page.image,
-    //         }));
-    //         console.log("novelContents: "+ novelContents[0].novelId + novelContents[0].textContent+ novelContents[0].image);
-    //         const response = await fetch(`http://localhost:8080/api/novelContents/replace?novelId=${novelId}`, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(novelContents),
-    //         });
-    //
-    //         if (response.ok) {
-    //             console.log('Novel contents saved successfully');
-    //         } else {
-    //             console.error('Failed to save novel contents');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error saving novel contents:', error);
-    //     }
-    // };
 
     return (
         <div>
@@ -492,7 +463,7 @@ const WriteNovelForm = () => {
                 <meta name="description" content="BlueMemories WriteNovel Page"/>
             </Helmet>
             <Wrapper>
-                <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave}></WriteMenuBar>
+                <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave} novelId={novelId}></WriteMenuBar>
                 <BodyContainer>
                     <BeforePageBtn onClick={handlePrevPage}></BeforePageBtn>
                     <WriteContainer>

@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface NovelContentService {
-    void saveNovelContent(Long novelId, int pageNumber, String textContent, MultipartFile image) throws IOException;
-    void saveNovelContentWithoutImage(Long novelId, int pageNumber, String textContent) throws IOException;
+
     void replaceNovelContents(Long novelId, List<Integer> pageNumber, List<String> textContent, List<MultipartFile> image) throws IOException;
 }

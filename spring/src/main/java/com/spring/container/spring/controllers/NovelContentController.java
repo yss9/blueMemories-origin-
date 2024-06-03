@@ -60,25 +60,6 @@ public class NovelContentController {
     @Autowired
     private NovelContentService novelContentService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("novelId") Long novelId,
-                                              @RequestParam("pageNumber") int pageNumber,
-                                              @RequestParam("textContent") String textContent,
-                                              @RequestParam("image") MultipartFile image) {
-        try {
-            if(image.isEmpty()){//image가 비었다면
-                novelContentService.saveNovelContentWithoutImage(novelId, pageNumber, textContent);
-            }else {
-                novelContentService.saveNovelContent(novelId, pageNumber, textContent, image);
-            }
-
-            return ResponseEntity.ok("Image uploaded and saved successfully");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Error saving image: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
     @PostMapping("/replace")
     public ResponseEntity<String> replaceContents(@RequestParam("novelId") Long novelId,
                                                   @RequestParam("pageNumber") List<Integer> pageNumber,

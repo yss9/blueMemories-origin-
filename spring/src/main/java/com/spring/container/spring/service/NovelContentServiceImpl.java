@@ -79,38 +79,6 @@ public class NovelContentServiceImpl implements NovelContentService {
     @Autowired
     private NovelRepository novelRepository;
 
-
-    @Override
-    public void saveNovelContent(Long novelId, int pageNumber, String textContent, MultipartFile image) throws IOException {
-        Optional<Novel> novelOptional = novelRepository.findById(novelId);
-        if (novelOptional.isPresent()) {
-            NovelContent novelContent = new NovelContent();
-            novelContent.setNovel(novelOptional.get());
-            novelContent.setPageNumber(pageNumber);
-            novelContent.setTextContent(textContent);
-            novelContent.setImage(image.getBytes());
-
-            novelContentRepository.save(novelContent);
-        } else {
-            throw new IllegalArgumentException("Novel with id " + novelId + " not found");
-        }
-    }
-
-    @Override
-    public void saveNovelContentWithoutImage(Long novelId, int pageNumber, String textContent) throws IOException {
-        Optional<Novel>novelOptional = novelRepository.findById(novelId);
-        if(novelOptional.isPresent()){
-            NovelContent novelContent = new NovelContent();
-            novelContent.setNovel(novelOptional.get());
-            novelContent.setPageNumber(pageNumber);
-            novelContent.setTextContent(textContent);
-
-            novelContentRepository.save(novelContent);
-        }else{
-            throw new IllegalArgumentException("Novel with id " + novelId + " not found");
-        }
-    }
-
     @Override
     public void replaceNovelContents(Long novelId, List<Integer> pageNumber, List<String> textContent, List<MultipartFile> image)  throws IOException {
         Optional<Novel> novelOptional = novelRepository.findById(novelId);
