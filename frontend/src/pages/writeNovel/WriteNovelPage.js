@@ -503,7 +503,7 @@ const WriteNovelForm = () => {
                     setVisible={setNovelOverlayState}
                     onImageRegister={handleImageRegister}
                 ></ImageOverlay>
-                <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible}></NovelCoverOverlay>
+                <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible} novelId={novelId}></NovelCoverOverlay>
             </Wrapper>
         </div>
     );

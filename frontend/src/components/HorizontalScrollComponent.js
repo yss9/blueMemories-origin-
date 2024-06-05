@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import axios from "axios";
+import {useAuth} from "../pages/Context/AuthContext";
 
 const Container=styled.div`
     width: 43.8vw;
@@ -60,6 +62,8 @@ const ScrollNextButton = styled.button`
 const HorizontalScrollComponent = ({ items }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsPerPage = 4;//한번에 보여질 item 개수
+    const {user} = useAuth();// userID
+    const userID = user.id;
 
     const handleNext = () => {
         if (currentIndex + itemsPerPage < items.length) {
@@ -75,14 +79,36 @@ const HorizontalScrollComponent = ({ items }) => {
 
     const translateX = -(currentIndex * (644 / itemsPerPage));
 
+    const fetchIncompleteNovels = async (userID) => {
+        console.log("userid: "+userID);
+        try {
+            const response = await axios.get(`http://localhost:8080/api/novels/storageNovel/complete?memberId=${userID}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching incomplete novels:', error);
+            return [];
+        }
+    };
+
+    const [novels, setNovels] = useState([]);
+    useEffect(() => {
+        const loadNovels = async () => {
+            const data = await fetchIncompleteNovels(userID);
+            setNovels(data);
+        };
+        loadNovels();
+    }, [userID]);
+
     return (
         <div>
             <Container>
                 <ScrollBeforeButton onClick={handlePrev} disabled={currentIndex < 4}/>
                 <ScrollContainer>
                     <Wrapper translateX={translateX}>
-                        {items.map((item, index) => (
-                            <Item key={index}>{item}</Item>
+                        {novels.map((novel, index) => (
+                            <Item key={index}>
+                                <div>{novel.title}</div>
+                            </Item>
                         ))}
                     </Wrapper>
                 </ScrollContainer>

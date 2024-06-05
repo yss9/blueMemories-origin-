@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import {useNavigate} from "react-router-dom";
@@ -76,25 +76,27 @@ const ScrollNextButton = styled.button`
 const NewAddHorizontalScrollComponent = ({ items }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsPerPage = 3;//한번에 보여질 item 개수
-    const { user } = useAuth();// userID
+    const {user} = useAuth();// userID
     const [novelId, setNovelId] = useState(null);//novel DB
     const navigate = useNavigate();
-    const userID=user.id;
-    const handleCreateNovel = async() => {
+    const userID = user.id;
+
+    //새로운 novel 생성
+    const handleCreateNovel = async () => {
         try {
-            console.log("user:"+ userID);
+            console.log("user:" + userID);
             const response = await fetch('http://localhost:8080/api/novels', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ member: { id: userID } })
+                body: JSON.stringify({member: {id: userID}})
             });
             const data = await response.json();
             if (response.ok) {
                 setNovelId(data.id); // 생성된 소설 ID로 업데이트
                 console.log('Novel created with ID:', data.id);
-                navigate('/writeNovel', { state: { novelId: data.id } }); // 소설 작성 페이지로 리디렉션 (생성된 novel id 넘겨줌)
+                navigate('/writeNovel', {state: {novelId: data.id}}); // 소설 작성 페이지로 리디렉션 (생성된 novel id 넘겨줌)
             } else {
                 console.error('Failed to create novel:', data);
             }
@@ -102,6 +104,27 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
             console.error('Error creating novel:', error);
         }
     };
+
+    //기존 novel db 불러오기 -> status가 'IN_COMPLETED' 인것들
+    const fetchIncompleteNovels = async (userID) => {
+        console.log("userid: "+userID);
+        try {
+            const response = await axios.get(`http://localhost:8080/api/novels/storageNovel/incomplete?memberId=${userID}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching incomplete novels:', error);
+            return [];
+        }
+    };
+
+    const [novels, setNovels] = useState([]);
+    useEffect(() => {
+        const loadNovels = async () => {
+            const data = await fetchIncompleteNovels(userID);
+            setNovels(data);
+        };
+        loadNovels();
+    }, [userID]);
 
     const handleNext = () => {
         if (currentIndex + itemsPerPage < items.length) {
@@ -124,17 +147,15 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
                 <NewItemBtn onClick={handleCreateNovel}></NewItemBtn>
                 <ScrollContainer>
                     <Wrapper translateX={translateX}>
-                        {items.map((item, index) => (
-                            <Item key={index}>{item}</Item>
+                        {novels.map((novel, index) => (
+                            <Item key={index}>
+                                <div>{novel.title}</div>
+                            </Item>
                         ))}
                     </Wrapper>
                 </ScrollContainer>
                 <ScrollNextButton onClick={handleNext} disabled={currentIndex + itemsPerPage >= items.length}/>
             </Container>
-
-
-
-
         </div>
     );
 };

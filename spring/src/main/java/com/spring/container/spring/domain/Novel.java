@@ -1,6 +1,7 @@
 package com.spring.container.spring.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class Novel {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
+    @JsonIgnore //직렬화 무시(base64 문자열로 변환하여 반환할 수 있도록 함)
     private byte[] coverImage;
 
     @Column(nullable = false, length = 100)
@@ -31,6 +33,9 @@ public class Novel {
 
     @Column(nullable = false)
     private int titleY=0;
+
+    @Column(nullable = false)
+    private  int titleSize=0;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

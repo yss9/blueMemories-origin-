@@ -89,7 +89,6 @@ const WriteMenuBar=({onClick, onSave, novelId})=>{
      *     "완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?"
      * }
      */
-
     const handleComplete = async () => {
 
         try {
@@ -109,7 +108,7 @@ const WriteMenuBar=({onClick, onSave, novelId})=>{
                 else {
                     const userConfirmed = window.confirm("완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?");
                     if (userConfirmed) { //"확인 버튼 클릭한 경우"
-                        //db에 저장 -> novel status 변경
+                        updateNovelStatus(novelId,'COMPLETED');
                     }
                 }
             });
@@ -119,6 +118,21 @@ const WriteMenuBar=({onClick, onSave, novelId})=>{
         }
     };
 
+    //novel status update => COMPLETED
+    const updateNovelStatus = async (novelId, status) => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/novels/updateStatus', null, {
+                params: {
+                    novelId: novelId,
+                    status: status
+                }
+            });
+            console.log('Novel status updated successfully:', response.data);
+            navigate("/storageNovel");
+        } catch (error) {
+            console.error('Error updating novel status:', error);
+        }
+    };
     return (
         <ImageContainer>
             <TopImage></TopImage>

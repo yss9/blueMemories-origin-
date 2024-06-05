@@ -11,4 +11,5 @@ public interface NovelRepository extends JpaRepository<Novel, Long> {
     List<Novel> findByMemberId(Long memberId);
 //    Optional<Novel> findById(Long id);
     List<Novel> findAllById(Long id);
+    List<Novel> findByMemberIdAndStatus(Long memberId, NovelStatus status);
 }

@@ -8,6 +8,7 @@ import TitleSize from "./TitleSizeControl";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {Context} from "../../../Context/Context";
 import {loadImageFromBackend} from "../../../API/stableApi";
+import axios from "axios";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
@@ -163,27 +164,7 @@ const ImageCreateBtn = styled.div`
         cursor:pointer;
     }
 `;
-const NovelCoverOverlay=({visible,setVisible})=>{
-    //contextAPI: style-preset
-    const {stableCoverImage, setStableCoverImage}=useContext(Context);
-    // 이미지가 선택되었을 때 호출될 함수
-    const handleImageSelected = (imageUrl) => {
-        setStableCoverImage(imageUrl);
-    };
-
-    //contextAPI: style-preset
-    const {stableCoverStyle}=useContext(Context);
-    //contextAPI: prompt
-    const {stableCoverPrompt} = useContext(Context);
-    //stableDiffusion API formData
-    const loadImageFromApi = async () => {
-        try {
-            const url = await loadImageFromBackend(stableCoverPrompt,stableCoverStyle,"9:16");//encodedPrompt,stableStyle
-            setStableCoverImage(url); // 생성된 이미지 URL 상태에 저장
-        } catch (error) {
-            console.error('Error loading image:', error);
-        }
-    };
+const NovelCoverOverlay=({visible,setVisible,novelId})=>{
 
     // 제목 동기화
     const {coverTitle, setCoverTitle}=useContext(Context);
@@ -254,6 +235,57 @@ const NovelCoverOverlay=({visible,setVisible})=>{
         setVisible(false);
     };
 
+
+    const [stableCoverImage, setStableCoverImage]=useState(null);
+    const [coverImageUrl,setCoverImageUrl]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
+    // 이미지가 선택되었을 때 호출될 함수
+    const handleImageSelected = (file) => {
+        const imageFile=URL.createObjectURL(file);
+        setCoverImageUrl(imageFile);
+        setStableCoverImage(file);
+    };
+
+    //contextAPI: style-preset
+    const {stableCoverStyle}=useContext(Context);
+    //contextAPI: prompt
+    const {stableCoverPrompt} = useContext(Context);
+    //stableDiffusion API formData
+    const loadImageFromApi = async () => {
+        try {
+            const file = await loadImageFromBackend(stableCoverPrompt,stableCoverStyle,"9:16");//encodedPrompt,stableStyle
+            const imageUrl=URL.createObjectURL(file);
+            setStableCoverImage(file); // 생성된 이미지 File 상태에 저장
+            setCoverImageUrl(imageUrl);
+        } catch (error) {
+            console.error('Error loading image:', error);
+        }
+    };
+
+
+    const handleCoverSave = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('novelId', novelId);
+            formData.append('title', coverTitle);
+            formData.append('coverImage', stableCoverImage|| new Blob([]));
+            formData.append('titleX', position.x);
+            formData.append('titleY', position.y);
+            formData.append('titleSize', coverTitlePxSize);
+            const response = await axios.post(`http://localhost:8080/api/novels/replace`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            if (response.status !== 200) {
+                throw new Error('Failed to save novel contents');
+            }
+            console.log('Novel contents saved successfully');
+            handleClose();
+        } catch (error) {
+            console.error('Error saving novel contents:', error);
+        }
+    };
+
     return(
         <Overlay visible={visible}>
             <LeftContainer>
@@ -266,7 +298,7 @@ const NovelCoverOverlay=({visible,setVisible})=>{
                 <ImageCreateButton onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateButton>
             </LeftContainer>
             <ImageShowContainer>
-                <CoverImage src={stableCoverImage} alt="Selected Image"></CoverImage>
+                <CoverImage src={coverImageUrl} alt="Selected Image"></CoverImage>
                 <TitleContainer
                     ref={titleContainerRef}
                     onMouseUp={handleMouseUp}
@@ -294,7 +326,7 @@ const NovelCoverOverlay=({visible,setVisible})=>{
                 </TitlePromptContainer>
                 <ImageCreateBtnContainer>
                     <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>
-                    <ImageCreateBtn onClick={handleClose}>등록</ImageCreateBtn>
+                    <ImageCreateBtn onClick={handleCoverSave}>등록</ImageCreateBtn>
                 </ImageCreateBtnContainer>
             </RightContainer>
         </Overlay>
