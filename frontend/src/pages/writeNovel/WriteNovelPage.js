@@ -470,19 +470,6 @@ const WriteNovelForm = () => {
             console.error('Error saving novel contents:', error);
         }
     };
-    // // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
-    // const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus/inComplete`, null, {
-    //     params: {
-    //         novelId: novelId,
-    //         status: 'IN_COMPLETED'
-    //     }
-    // });
-    //
-    // if (statusResponse.status === 200) {
-    //     console.log('Novel status updated successfully');
-    // } else {
-    //     throw new Error('Failed to update novel status');
-    // }
 
     return (
         <div>

@@ -85,7 +85,7 @@ public class NovelController {
     }
 
     /**[novel status => inComplete로 update]
-     * writeNovelPage.js 에서 '책 완성 ' 버튼 눌렀을 때
+     * writeNovelPage.js 에서 '저장하고 나가기 ' 버튼 눌렀을 때
      */
     @PostMapping("/updateStatus/inComplete")
     public ResponseEntity<String> replaceInContents(@RequestParam("novelId") Long novelId,

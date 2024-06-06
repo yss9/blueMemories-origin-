@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Helmet} from "react-helmet";
 import styled from "styled-components";
 import {Body,LeftContainer,RightContainer,MessageContainer,WelcomeMassage,
     LoginContainer,LoginText,InputText,InputBox,ButtonBox,LoginButton,JoinButton} from "../../components/LoginJoin"
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../Context/AuthContext";
+import axios from "axios";
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -25,6 +26,7 @@ const LoginForm = () => {
             if (response.ok) {
                 login(data);
                 console.log('Login successful:', data.id);
+                await deleteNovels(data.id); //novel status:TEMPORARY 삭제
                 navigate('/'); // 로그인 성공 후 리디렉션
             } else {
                 console.error('Failed to login:', data);
@@ -33,6 +35,18 @@ const LoginForm = () => {
             console.error('Error:', error);
         }
     };
+
+    //novel status:TEMPORARY 삭제 __충돌방지위해서 여기에서 실행
+    const deleteNovels = async (userID) => {
+        try {
+            await axios.delete(`http://localhost:8080/api/novels/deleteTemporary?memberId=${userID}`);
+            console.log('Temporary novels deleted successfully');
+        } catch (error) {
+            console.error('Error deleting temporary novels:', error);
+        }
+    };
+
+
 
     const goRegister = () => {
         navigate('/register');

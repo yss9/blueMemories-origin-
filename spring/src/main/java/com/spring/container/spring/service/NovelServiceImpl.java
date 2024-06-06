@@ -112,4 +112,18 @@ public class NovelServiceImpl implements NovelService {
         List<Novel> temporaryNovels = novelRepository.findByMemberIdAndStatus(memberId, NovelStatus.TEMPORARY);
         novelRepository.deleteAll(temporaryNovels);
     }
+//@Override
+//@Transactional
+//public void deleteTemporaryNovelsByMemberId(Long memberId) {
+//    try {
+//        List<Novel> temporaryNovels = novelRepository.findByMemberIdAndStatus(memberId, NovelStatus.TEMPORARY);
+//        if (temporaryNovels != null && !temporaryNovels.isEmpty()) {
+//            novelRepository.deleteAll(temporaryNovels);
+//        }
+//    } catch (Exception e) {
+//        // 예외를 기록하고 예외를 다시 던집니다.
+//        e.printStackTrace();
+//        throw e;
+//    }
+//}
 }

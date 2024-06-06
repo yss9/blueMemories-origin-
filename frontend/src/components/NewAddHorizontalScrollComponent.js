@@ -91,13 +91,14 @@ const ScrollNextButton = styled.button`
     background-color:transparent;
 `;
 
-const NewAddHorizontalScrollComponent = ({ items }) => {
+const NewAddHorizontalScrollComponent = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsPerPage = 3;//한번에 보여질 item 개수
     const {user} = useAuth();// userID
     const [novelId, setNovelId] = useState(null);//novel DB
     const navigate = useNavigate();
     const userID = user.id;
+    const [novels, setNovels] = useState([]);
 
     //새로운 novel 생성
     const handleCreateNovel = async () => {
@@ -125,7 +126,7 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
 
     //기존 novel db 불러오기 -> status가 'IN_COMPLETED' 인것들
     const fetchIncompleteNovels = async (userID) => {
-        console.log("userid: "+userID);
+        console.log("userid: " + userID);
         try {
             const response = await axios.get(`http://localhost:8080/api/novels/storageNovel/incomplete?memberId=${userID}`);
             return response.data;
@@ -134,17 +135,20 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
             return [];
         }
     };
-
-
-    //작성 중 작품 novels에 저장
-    const [novels, setNovels] = useState([]);
     useEffect(() => {
-        const loadNovels = async () => {
-            const data = await fetchIncompleteNovels(userID);
-            setNovels(data);
+        const FetchInCompleteNovels = async () => {
+            try {
+                const novel = await fetchIncompleteNovels(userID); // 2. 작성 중인 소설 가져오기
+                setNovels(novel);
+
+            } catch (error) {
+                console.error('Error deleting temporary novels:', error);
+            }
         };
-        loadNovels();
+
+        FetchInCompleteNovels();
     }, [userID]);
+
 
     //스크롤 오른쪽 next btn
     const handleNext = () => {
@@ -183,7 +187,7 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
                         ))}
                     </Wrapper>
                 </ScrollContainer>
-                <ScrollNextButton onClick={handleNext} disabled={currentIndex + itemsPerPage >= novels.length}/>
+                <ScrollNextButton onClick={handleNext} disabled={currentIndex + itemsPerPage > novels.length}/>
             </Container>
         </div>
     );

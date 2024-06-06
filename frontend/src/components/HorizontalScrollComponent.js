@@ -80,27 +80,31 @@ const HorizontalScrollComponent = () => {
     const itemsPerPage = 4;//한번에 보여질 item 개수
     const {user} = useAuth();// userID
     const userID = user.id;
+    const [novels, setNovels] = useState([]);
 
-    //userId와 일치하는 novel 중 '작성 완료'된 작품 가져오기
+    // 기존 novel db 불러오기 -> status가 'COMPLETED' 인것들
     const fetchCompleteNovels = async (userID) => {
-        console.log("userid: "+userID);
+        console.log("userid: " + userID);
         try {
             const response = await axios.get(`http://localhost:8080/api/novels/storageNovel/complete?memberId=${userID}`);
             return response.data;
         } catch (error) {
-            console.error('Error fetching incomplete novels:', error);
+            console.error('Error fetching complete novels:', error);
             return [];
         }
     };
-
-    //작성 완료 작품 novels에 저장
-    const [novels, setNovels] = useState([]);
     useEffect(() => {
-        const loadNovels = async () => {
-            const data = await fetchCompleteNovels(userID);
-            setNovels(data);
+        const FetchCompleteNovels = async () => {
+            try {
+                const novel = await fetchCompleteNovels(userID); // 2. 작성 중인 소설 가져오기
+                setNovels(novel);
+
+            } catch (error) {
+                console.error('Error deleting temporary novels:', error);
+            }
         };
-        loadNovels();
+
+        FetchCompleteNovels();
     }, [userID]);
 
     //스크롤 오른쪽 next btn
@@ -118,6 +122,7 @@ const HorizontalScrollComponent = () => {
 
     //스크롤 4개씩 넘어가는 효과
     const translateX = -(currentIndex * (780 / itemsPerPage));
+
 
     return (
         <div>
@@ -150,5 +155,3 @@ const HorizontalScrollComponent = () => {
 };
 
 export default HorizontalScrollComponent;
-// style={{ backgroundImage: `url(data:image/jpeg;base64,${novel.coverImage})` }}>
-// fontSize={`${novel.titleSize}px`}
