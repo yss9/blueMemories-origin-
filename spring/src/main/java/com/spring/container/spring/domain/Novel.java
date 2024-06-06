@@ -39,7 +39,7 @@ public class Novel {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private NovelStatus status=NovelStatus.IN_COMPLETED;
+    private NovelStatus status=NovelStatus.TEMPORARY;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -50,5 +50,6 @@ public class Novel {
     @OneToMany(mappedBy = "novel", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<NovelContent> contents = new ArrayList<>();
+
 }
 

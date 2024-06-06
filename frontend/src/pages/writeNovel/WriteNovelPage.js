@@ -426,6 +426,10 @@ const WriteNovelForm = () => {
         console.log("PrevPage_currentPageIndex: "+currentPageIndex);
     };
 
+    /**[저장하고 나가기]
+     * pages[] 내용을 novelContent에 덮어 씌우기 &
+     * novel stastus TEMPORARY => IN_COMPLETED 로 변경
+     */
     const handleSave = async () => {
         try {
             for (const page of pages) {
@@ -437,7 +441,6 @@ const WriteNovelForm = () => {
                     formData.append('image', page.image || new Blob([]));
                 });
 
-
                 const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -448,13 +451,38 @@ const WriteNovelForm = () => {
                     throw new Error('Failed to save novel contents');
                 }
             }
-
             console.log('Novel contents saved successfully');
+            // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
+            const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus/inComplete`, null, {
+                params: {
+                    novelId: novelId,
+                    status: 'IN_COMPLETED'
+                }
+            });
+
+            if (statusResponse.status === 200) {
+                console.log('Novel status updated successfully');
+            } else {
+                throw new Error('Failed to update novel status');
+            }
+
         } catch (error) {
             console.error('Error saving novel contents:', error);
         }
     };
-
+    // // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
+    // const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus/inComplete`, null, {
+    //     params: {
+    //         novelId: novelId,
+    //         status: 'IN_COMPLETED'
+    //     }
+    // });
+    //
+    // if (statusResponse.status === 200) {
+    //     console.log('Novel status updated successfully');
+    // } else {
+    //     throw new Error('Failed to update novel status');
+    // }
 
     return (
         <div>

@@ -16,4 +16,5 @@ public interface NovelService {
     void updateStatus(Long novelId, NovelStatus novelStatus);
     List<NovelDTO> getIncompleteNovelsByMemberId(Long memberId);
     List<NovelDTO> getCompleteNovelsByMemberId(Long memberId);
+    void deleteTemporaryNovelsByMemberId(Long memberId);
 }

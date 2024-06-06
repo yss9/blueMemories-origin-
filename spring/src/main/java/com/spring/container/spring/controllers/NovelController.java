@@ -48,13 +48,13 @@ public class NovelController {
         }
     }
 
-    //storage novel 에서 작성중인 소설의 title, cover_image가져오기
+    //storage novel 에서 '작성중'인 소설의 title, cover_image가져오기
     @GetMapping("/storageNovel/incomplete")
     public ResponseEntity<List<NovelDTO>> getIncompleteNovels(@RequestParam("memberId") Long memberId) {
         List<NovelDTO> novelDTOs = novelService.getIncompleteNovelsByMemberId(memberId);
         return ResponseEntity.ok(novelDTOs);
     }
-    //storage novel 에서 작성완료인 소설의 title, cover_image가져오기
+    //storage novel 에서 '작성완료'인 소설의 title, cover_image가져오기
     @GetMapping("/storageNovel/complete")
     public ResponseEntity<List<NovelDTO>> getCompleteNovels(@RequestParam("memberId") Long memberId) {
         List<NovelDTO> novelDTOs = novelService.getCompleteNovelsByMemberId(memberId);
@@ -84,6 +84,22 @@ public class NovelController {
         }
     }
 
+    /**[novel status => inComplete로 update]
+     * writeNovelPage.js 에서 '책 완성 ' 버튼 눌렀을 때
+     */
+    @PostMapping("/updateStatus/inComplete")
+    public ResponseEntity<String> replaceInContents(@RequestParam("novelId") Long novelId,
+                                                  @RequestParam("status") NovelStatus status) {
+        try{
+            novelService.updateStatus(novelId, status);
+            return ResponseEntity.ok("Novel replaced successfully");
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+
+    }
+
     /**[novel status => complete로 update]
      * writeNovelPage.js 에서 '책 완성 ' 버튼 눌렀을 때
      */
@@ -98,5 +114,15 @@ public class NovelController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
 
+    }
+
+    /**
+     * storageNovel.js에서 novel db가져올때
+     * status가 TEMPORARY인것 삭제
+     */
+    @DeleteMapping("/deleteTemporary")
+    public ResponseEntity<String> deleteTemporaryNovels(@RequestParam("memberId") Long memberId) {
+        novelService.deleteTemporaryNovelsByMemberId(memberId);
+        return ResponseEntity.ok("Temporary novels deleted successfully");
     }
 }

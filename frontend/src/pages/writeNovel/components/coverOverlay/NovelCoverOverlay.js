@@ -263,13 +263,15 @@ const NovelCoverOverlay=({visible,setVisible,novelId})=>{
 
 
     const handleCoverSave = async () => {
+        const title_x = parseInt(position.x);
+        const title_y = parseInt(position.y);
         try {
             const formData = new FormData();
             formData.append('novelId', novelId);
             formData.append('title', coverTitle);
             formData.append('coverImage', stableCoverImage|| new Blob([]));
-            formData.append('titleX', position.x);
-            formData.append('titleY', position.y);
+            formData.append('titleX', title_x);
+            formData.append('titleY', title_y);
             formData.append('titleSize', coverTitlePxSize);
             const response = await axios.post(`http://localhost:8080/api/novels/replace`, formData, {
                 headers: {

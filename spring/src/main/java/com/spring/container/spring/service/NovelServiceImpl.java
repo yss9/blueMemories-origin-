@@ -3,6 +3,7 @@ package com.spring.container.spring.service;
 import com.spring.container.spring.domain.Novel;
 import com.spring.container.spring.domain.NovelStatus;
 import com.spring.container.spring.dto.NovelDTO;
+import com.spring.container.spring.repository.NovelContentRepository;
 import com.spring.container.spring.repository.NovelRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class NovelServiceImpl implements NovelService {
 
     @Autowired
     private NovelRepository novelRepository;
+    @Autowired
+    private NovelContentRepository novelContentRepository;
 
     @Override
     public Novel createNovel(Novel novel) {
@@ -64,6 +67,7 @@ public class NovelServiceImpl implements NovelService {
         novelDTO.setTitle(novel.getTitle());
         novelDTO.setTitleX(novel.getTitleX());
         novelDTO.setTitleY(novel.getTitleY());
+        novelDTO.setTitleSize(novel.getTitleSize());
         novelDTO.setStatus(novel.getStatus().toString());
         novelDTO.setMemberId(novel.getMember().getId());
         novelDTO.setCoverImage(novel.getCoverImage());
@@ -100,5 +104,12 @@ public class NovelServiceImpl implements NovelService {
         else{
             throw new IllegalAccessError("Novel with ID " + novelId + " not found");
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteTemporaryNovelsByMemberId(Long memberId) {
+        List<Novel> temporaryNovels = novelRepository.findByMemberIdAndStatus(memberId, NovelStatus.TEMPORARY);
+        novelRepository.deleteAll(temporaryNovels);
     }
 }

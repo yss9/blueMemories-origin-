@@ -28,8 +28,8 @@ const Wrapper = styled.div`
   transform: translateX(${props => props.translateX}px);
 `;
 const NewItemBtn = styled.button`
-    width: 25%;
-    height: 82%;
+    width: 24%;
+    height: 85%;
     background-image: url("/resourcesPng/storagePage/storageNovelPage/add_novel_btn.png");
     background-size: contain;
     background-position: center;
@@ -41,13 +41,31 @@ const NewItemBtn = styled.button`
     cursor: pointer;
 `;
 const Item = styled.div`
-  flex: 0 0 20%;
-  box-sizing: border-box;
-  //padding: 10px;
-  text-align: center;
-  background: #f1f1f1;
-  margin: 8px;
-  border-radius: 8px;
+    position: relative;
+    width: 8.5vw;
+    height: 11vw;
+    box-sizing: border-box;
+    //text-align: center;
+    margin: 10px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    background-image: ${props => `url(data:image/jpeg;base64,${props.coverImage})`};
+`;
+
+const Title = styled.div`
+    /*텍스트 설정*/
+    font-size: ${props => props.fontSize||'15px'};
+    font-family: gangwonedusaeeum, sans-serif; //대체폰트
+    user-focus: none;
+    /*텍스트 위치*/
+    position: absolute;
+    left: ${props => props.x || '0px'};
+    top: ${props => props.y || '0px'};
+    margin: 6%;
 `;
 const ScrollBeforeButton = styled.button`
     width: 6%;
@@ -117,6 +135,8 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
         }
     };
 
+
+    //작성 중 작품 novels에 저장
     const [novels, setNovels] = useState([]);
     useEffect(() => {
         const loadNovels = async () => {
@@ -126,20 +146,22 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
         loadNovels();
     }, [userID]);
 
+    //스크롤 오른쪽 next btn
     const handleNext = () => {
-        if (currentIndex + itemsPerPage < items.length) {
+        if (currentIndex + itemsPerPage < novels.length) {
             setCurrentIndex(currentIndex + itemsPerPage);
         }
     };
-
+    //스크롤 왼쪽 prev btn
     const handlePrev = () => {
         if (currentIndex - itemsPerPage >= 0) {
             setCurrentIndex(currentIndex - itemsPerPage);
         }
     };
 
-    const translateX = -(currentIndex * (482 / itemsPerPage));
-    console.log(currentIndex);
+    //스크롤 4개씩 넘어가는 효과
+    const translateX = -(currentIndex * (581 / itemsPerPage));
+
     return (
         <div>
             <Container>
@@ -148,13 +170,20 @@ const NewAddHorizontalScrollComponent = ({ items }) => {
                 <ScrollContainer>
                     <Wrapper translateX={translateX}>
                         {novels.map((novel, index) => (
-                            <Item key={index}>
-                                <div>{novel.title}</div>
+                            <Item key={index}
+                                  coverImage={novel.coverImage}>
+
+                                <Title
+                                    fontSize={`${novel.titleSize+20}px`}
+                                    x={`${novel.titleX/2}px`}
+                                    y={`${novel.titleY/3}px`}>
+                                    {novel.title}
+                                </Title>
                             </Item>
                         ))}
                     </Wrapper>
                 </ScrollContainer>
-                <ScrollNextButton onClick={handleNext} disabled={currentIndex + itemsPerPage >= items.length}/>
+                <ScrollNextButton onClick={handleNext} disabled={currentIndex + itemsPerPage >= novels.length}/>
             </Container>
         </div>
     );

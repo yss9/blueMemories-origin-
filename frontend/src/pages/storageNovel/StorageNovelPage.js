@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { LoggedInNavigationBar } from '../../components/NavigationBar';
 import { BookListItemContainer } from '../../components/BookList';
 import { StoargeTextBtnContainer } from '../../components/StorageTextBtn';
+import {useEffect} from "react";
+import axios from "axios";
+import {useAuth} from "../Context/AuthContext";
 
 const Wrapper = styled.div`
     width:100%;
@@ -34,6 +37,19 @@ const ListBackgroundImg=styled.div`
 `;
 
 const StorageNovelForm = () => {
+    const {user} = useAuth();// userID
+    const userID = user.id;
+    useEffect(() => {
+        const deleteTemporaryNovels = async () => {
+            try {
+                await axios.delete(`http://localhost:8080/api/novels/deleteTemporary?memberId=${userID}`);
+                console.log('Temporary novels deleted successfully');
+            } catch (error) {
+                console.error('Error deleting temporary novels:', error);
+            }
+        };
+        deleteTemporaryNovels();
+    }, [userID]);
     return (
         <div>
             <Helmet>

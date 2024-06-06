@@ -5,27 +5,24 @@ import lombok.Setter;
 
 import java.util.Base64;
 
+@Getter
 public class NovelDTO {
     @Setter
-    @Getter
     private Long id;
     @Setter
-    @Getter
     private String title;
     @Setter
-    @Getter
     private int titleX;
     @Setter
-    @Getter
     private int titleY;
     @Setter
-    @Getter
+    private int titleSize;
+    @Setter
     private String status;
     @Setter
-    @Getter
     private Long memberId;
-    @Getter
     private String coverImage;
+
 
     public void setCoverImage(byte[] coverImage) {
         if (coverImage != null) {
