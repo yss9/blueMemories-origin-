@@ -32,4 +32,14 @@ public class NovelContentController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
+    @GetMapping("/view")
+    public ResponseEntity<List<NovelContent>> getContentsByNovelId(@RequestParam("novelId")Long novelId){
+        List<NovelContent> contents = novelContentService.findByNovelIdOrderByPageNumber(novelId);
+        if(contents!=null&&!contents.isEmpty()){
+            return ResponseEntity.ok(contents);
+        }else{
+            return ResponseEntity.noContent().build();
+        }
+    }
 }

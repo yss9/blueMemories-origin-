@@ -103,4 +103,9 @@ public class NovelContentServiceImpl implements NovelContentService {
             throw new IllegalArgumentException("Novel with id " + novelId + " not found");
         }
     }
+
+    @Override
+    public List<NovelContent> findByNovelIdOrderByPageNumber(Long novelId){
+        return novelContentRepository.findByNovelIdOrderByPageNumber(novelId);
+    }
 }

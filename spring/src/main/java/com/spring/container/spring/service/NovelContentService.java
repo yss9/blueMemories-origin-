@@ -19,4 +19,5 @@ import java.io.IOException;
 public interface NovelContentService {
 
     void replaceNovelContents(Long novelId, List<Integer> pageNumber, List<String> textContent, List<MultipartFile> image) throws IOException;
+    List<NovelContent> findByNovelIdOrderByPageNumber(Long novelId);
 }

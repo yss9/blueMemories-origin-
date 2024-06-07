@@ -471,6 +471,51 @@ const WriteNovelForm = () => {
         }
     };
 
+    /**[책 완성하기]
+     * pages[] 내용을 novelContent에 덮어 씌우기 &
+     * novel stastus TEMPORARY/IN_COMPLETED => COMPLETED 로 변경
+     */
+    const handleSaveComplete = async () => {
+        try {
+            for (const page of pages) {
+                const formData = new FormData();
+                formData.append('novelId', novelId);
+                pages.forEach((page, index) => {
+                    formData.append('pageNumber', page.pageNumber);
+                    formData.append('textContent', page.text);
+                    formData.append('image', page.image || new Blob([]));
+                });
+
+                const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                if (response.status !== 200) {
+                    throw new Error('Failed to save novel contents');
+                }
+            }
+            console.log('Novel contents saved successfully');
+            // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
+            const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus`, null, {
+                params: {
+                    novelId: novelId,
+                    status: 'COMPLETED'
+                }
+            });
+
+            if (statusResponse.status === 200) {
+                console.log('Novel status updated successfully');
+            } else {
+                throw new Error('Failed to update novel status');
+            }
+
+        } catch (error) {
+            console.error('Error saving novel contents:', error);
+        }
+    };
+
     return (
         <div>
             <Helmet>
@@ -478,7 +523,7 @@ const WriteNovelForm = () => {
                 <meta name="description" content="BlueMemories WriteNovel Page"/>
             </Helmet>
             <Wrapper>
-                <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave} novelId={novelId}></WriteMenuBar>
+                <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave} novelId={novelId} onComplete={handleSaveComplete}></WriteMenuBar>
                 <BodyContainer>
                     <BeforePageBtn onClick={handlePrevPage}></BeforePageBtn>
                     <WriteContainer>

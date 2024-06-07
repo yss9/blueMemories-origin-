@@ -62,7 +62,7 @@ const MenuItem = styled.button`
     
 `;
 //로그인 했을 때 네비게이션 바
-const WriteMenuBar=({onClick, onSave, novelId})=>{
+const WriteMenuBar=({onClick, onSave, novelId, onComplete})=>{
     const navigate = useNavigate();
     const goToStorageNovel=()=>{
         navigate("/storageNovel");
@@ -108,7 +108,9 @@ const WriteMenuBar=({onClick, onSave, novelId})=>{
                 else {
                     const userConfirmed = window.confirm("완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?");
                     if (userConfirmed) { //"확인 버튼 클릭한 경우"
-                        updateNovelStatus(novelId,'COMPLETED');
+                        // updateNovelStatus(novelId,'COMPLETED'); //novel의 status를 completed로 변경
+                        onComplete();
+                        navigate("/storageNovel");
                     }
                 }
             });
@@ -118,21 +120,21 @@ const WriteMenuBar=({onClick, onSave, novelId})=>{
         }
     };
 
-    //novel status update => COMPLETED
-    const updateNovelStatus = async (novelId, status) => {
-        try {
-            const response = await axios.post('http://localhost:8080/api/novels/updateStatus', null, {
-                params: {
-                    novelId: novelId,
-                    status: status
-                }
-            });
-            console.log('Novel status updated successfully:', response.data);
-            navigate("/storageNovel");
-        } catch (error) {
-            console.error('Error updating novel status:', error);
-        }
-    };
+    // //novel status update => COMPLETED
+    // const updateNovelStatus = async (novelId, status) => {
+    //     try {
+    //         const response = await axios.post('http://localhost:8080/api/novels/updateStatus', null, {
+    //             params: {
+    //                 novelId: novelId,
+    //                 status: status
+    //             }
+    //         });
+    //         console.log('Novel status updated successfully:', response.data);
+    //         navigate("/storageNovel");
+    //     } catch (error) {
+    //         console.error('Error updating novel status:', error);
+    //     }
+    // };
     return (
         <ImageContainer>
             <TopImage></TopImage>
@@ -149,5 +151,25 @@ const WriteMenuBar=({onClick, onSave, novelId})=>{
         </ImageContainer>
     );
 };
-export {WriteMenuBar};
+
+const ViewMenuBar=()=>{
+    const navigate=useNavigate();
+    const handleViewOut=()=>{
+        navigate('/storageNovel');
+    }
+    return (
+        <ImageContainer>
+            <TopImage></TopImage>
+            <MenuBarContainer>
+                <MenuGroup>
+                    <MenuItem></MenuItem>
+                </MenuGroup>
+                <MenuGroup>
+                    <MenuItem onClick={handleViewOut}>나가기</MenuItem>
+                </MenuGroup>
+            </MenuBarContainer>
+        </ImageContainer>
+    );
+};
+export {WriteMenuBar,ViewMenuBar};
 

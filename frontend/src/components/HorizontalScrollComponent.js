@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import axios from "axios";
 import {useAuth} from "../pages/Context/AuthContext";
+import {useNavigate} from "react-router-dom";
 
 const Container=styled.div`
     width: 43.8vw;
@@ -123,7 +124,12 @@ const HorizontalScrollComponent = () => {
     //스크롤 4개씩 넘어가는 효과
     const translateX = -(currentIndex * (780 / itemsPerPage));
 
-
+    const navigate = useNavigate();
+    //작성 완료 item 클릭하면 화면 전환 (해당 novelID넘겨줌)
+    const handleNavigateViewPage=(novelId)=>{
+        console.log('novelId:'+ novelId);
+        navigate('/viewNovel',  { state: { novelId: novelId } });
+    }
     return (
         <div>
             <Container>
@@ -132,8 +138,9 @@ const HorizontalScrollComponent = () => {
                     <Wrapper translateX={translateX}>
                         {novels.map((novel, index) => (
                             <Item key={index}
-                                  coverImage={novel.coverImage}>
-
+                                  coverImage={novel.coverImage}
+                                  onClick={()=>handleNavigateViewPage(novel.id)}
+                            >
                                 <Title
                                     fontSize={`${novel.titleSize+20}px`}
                                     x={`${novel.titleX/2}px`}
