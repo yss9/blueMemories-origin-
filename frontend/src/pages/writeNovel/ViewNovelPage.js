@@ -24,7 +24,7 @@ const BodyContainer=styled.div`
     align-items: center; /* 수직 중앙 정렬 */
 `;
 const BeforePageBtn = styled.button`
-    background: url("/resourcesPng/writeNovelPage/beforePageBtn.png") no-repeat;
+    background: url(${props => props.isActive ? "/resourcesPng/writeNovelPage/beforePageBtn.png" : "/resourcesPng/writeNovelPage/disabledBeforePageBtn.png"}) no-repeat;
     background-size: contain;
     /*스타일*/
     border: none;
@@ -32,7 +32,7 @@ const BeforePageBtn = styled.button`
     height: 2.5vw;
     width: 2.5vw;
     /*마우스 HOVER 설정*/
-    cursor: pointer;
+    cursor: ${props => (props.disabled ? 'default' : 'pointer')};
 `;
 const AfterePageBtn = styled.button`
     background: url(${props => props.isActive ? "/resourcesPng/writeNovelPage/afterPageBtn.png" : "/resourcesPng/writeNovelPage/disabledAfterPageBtn.png"}) no-repeat;
@@ -87,15 +87,6 @@ const WriteText = styled.div`
     /*위치*/
     top:10%;
     left: ${(props) => props.marginLeft || '15.2%'};
-    //&:focus {
-    //    border: none; // 클릭했을 때 테두리 없앰
-    //    outline:none;
-    //    resize: none;
-    //    overflow: hidden; /* 스크롤바 숨김 */
-    //    /*텍스트 설정*/
-    //    font-size: 0.8vw;
-    //    font-family: BokkLight, sans-serif; //대체폰트
-    //}
 `;
 const Image=styled.img`
     width: 25vw;
@@ -147,6 +138,10 @@ const ViewNovelForm = () => {
     const [imageB, setImageB]=useState(null);
     const [pageNumberA, setPageNumberA]=useState(1);
     const [pageNumberB, setPageNumberB]=useState(2);
+    //페이지 넘김 버튼 비/활성화
+    const [nextPageBtnActive, setNextPageBtnActive] = useState(false);
+    const [prevPageBtnActive, setPrevPageBtnActive] = useState(false);
+
     /**
      * novelContents db에서 novel id와 일치하는 값들 가져오기(List)
      * 'novelContents[]' 에 저장
@@ -170,15 +165,18 @@ const ViewNovelForm = () => {
             fetchContents();
         }
     },[novelId]);
-
-
-    //text랑 image novelContent 값으로 초기화
+    /**
+     * [text, image, pageNumber]변수들 'novelContents[]' 값으로 초기화
+     */
     useEffect(()=>{
         if(novelContents.length>0){
             const handleSetTextAndImageA=()=>{
                 setTextA(novelContents[currentPage]?.textContent || '');
                 if(novelContents[currentPage].image){
                     setImageA(`data:image/jpeg;base64,${novelContents[currentPage].image}`);
+                }
+                else{
+                    setImageA('');
                 }
                 setPageNumberA(novelContents[currentPage].pageNumber);
             };
@@ -187,12 +185,60 @@ const ViewNovelForm = () => {
                 if(novelContents[currentPage+1].image){
                     setImageB(`data:image/jpeg;base64,${novelContents[currentPage+1].image}`);
                 }
+                else{
+                    setImageB('');
+                }
                 setPageNumberB(novelContents[currentPage+1].pageNumber);
             };
             handleSetTextAndImageA();
             handleSetTextAndImageB();
         }
     },[currentPage,novelContents]);
+    /**
+     * pageNextBtn 설정
+     * if(현재 페이지 + 1 < novelContents.length) => nextBtn 활성화
+     * ---------------------------
+     * pagePrevBtn 설정
+     * if(현재 페이지 === 0 ) => prevBtn 비활성화
+     * ---------------------------
+     * 현재 페이지값이 갱신될때마다 실행되어야 하므로 useEffect 사용
+     */
+    useEffect(()=>{
+        if(currentPage+1){
+            const handleNextPageButton=()=>{
+                if(currentPage + 2< novelContents.length){ //currentPage는 0부터 시작이기 때문에 2를 더해줌
+                    setNextPageBtnActive(true);
+                }
+                else{
+                    setNextPageBtnActive(false);
+                }
+            };
+            const handlePrevPageButton=()=>{
+                if(currentPage === 0){ //currentPage가 0이면 이전 페이지 버튼 비활성화
+                    setPrevPageBtnActive(false);
+                }
+                else{
+                    setPrevPageBtnActive(true);
+                }
+            };
+            handleNextPageButton();
+            handlePrevPageButton();
+        }
+    },[currentPage,novelContents]);
+    /**
+     * pageNextBtn 클릭했을 때 실행되는 함수
+     * currentPage++ 해줌.
+     */
+    const handleNextPageSetting=()=>{
+        setCurrentPage(currentPage+2);
+    }
+    /**
+     * pagePrevBtn 클릭했을 때 실행되는 함수
+     * currentPage-- 해줌.
+     */
+    const handlePrevPageSetting=()=>{
+        setCurrentPage(currentPage-2);
+    }
     return (
         <div>
             <Helmet>
@@ -202,7 +248,7 @@ const ViewNovelForm = () => {
             <Wrapper>
                 <ViewMenuBar></ViewMenuBar>
                 <BodyContainer>
-                    <BeforePageBtn></BeforePageBtn>
+                    <BeforePageBtn isActive={prevPageBtnActive} disabled={!prevPageBtnActive} onClick={handlePrevPageSetting}></BeforePageBtn>
                     <WriteContainer>
                         <WritePage></WritePage>
                         <WriteText>{textA}</WriteText>
@@ -212,7 +258,7 @@ const ViewNovelForm = () => {
                         <LeftPageNumber>{pageNumberA}</LeftPageNumber>
                         <RightPageNumber>{pageNumberB}</RightPageNumber>
                     </WriteContainer>
-                    <AfterePageBtn></AfterePageBtn>
+                    <AfterePageBtn isActive={nextPageBtnActive} disabled={!nextPageBtnActive} onClick={handleNextPageSetting}></AfterePageBtn>
                 </BodyContainer>
             </Wrapper>
         </div>
