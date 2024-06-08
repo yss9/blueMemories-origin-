@@ -125,6 +125,7 @@ const HorizontalScrollComponent = () => {
     const translateX = -(currentIndex * (780 / itemsPerPage));
 
     const navigate = useNavigate();
+
     //작성 완료 item 클릭하면 화면 전환 (해당 novelID넘겨줌)
     const handleNavigateViewPage=(novelId)=>{
         console.log('novelId:'+ novelId);

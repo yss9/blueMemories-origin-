@@ -196,7 +196,7 @@ const ViewNovelForm = () => {
     },[currentPage,novelContents]);
     /**
      * pageNextBtn 설정
-     * if(현재 페이지 + 1 < novelContents.length) => nextBtn 활성화
+     * if(현재 페이지 + 2 < novelContents.length) => nextBtn 활성화
      * ---------------------------
      * pagePrevBtn 설정
      * if(현재 페이지 === 0 ) => prevBtn 비활성화

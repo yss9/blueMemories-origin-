@@ -62,7 +62,7 @@ const MenuItem = styled.button`
     
 `;
 //로그인 했을 때 네비게이션 바
-const WriteMenuBar=({onClick, onSave, novelId, onComplete})=>{
+const WriteMenuBar=({visible, onSave, novelId, onComplete})=>{
     const navigate = useNavigate();
     const goToStorageNovel=()=>{
         navigate("/storageNovel");
@@ -97,13 +97,13 @@ const WriteMenuBar=({onClick, onSave, novelId, onComplete})=>{
             novel.forEach(novel => {
                 if (novel.title === 'untitled' && (novel.coverImage === null)) {
                     alert('책제목과 책표지를 생성해 주세요.');
-                    onClick();
+                    visible();
                 } else if (!novel.coverImage || novel.coverImage === '') {
                     alert('책표지를 생성해 주세요.');
-                    onClick();
+                    visible();
                 } else if (novel.title === 'untitled'){
                     alert('책제목을 입력해 주세요.');
-                    onClick();
+                    visible();
                 }
                 else {
                     const userConfirmed = window.confirm("완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?");
@@ -120,28 +120,13 @@ const WriteMenuBar=({onClick, onSave, novelId, onComplete})=>{
         }
     };
 
-    // //novel status update => COMPLETED
-    // const updateNovelStatus = async (novelId, status) => {
-    //     try {
-    //         const response = await axios.post('http://localhost:8080/api/novels/updateStatus', null, {
-    //             params: {
-    //                 novelId: novelId,
-    //                 status: status
-    //             }
-    //         });
-    //         console.log('Novel status updated successfully:', response.data);
-    //         navigate("/storageNovel");
-    //     } catch (error) {
-    //         console.error('Error updating novel status:', error);
-    //     }
-    // };
     return (
         <ImageContainer>
             <TopImage></TopImage>
             <MenuBarContainer>
                 <MenuGroup>
                     <MenuItem onClick={handleComplete}>책 완성</MenuItem>
-                    <MenuItem onClick={onClick}>책 표지</MenuItem>
+                    <MenuItem onClick={visible}>책 표지</MenuItem>
                     <MenuItem onClick={onSave}>임시저장</MenuItem>
                 </MenuGroup>
                 <MenuGroup>

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {Context} from "../../../Context/Context";
 
 const ImagePromptTextContainer= styled.div`
@@ -63,8 +63,7 @@ const PromptTextarea = styled.textarea`
         opacity: 0.5;
     }
 `;
-const TitlePrompt=({onChange})=>{
-    const {setCoverTitle}=useContext(Context);
+const TitlePrompt=({onChange, setCoverTitle})=>{
    const handleChange = (event) => {
        const title=event.target.value;
        onChange(title); // 입력된 값으로 콜백 함수 호출
@@ -77,6 +76,7 @@ const TitlePrompt=({onChange})=>{
            onChange(event.target.value+'\n'); // 입력된 값으로 콜백 함수 호출
        }
    };
+
     return(
         <ImagePromptTextContainer>
             <PromptTitle>Title</PromptTitle>

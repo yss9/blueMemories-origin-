@@ -95,10 +95,15 @@ const NewAddHorizontalScrollComponent = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsPerPage = 3;//한번에 보여질 item 개수
     const {user} = useAuth();// userID
-    const [novelId, setNovelId] = useState(null);//novel DB
+
     const navigate = useNavigate();
     const userID = user.id;
     const [novels, setNovels] = useState([]);
+
+    //writeNovelPage로 화면 전환
+    const navigateToWriteNovel=(novelId)=>{
+        navigate('/writeNovel', {state: {novelId:novelId } }); // 소설 작성 페이지로 리디렉션 (생성된 novel id 넘겨줌)
+    }
 
     //새로운 novel 생성
     const handleCreateNovel = async () => {
@@ -113,9 +118,8 @@ const NewAddHorizontalScrollComponent = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                setNovelId(data.id); // 생성된 소설 ID로 업데이트
                 console.log('Novel created with ID:', data.id);
-                navigate('/writeNovel', {state: {novelId: data.id}}); // 소설 작성 페이지로 리디렉션 (생성된 novel id 넘겨줌)
+                navigateToWriteNovel(data.id);
             } else {
                 console.error('Failed to create novel:', data);
             }
@@ -175,8 +179,9 @@ const NewAddHorizontalScrollComponent = () => {
                     <Wrapper translateX={translateX}>
                         {novels.map((novel, index) => (
                             <Item key={index}
-                                  coverImage={novel.coverImage}>
-
+                                  coverImage={novel.coverImage}
+                                  onClick={()=>navigateToWriteNovel(novel.id)}
+                            >
                                 <Title
                                     fontSize={`${novel.titleSize+20}px`}
                                     x={`${novel.titleX/2}px`}

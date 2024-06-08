@@ -9,6 +9,7 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {Context} from "../../../Context/Context";
 import {loadImageFromBackend} from "../../../API/stableApi";
 import axios from "axios";
+import {useLocation} from "react-router";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
@@ -119,6 +120,7 @@ const Title = styled.text`
     white-space: pre-wrap; //'\n' 줄바꿈 인식
     /*위치 드래그*/
     cursor:move;
+    background-color: red;
 `;
 /////---오른쪽 컨테이너---/////
 const RightContainer=styled.div`
@@ -165,31 +167,115 @@ const ImageCreateBtn = styled.div`
     }
 `;
 const NovelCoverOverlay=({visible,setVisible,novelId})=>{
+    //db 초기값 저장
+    const [novelCover,setNovelCover]=useState(null);
+    // 초기값 이후 수정된 값들을 저장
+    const [cover, setCover]=useState(null);
+    // 제목 변수
+    const [coverTitle, setCoverTitle]=useState('');
+    const [coverTitleX, setCoverTitleX]=useState(0);
+    const [coverTitleY, setCoverTitleY]=useState(0);
+    const [coverTitleSize, setCoverTitleSize]=useState(5);
+    // image, prompt 변수
+    const [stableStyle,setStableStyle]=useState('fantasy');
+    const [stablePrompt,setStablePrompt]=useState('');
+    const [imageFile,setImageFile]=useState(null);
+    const [imageUrl, setImageUrl]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
+    //제목 위치 이동
+    const [position, setPosition] = useState({ x: 0, y: 0 }); //드래그 중인 요소의 현재 위치
+    const [dragging, setDragging] = useState(false);  //드래그 상태 ->true는 드래그중, false는 드래그 아님
+    const [coverTitleStartPosition, setCoverTitleStartPosition] = useState({ x: 0, y: 0 });//드래그가 시작된 지점의 위치
+    const titleContainerRef = useRef(null);  //제목 컨테이너 참조
+    const titleRef = useRef(null);  //제목 컨테이너 참조
 
-    // 제목 동기화
-    const {coverTitle, setCoverTitle}=useContext(Context);
+    /** novel db에서 novelid와 일치하는 것 가져와서 표지 초기값 세팅
+     * setCover(novelCover) 를 통해 원본은 건들이지 않음
+     * _원본은 수정된 cover값을 저장할때 바뀌는 것
+     * 사용자가 수정하는 내용들은 cover에 쓰여진다.
+     */
+    useEffect(() => {
+        const fetchNovelContent = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/novels/cover/${novelId}`);
+                setNovelCover(response.data);
+                console.log('sucess fetching novel cover');
+            } catch (error) {
+                console.error("Error fetching novel content", error);
+            }
+        };
+        if (novelId) {
+            fetchNovelContent();
+        }
+    }, [novelId]);
+    useEffect(() => {
+        if (novelCover !== null) { //이전 작성내용이 있는 상태
+            setCover(novelCover);
+        }
+    }, [novelCover]); // novelCover 변경될 때 실행
+    useEffect(() => {
+        if (novelCover!==null && cover !== null) { //이전 작성내용이 있는 상태
+            console.log('초기화 진행');
+            if(cover.title === 'untitled'){
+                setCoverTitle('');
+            }
+            else{
+                setCoverTitle(cover.title);
+            }
+            setCoverTitleX(cover.titleX);
+            setCoverTitleY(cover.titleY);
+            if(cover.titleSize === 0){
+                setCoverTitleSize(5);
+            }
+            else{
+                setCoverTitleSize(cover.titleSize);
+            }
+            if(cover.coverImage ===null){
+                setImageUrl('/resourcesPng/writeNovelPage/imageShowPanel.png');
+            }
+            else{
+                setImageUrl(`data:image/jpeg;base64,${cover?.coverImage}`);
+            }
+        }
+    }, [visible]); // novelCover 변경될 때 실행
+
+    /** [이미지 설정]
+     * input, dragAndDrop
+     */
+    const handleImageSelected = (file) => {
+            setImageFile(file);
+            const url=URL.createObjectURL(file);
+            setImageUrl(url);
+    };
+
+    /** ['AI 그림 생성하기' 버튼]
+     * stableAPI 호출
+     */
+    const loadImageFromApi = async () => {
+        try {//prompt, style은 저장할 필요 x 표지 창 열때마다 값 초기화 돼있도록 할것임 -> novel db에서 처음에 초기값 가져올때 이 값들은 없기 때문
+            const file = await loadImageFromBackend(stablePrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
+            setImageFile(file);
+            const url=URL.createObjectURL(file);
+            setImageUrl(url);
+        } catch (error) {
+            console.error('Error loading image:', error);
+        }
+    };
+
+    /** [title update]
+     */
     const handleTitleChange = (newTitle) => {
-        // 입력된 제목으로 상태 업데이트
         setCoverTitle(newTitle);
     };
 
-    // 스크롤러 값에 따른 제목 크기 변경
-    const {coverTitlePxSize, setCoverTitlePxSize}=useContext(Context);
+    //스크롤러 값에 따른 제목 크기 변경
     const handleTitlePxSize = (newSize)=>{
-        setCoverTitlePxSize(newSize);
+        setCoverTitleSize(newSize);
     };
 
-    //제목 위치 이동
-    //드래그 중인 요소의 현재 위치
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    //드래그 상태 ->true는 드래그중, false는 드래그 아님
-    const [dragging, setDragging] = useState(false);
-    //드래그가 시작된 지점의 위치
-    const {coverTitleStartPosition, setCoverTitleStartPosition}=useContext(Context);
-    //제목 컨테이너 참조
-    const titleContainerRef = useRef(null);
-    //제목 컨테이너 참조
-    const titleRef = useRef(null);
+    /**
+     * 컨테이너 내에서 제목 마우스 이동
+     * handleMouseDown,handleMouseMove,handleMouseUp
+     */
     const handleMouseDown=(event)=>{
         if (event.target === event.currentTarget){
             setDragging(true);
@@ -223,111 +309,106 @@ const NovelCoverOverlay=({visible,setVisible,novelId})=>{
 
             // 위치를 업데이트합니다.
             setPosition({ x: newX, y: newY });
-
+            setCoverTitleX(position.x);
+            setCoverTitleY(position.y);
         }
     };
     const handleMouseUp=()=>{
         setDragging(false);
     };
 
-    //취소 버튼 -> 창닫기
+    //'취소' 버튼 -> 창 닫기
     const handleClose = () => {
         setVisible(false);
+        setCoverTitle('');
     };
 
-
-    const [stableCoverImage, setStableCoverImage]=useState(null);
-    const [coverImageUrl,setCoverImageUrl]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
-    // 이미지가 선택되었을 때 호출될 함수
-    const handleImageSelected = (file) => {
-        const imageFile=URL.createObjectURL(file);
-        setCoverImageUrl(imageFile);
-        setStableCoverImage(file);
-    };
-
-    //contextAPI: style-preset
-    const {stableCoverStyle}=useContext(Context);
-    //contextAPI: prompt
-    const {stableCoverPrompt} = useContext(Context);
-    //stableDiffusion API formData
-    const loadImageFromApi = async () => {
-        try {
-            const file = await loadImageFromBackend(stableCoverPrompt,stableCoverStyle,"9:16");//encodedPrompt,stableStyle
-            const imageUrl=URL.createObjectURL(file);
-            setStableCoverImage(file); // 생성된 이미지 File 상태에 저장
-            setCoverImageUrl(imageUrl);
-        } catch (error) {
-            console.error('Error loading image:', error);
-        }
-    };
-
-
+    //'등록' 버튼 -> 창 닫기
     const handleCoverSave = async () => {
-        const title_x = parseInt(position.x);
-        const title_y = parseInt(position.y);
-        try {
-            const formData = new FormData();
-            formData.append('novelId', novelId);
-            formData.append('title', coverTitle);
-            formData.append('coverImage', stableCoverImage|| new Blob([]));
-            formData.append('titleX', title_x);
-            formData.append('titleY', title_y);
-            formData.append('titleSize', coverTitlePxSize);
-            const response = await axios.post(`http://localhost:8080/api/novels/replace`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            if (response.status !== 200) {
-                throw new Error('Failed to save novel contents');
-            }
-            console.log('Novel contents saved successfully');
-            handleClose();
-        } catch (error) {
-            console.error('Error saving novel contents:', error);
+        cover.title=coverTitle;
+        cover.titleX=coverTitleX;
+        cover.titleY=coverTitleY;
+        cover.titleSize=coverTitleSize;
+        if(imageFile!==null){
+            const image64 = await convertFileToBase64(imageFile);
+            cover.coverImage=image64.split(',')[1];
         }
+        handleClose();
+        //밑의 코드는 저장하고 나가기 또는 임시저장 버튼에서 실행
+        // const title_x = parseInt(position.x);
+        // const title_y = parseInt(position.y);
+        // try {
+        //     const formData = new FormData();
+        //     formData.append('novelId', novelId);
+        //     formData.append('title', coverTitle);
+        //     formData.append('coverImage', stableCoverImage|| new Blob([]));
+        //     formData.append('titleX', title_x);
+        //     formData.append('titleY', title_y);
+        //     formData.append('titleSize', coverTitlePxSize);
+        //     const response = await axios.post(`http://localhost:8080/api/novels/replace`, formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data',
+        //         },
+        //     });
+        //     if (response.status !== 200) {
+        //         throw new Error('Failed to save novel contents');
+        //     }
+        //     console.log('Novel contents saved successfully');
+        //     handleClose();
+        // } catch (error) {
+        //     console.error('Error saving novel contents:', error);
+        // }
     };
-
+    //file => base64 형변환
+    const convertFileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
     return(
         <Overlay visible={visible}>
             <LeftContainer>
                 <ImagePromptContainer>
-                    <ImageStyleDropDown></ImageStyleDropDown>
-                    <ImagePrompt></ImagePrompt>
+                    <ImageStyleDropDown stableStyle={stableStyle} setStableStyle={setStableStyle}></ImageStyleDropDown>
+                    <ImagePrompt stablePrompt={stablePrompt} setStablePrompt={setStablePrompt} ></ImagePrompt>
                     <ImageUploader key="secondImageUploader" onImageSelected={handleImageSelected}></ImageUploader>
                     <DragAndDrop onImageSelected={handleImageSelected}></DragAndDrop>
                 </ImagePromptContainer>
                 <ImageCreateButton onClick={loadImageFromApi}>AI 그림 생성하기</ImageCreateButton>
             </LeftContainer>
             <ImageShowContainer>
-                <CoverImage src={coverImageUrl} alt="Selected Image"></CoverImage>
+                <CoverImage src={imageUrl} alt="Selected Image"></CoverImage>
                 <TitleContainer
                     ref={titleContainerRef}
                     onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
                     onMouseDown={handleMouseDown}>
+
                     <Title
                         ref={titleRef}
                         onMouseUp={handleMouseUp}
                         onMouseMove={handleMouseMove}
                         onMouseDown={handleMouseDown}
                         style={{
-                            fontSize:`${coverTitlePxSize}vw`,
+                            fontSize:`${coverTitleSize}vw`,
                             overflow:`hidden`,
                             cursor:`move`,
-                            left: `${position.x}px`,
-                            top:`${position.y}px`,
+                            left: `${coverTitleX}px`,
+                            top:`${coverTitleY}px`,
                             position:`absolute`
                     }}>{coverTitle}</Title>
                 </TitleContainer>
             </ImageShowContainer>
             <RightContainer>
                 <TitlePromptContainer>
-                    <TitlePrompt onChange={handleTitleChange}></TitlePrompt>
+                    <TitlePrompt onChange={handleTitleChange} setCoverTitle={setCoverTitle}></TitlePrompt>
                     <TitleSize onChange={handleTitlePxSize}></TitleSize>
                 </TitlePromptContainer>
                 <ImageCreateBtnContainer>
-                    <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>
+                    <ImageCreateBtn onClick={handleClose} >취소</ImageCreateBtn>
                     <ImageCreateBtn onClick={handleCoverSave}>등록</ImageCreateBtn>
                 </ImageCreateBtnContainer>
             </RightContainer>

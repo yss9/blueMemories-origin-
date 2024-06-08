@@ -28,7 +28,7 @@ const BodyContainer=styled.div`
     align-items: center; /* 수직 중앙 정렬 */
 `;
 const BeforePageBtn = styled.button`
-    background: url("/resourcesPng/writeNovelPage/beforePageBtn.png") no-repeat;
+    background: url(${props => props.isActive ? "/resourcesPng/writeNovelPage/beforePageBtn.png" : "/resourcesPng/writeNovelPage/disabledBeforePageBtn.png"}) no-repeat;
     background-size: contain;
     /*스타일*/
     border: none;
@@ -36,7 +36,7 @@ const BeforePageBtn = styled.button`
     height: 2.5vw;
     width: 2.5vw;
     /*마우스 HOVER 설정*/
-    cursor: pointer;
+    cursor: ${props => (props.disabled ? 'default' : 'pointer')};
 `;
 const AfterePageBtn = styled.button`
     background: url(${props => props.isActive ? "/resourcesPng/writeNovelPage/afterPageBtn.png" : "/resourcesPng/writeNovelPage/disabledAfterPageBtn.png"}) no-repeat;
@@ -186,336 +186,301 @@ const RightPageNumber=styled.span`
 `;
 
 const WriteNovelForm = () => {
-
-    //이미지 추가버튼 => 이미지 생성 overlay
-    //해당 페이지에 글자가 적혀있을 경우 그림 생성 x
-    const {novelOverlayState, setNovelOverlayState}=useContext(Context);
-    const toggleOverlayA=()=> {//왼쪽 페이지 글자 유무 확인
-        if(textA.trim()==='')//글자가 없을때만 이미지 추가 오버레이 내림
-            setNovelOverlayState(true);
-        else{
-            alert('텍스트를 지우고 다시 시도해주세요.');
-        }
-    };
-    const toggleOverlayB=()=> {//오른쪽 페이지 글자 유무 확인
-        if(textB.trim()==='')//글자가 없을때만 이미지 추가 오버레이 내림
-            setNovelOverlayState(true);
-        else{
-            alert('텍스트를 지우고 다시 시도해주세요.');
-        }
-    };
-
-    //textarea 글자수 제한(높이가 기준)
-    const [textA, setTextA] = useState('');
-    const [textB, setTextB] = useState('');
-
-
-    //menubar 책 표지 버튼(WriteMenuBar.js)눌렀을 때 콜백함수
-    const [coverVisible, setCoverVisible] = useState(false);
-    const handleCoverBtnClick = (data) => {
-        // WriteMenuBar 클릭 시 NovelCoverOverlay 보이도록 설정
-        setCoverVisible(!coverVisible);
-        //이미지 생성 화면이 출력돼있을 경우 올라감
-        setNovelOverlayState(false);
-    };
-    //imageOverlayItem 상태 관리
-    const {stableStyle,setStableStyle}=useContext(Context);//contextAPI: style-preset
-    const {stablePrompt,setStablePrompt} = useContext(Context);//contextAPI: prompt
-    const {setImageUrl} = useContext(Context);//contextAPI: prompt
-    //textarea, image, imageAddBtn, imageDeleteBtn 상태 관리
-    const [leftImage, setLeftImage] = useState('');//imageL
-    const [rightImage, setRightImage] = useState('');//imageR
-    const [leftImagePrompt, setLeftImagePrompt] = useState(stablePrompt);//promptL
-    const [rightImagePrompt, setRightImagePrompt] = useState(stablePrompt);//promptR
-    const [leftImageStyle, setLeftImageStyle] = useState(stableStyle);//styleL
-    const [rightImageStyle, setRightImageStyle] = useState(stableStyle);//styleR
-    const [leftDisabled, setLeftDisabled] = useState(false);//imageAddBtnL
-    const [rightDisabled, setRightDisabled] = useState(false);//imageAddBtnR
-
-    // 'left' 또는 'right' 값을 저장할 상태 설정
-    const [selectedButton, setSelectedButton] = useState(null);
-    // 왼쪽 이미지 생성 버튼 클릭 핸들러
-    const handleLeftButtonClick = () => {
-        toggleOverlayA();//글자 유무 확인
-        setSelectedButton('left');
-        // 왼쪽 이미지의 style, prompt, img 를 overlay에 전달
-        settingImageOverlayItem(leftImageStyle,leftImagePrompt,leftImage);
-    };
-    // 오른쪽 이미지 생성 버튼 클릭 핸들러
-    const handleRightButtonClick = () => {
-        toggleOverlayB();
-        setSelectedButton('right');
-        // 오른쪽 이미지의 style, prompt, img 를 overlay에 전달
-        settingImageOverlayItem(rightImageStyle,rightImagePrompt,rightImage);
-    };
-    //이미지의 style, prompt, imageUrl 를 왼/오 페이지 값으로 전환
-    const settingImageOverlayItem=(style,prompt,imageUrl)=>{
-        if(imageUrl===''){
-            setImageUrl('/resourcesPng/writeNovelPage/imageShowPanel.png');
-        }else{
-            setImageUrl(imageUrl);
-        }
-        setStableStyle(style);
-        setStablePrompt(prompt);
-
-    };
-
-    //두 페이지 내용 유무 확인 후 다음 장 버튼 비/활성화
-    const [nextPageBtnActive, setNextPageBtnActive] = useState(false);
-    useEffect(() => {
-        if (rightDisabled||textB.trim()!=='') {//왼쪽 페이지에 등록된 이미지가 있거나 글자가 있을 경우
-            if(leftDisabled||textA.trim()!==''){
-                //다음 페이지 넘김 버튼 활성화
-                setNextPageBtnActive(true);
-            }
-            else{
-                setNextPageBtnActive(false);
-            }
-        }
-        else{
-            setNextPageBtnActive(false);
-        }
-    }, [rightDisabled,textB,leftDisabled,textA]); // rightDisabled 상태에 의존
-
-    // leftDisabled 상태에 따라 textArea 내용 초기화 및 hidden 설정
-    useEffect(() => {
-        if (leftDisabled) {//등록된 이미지가 있음
-            setTextA(''); // 왼쪽 textarea의 내용을 초기화
-        }
-    }, [leftDisabled]); // leftDisabled 상태에 의존
-
-    // rightDisabled 상태가 변경될 때마다 실행
-    useEffect(() => {
-        if (rightDisabled) {//등록된 이미지가 있음
-            setTextB(''); // 오른쪽 textarea의 내용을 초기화
-        }
-    }, [rightDisabled]); // rightDisabled 상태에 의존
-    //왼쪽 삭제 버튼
-    const LeftHandleDeleteImage=()=>{
-        setLeftDisabled(false);//등록된 이미지가 없음
-        setTextA('');//텍스트 초기화
-        setLeftImage('');//이미지 초기화
-        setLeftImageStyle('fantasy-art');
-        setLeftImagePrompt('');
-    }
-    //오른쪽 삭제 버튼
-    const RightHandleDeleteImage=()=>{
-        setRightDisabled(false);//등록된 이미지가 없음
-        setTextB('');//텍스트 초기화
-        setRightImage('');//이미지 초기화
-        setRightImageStyle('fantasy-art');
-        setRightImagePrompt('');
-    }
-
-
-/**
- * 아래에부터는 novelContent db 관련 코드
- **/
-    const [pages,setPages]=useState([{pageNumber:1,text:"",image:""},{pageNumber:2,text:"",image:""}])
-    const [currentPageIndex,setCurrentPageIndex] = useState(0);
-    const [tempText,setTempText]=useState("");
-    const [tempImage, setTempImage]=useState();
-    const [saveTimeout,setSaveTimeout]=useState(null);
     const location = useLocation();
-    const { novelId } = location.state || { novelId: null }; // NewAddHorizontalScrollComponent.js에서 소설 생성되면서 전달된 novelId 가져옴
+    const { novelId } = location.state || { novelId: null };  //navigate로 받은 novelId
+    //novelContents list 저장
+    const [novelContents,setNovelContents]=useState([]);
+    const [pages,setPages]=useState([{pageNumber:1,textContent:"",image:""},{pageNumber:2,textContent:"",image:""}])
+    //텍스트, 이미지, 페이지 번호 초기화
+    const [currentPage, setCurrentPage]=useState(null); //novels의 index역할
+    const [textA, setTextA]=useState('');
+    const [textB, setTextB]=useState('');
+    const [imageA, setImageA]=useState(null);
+    const [imageB, setImageB]=useState(null);
+    const [pageNumberA, setPageNumberA]=useState(1);
+    const [pageNumberB, setPageNumberB]=useState(2);
+    const [saveTimeout,setSaveTimeout]=useState(null); //textarea 타임아웃 설정
+    //해당 페이지가 이미지인지 텍스트인지 상태 확인 (false: 텍스트 상태, true: 이미지 상태)
+    const [stateImageA, setStateImageA]=useState(false);
+    const [stateImageB, setStateImageB]=useState(false);
+    //페이지 넘김 버튼 비/활성화
+    const [nextPageBtnActive, setNextPageBtnActive] = useState(false);
+    const [prevPageBtnActive, setPrevPageBtnActive] = useState(false);
+    //이미지 오버레이 상태
+    const [imageOverlayState, setImageOverlayState]=useState(false);
+    const [selectCreateBtn, setSelectCreateBtn]=useState('left');
+    //책 표지 오버레이 상태
+    const [coverOverlayState, setCoverOverlayState] = useState(false);
+
     /**
-     * textarea에 글자가 변경되면
-     * 내용 임시 저장 배열에 text 저장
+     * novelContents db에서 novel id와 일치하는 값들 가져오기(List)
+     * 'novelContents[]' 에 저장
+     * pages = novelContents
+     */
+    const fetchNovelContents = async (novelId)=>{
+        try{
+            const response = await axios.get(`http://localhost:8080/api/novelContents/view?novelId=${novelId}`);
+            console.log('Success fetching novel contents');
+            return response.data;
+        }catch(error){
+            console.log('Error fetching novel contents: ',error);
+            return [];
+        }
+    }
+    useEffect(()=>{
+        if(novelId){
+            const fetchContents = async () =>{
+                const data =await fetchNovelContents(novelId);
+                setNovelContents(data); //db에서 novelContent 가져오기
+            };
+            fetchContents();
+        }
+    },[novelId]);
+    /** novelContents가 변경될 때 'currentPage'초기화 작업 수행
+     * novelContents의 가장 마지막 페이지 번호로 초기화 해야함
+     * currentPage = novelContents.length - 2 // curentPage는 0부터 시작
+     */
+    useEffect(() => {
+        if (novelContents.length > 0) { //이전 작성내용이 있는 상태
+            setCurrentPage(novelContents.length - 2);
+            setPages(novelContents);
+
+        } else { //이전 작성내용이 없는 상태
+            setCurrentPage(0);
+        }
+    }, [novelContents]); // novelContents가 변경될 때 실행
+
+    /** [text, image, pageNumber]변수들 'pages[currentPage]' 값으로 초기화
+     * (가장 마지막으로 작성된 페이지)
+     * 이전에 작성된 내용이 있는 경우에만 실행
+     *///&&currentPage+2<=novelContents.length
+    useEffect(()=>{
+        if(currentPage!==null&&pages!==null){
+            const handleSetTextAndImageA=()=>{ //왼쪽 페이지 text, image 초기화
+                if(pages[currentPage].textContent){
+                    setTextA(pages[currentPage].textContent);
+                    setStateImageA(false); //페이지 상태 텍스트로 변경
+                }
+                else{
+                    setTextA('');
+                }
+                if(pages[currentPage].image){
+                    setImageA(`data:image/jpeg;base64,${pages[currentPage].image}`);
+                    setStateImageA(true); //페이지 상태 이미지로 변경
+
+                }
+                else{
+                    setImageA('');
+                    setStateImageA(false); //페이지 상태 텍스트로 변경
+                }
+                setPageNumberA(pages[currentPage].pageNumber);
+            };
+            const handleSetTextAndImageB=()=> { //오른쪽 페이지 text, image 초기화
+                if(pages[currentPage+1].textContent){
+                    setTextB(pages[currentPage+1].textContent);
+                    setStateImageB(false); //페이지 상태 텍스트로 변경
+                }
+                else{
+                    setTextB('');
+                }
+                if(pages[currentPage+1].image){
+                    setImageB(`data:image/jpeg;base64,${pages[currentPage+1].image}`);
+                    setStateImageB(true); //페이지 상태 이미지로 변경
+                }
+                else{
+                    setImageB('');
+                    setStateImageB(false); //페이지 상태 텍스트로 변경
+                }
+                setPageNumberB(pages[currentPage+1].pageNumber);
+            };
+            handleSetTextAndImageA();
+            handleSetTextAndImageB();
+        }
+    },[currentPage]);
+
+    /** [pages.textContent, pages.image 실시간 저장]
+     * --textarea 입력 값 변경 핸들러--
+     * textarea에 글자가 변경되면 내용 임시 저장 배열에 text 저장
+     * textarea 높이 초과하지 않는지 검사
      * 저장된 image는 초기화
      * 타임아웃을 설정하여 과부하 문제 방지
+     * index : currentPage 왼/오 구분하기 위함
+     * setText : setTextA || setTextB 구분하기 위함
      **/
-    //입력값 변경 시 설정되는 타임아웃 설정
-    const hadleTextChange = (e,index,setText)=>{
+    const handleTextChange = (e, index, setText) => {
         const textarea = e.target;
         const value = e.target.value; //텍스트 입력값 저장
-        const isOverflowing = textarea.scrollHeight > textarea.clientHeight;
-
-        if(!isOverflowing) {
+        const isOverflowing = textarea.scrollHeight > textarea.clientHeight; //textarea 높이 초과 검토
+        if(!isOverflowing) {//높이 초과 안한다면
             setText(textarea.value);//해당 변수에 텍스트 값 저장(setTextA || setTextB)
+            //타임아웃 설정
             if (saveTimeout) {
                 clearTimeout(saveTimeout); // 이전에 설정된 타이머가 있으면 이를 취소 -> 불필요한 배열 업데이트를 방지
             }
-
             setSaveTimeout(setTimeout(() => { // 새로운 타이머 설정 -> 500ms 이후 지정된 함수 실행
                 setPages(prevPages => {
                     const updatedPages = [...prevPages]; //이전 상태의 모든 요소를 새로운 배열에 복사
-                    updatedPages[index].text = value; // text 저장
+                    updatedPages[index].textContent = value; // text 저장
                     updatedPages[index].image = ''; // 텍스트가 입력되면 이미지 초기화
                     return updatedPages;
                 });
-            }, 200));
+            }, 100));
         }
     };
 
-    /**생성된 이미지 가져와서 image에 적용
-     * 내용 임시 저장 배열에 image 저장
-     * 저장된 text는 초기화
-     **/
-    const handleImageRegister=(file,url)=>{
-        // const imageUrl=URL.createObjectURL(file);
-        //배열에 이미지 저장
-        setPages(prevPages => {
-            const updatedPages = [...prevPages];
-            const pageIndex = selectedButton === 'left' ? currentPageIndex : currentPageIndex + 1;
-            updatedPages[pageIndex].image = file;
-            updatedPages[pageIndex].text = ''; // 이미지가 등록되면 텍스트 초기화
-            return updatedPages;
-        });
-        //왼쪽 페이지 이미지 적용
-        if(selectedButton==='left'){
-            //context 값 저장
-            setLeftImage(url);
-            setLeftImagePrompt(stablePrompt);
-            setLeftImageStyle(stableStyle);
-            setLeftDisabled(true);//등록된 이미지가 있음
+    /** [페이지 이전/다음 버튼 설정]
+     * --pageNextBtn 설정--
+     * if(현재 페이지 + 2 < pages.length){ //이전에 작성한 내용이 있음
+     *  다음 페이지 버튼 활성화
+     *  }
+     *  else{
+     *      if(양쪽 페이지에 글이나 그림이 써졌다면){
+     *          다음 페이지 버튼 활성화
+     *      }else{
+     *          다음 페이지 비활성화
+     *      }
+     *  }
+     * --pagePrevBtn 설정--
+     * if(현재 페이지 === 0 ) => prevBtn 비활성화
+     */
+    useEffect(()=>{
+        if(currentPage!==null&&pages!==null){
+            const handleNextPageButton=()=>{
+                if(currentPage + 2 < pages.length){
+                    setNextPageBtnActive(true);
+                }
+                else{
+                    if((pages[currentPage].textContent || (stateImageA)) && (pages[currentPage+1].textContent || (stateImageB))){
+                        setNextPageBtnActive(true);
+                    }else{
+                        setNextPageBtnActive(false);
+                    }
+                }
+            };
+            const handlePrevPageButton=()=>{
+                if(currentPage === 0){ //currentPage가 0이면 이전 페이지 버튼 비활성화
+                    setPrevPageBtnActive(false);
+                }
+                else{
+                    setPrevPageBtnActive(true);
+                }
+            };
+            handleNextPageButton();
+            handlePrevPageButton();
         }
-        //오른쪽 페이지 이미지 적용
-        else{//(selectedButton==='right')
-            //context 값 저장
-            setRightImage(url);
-            setRightImagePrompt(stablePrompt);
-            setRightImageStyle(stableStyle);
-            setRightDisabled(true);//등록된 이미지가 있음
+    },[currentPage,pages,stateImageB,stateImageA]);
+
+    /**
+     * pageNextBtn 클릭했을 때 실행되는 함수
+     * if(currentPage+2<novelContents.length){currentPage+2}
+     * else { 
+     * pages 새로운 페이지(배열) 2개 추가;
+     * 내용 및 변수 상태 초기화(글, 그림);
+     * => useEffect handleSetTextAndImageA, handleSetTextAndImageB
+     * }
+     */
+    const handleNextPageSetting=()=>{
+        if(currentPage+2<pages.length){ //이전 작성 내용이 있는 경우
+            setCurrentPage(currentPage+2);
+        }
+        else{ //새로운 다음 페이지로 넘어감
+            setPages(prevPages =>[
+                ...prevPages,
+                {pageNumber:prevPages.length+1,textContent:"",image:""},
+                {pageNumber:prevPages.length+2,textContent:"",image:""}
+            ]);
+            setCurrentPage(currentPage+2);
+            setStateImageA(false); //페이지 상태 텍스트로 변경
+            setStateImageB(false); //페이지 상태 텍스트로 변경
+        }
+    }
+    /**
+     * pagePrevBtn 클릭했을 때 실행되는 함수
+     * currentPage-- 해줌.
+     */
+    const handlePrevPageSetting=()=>{
+        setCurrentPage(currentPage-2);
+    }
+
+    //왼쪽 '삭제' 버튼 (내용 삭제)
+    const handleDeleteContentsA=()=>{
+        pages[currentPage].textContent='';
+        pages[currentPage].image='';
+        setTextA('');
+        setImageA('');
+        setStateImageA(false); //페이지 상태 텍스트로 변경
+    }
+    //오른쪽 '삭제' 버튼 (내용 삭제)
+    const handleDeleteContentsB=()=>{
+        pages[currentPage+1].textContent='';
+        pages[currentPage+1].image='';
+        setTextB('');
+        setImageB('');
+        setStateImageB(false); //페이지 상태 텍스트로 변경
+    }
+
+    /** [이미지 추가 버튼]
+     * imageOverlay 내림
+     * imageOverlay의 [prompt, style, image] 전부 초기화
+     */
+    const handleImageOverlayA=()=>{
+        if(textA.trim()==='') {  //글자가 없을때만 이미지 추가 오버레이 내림
+            setImageOverlayState(true);
+            setSelectCreateBtn('left');
+        }
+        else{
+            alert('텍스트를 지우고 다시 시도해주세요.');
+        }
+    }
+    const handleImageOverlayB=()=>{
+        if(textB.trim()==='') {  //글자가 없을때만 이미지 추가 오버레이 내림
+            setImageOverlayState(true);
+            setSelectCreateBtn('right');
+        }
+        else{
+            alert('텍스트를 지우고 다시 시도해주세요.');
         }
     }
 
-    /**
-     * 다음 페이지 버튼 선택 => (
-     * 페이지 번호 증가 (배열도 새로운 페이지 2개 추가}
-     * 내용 및 변수 상태 초기화(글 또는 그림) + 하단 페이지 번호
-     * )
+    /** [ImageOverlay에서 매개변수 전달받아 image src 설정]
+     * pages[currentPage].image 도 매개변수 값으로 update 해준다
+     * if(왼쪽 이미지 생성 버튼){
+     *     imageOverlay.js에서 생성된 이미지는 왼쪽 이미지에 설정
+     * }
+     * else{
+     *     오른쪽 이미지에 설정
+     * }
      */
-    const handleAddPages = () => {
-        setPages(prevPages => [
-            ...prevPages, //이전 배열값에 새로운 페이지 두개 추가
-            { pageNumber: prevPages.length + 1, text: '', image: '' },
-            { pageNumber: prevPages.length + 2, text: '', image: '' }
-        ]);
-        setCurrentPageIndex(prevIndex => prevIndex + 2); //이전 페이지를 참조함으로써 안전한 비동기 업데이트
-        console.log("AddPage_currentPageIndex: "+currentPageIndex);
-    };
-
-    /**
-     * currentPageIndex가 변경될 때 마다
-     * textA, textB, leftImage, rightImage 값 업데이트
-     * 이때 값들은 배열에서 현재 페이지와 일치하는 인덱스 값 가져옴
-      */
-    useEffect(() => {
-        // 페이지가 변경될 때 텍스트와 이미지를 업데이트합니다.
-        setTextA(pages[currentPageIndex]?.text || '');
-        setLeftImage(pages[currentPageIndex]?.image || '');
-        if(pages[currentPageIndex].image===''){//다른페이지에서 이미지 등록을 하면 disabled가 true가 되어서 글자가 나타나지 않는 현상 방지
-            setLeftDisabled(false);
+    const handleImageOverlaySrc=async (file,url)=>{
+        const image64 = await convertFileToBase64(file);
+        if(selectCreateBtn==='left'){
+            pages[currentPage].image=image64.split(',')[1]; // "data:image/jpeg;base64," 부분을 제거하고 저장
+            setImageA(url);
+            setStateImageA(true);
         }
         else{
-            setLeftDisabled(true);
+            pages[currentPage+1].image=image64.split(',')[1];
+            setImageB(url);
+            setStateImageB(true);
         }
-        setTextB(pages[currentPageIndex + 1]?.text || '');
-        setRightImage(pages[currentPageIndex + 1]?.image || '');
-        if(pages[currentPageIndex+1].image===''){
-            setRightDisabled(false);
-        }
-        else{
-            setRightDisabled(true);
-        }
-    }, [currentPageIndex]);
-
-    //이전 버튼 누르면 prevIndex -2
-    const handlePrevPage = () => {
-        setCurrentPageIndex(prevIndex => Math.max(prevIndex - 2, 0));
-        console.log("PrevPage_currentPageIndex: "+currentPageIndex);
+    }
+    //file => base64 형변환
+    const convertFileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
     };
 
-    /**[저장하고 나가기]
-     * pages[] 내용을 novelContent에 덮어 씌우기 &
-     * novel stastus TEMPORARY => IN_COMPLETED 로 변경
-     */
-    const handleSave = async () => {
-        try {
-            for (const page of pages) {
-                const formData = new FormData();
-                formData.append('novelId', novelId);
-                pages.forEach((page, index) => {
-                    formData.append('pageNumber', page.pageNumber);
-                    formData.append('textContent', page.text);
-                    formData.append('image', page.image || new Blob([]));
-                });
 
-                const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-
-                if (response.status !== 200) {
-                    throw new Error('Failed to save novel contents');
-                }
-            }
-            console.log('Novel contents saved successfully');
-            // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
-            const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus/inComplete`, null, {
-                params: {
-                    novelId: novelId,
-                    status: 'IN_COMPLETED'
-                }
-            });
-
-            if (statusResponse.status === 200) {
-                console.log('Novel status updated successfully');
-            } else {
-                throw new Error('Failed to update novel status');
-            }
-
-        } catch (error) {
-            console.error('Error saving novel contents:', error);
-        }
+    const handleCoverBtnClick = (data) => {
+        // 책 표지 overlay 내림
+        setCoverOverlayState(true);
+        //이미지 생성 화면 올림
+        setImageOverlayState(false);
     };
-
-    /**[책 완성하기]
-     * pages[] 내용을 novelContent에 덮어 씌우기 &
-     * novel stastus TEMPORARY/IN_COMPLETED => COMPLETED 로 변경
-     */
-    const handleSaveComplete = async () => {
-        try {
-            for (const page of pages) {
-                const formData = new FormData();
-                formData.append('novelId', novelId);
-                pages.forEach((page, index) => {
-                    formData.append('pageNumber', page.pageNumber);
-                    formData.append('textContent', page.text);
-                    formData.append('image', page.image || new Blob([]));
-                });
-
-                const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-
-                if (response.status !== 200) {
-                    throw new Error('Failed to save novel contents');
-                }
-            }
-            console.log('Novel contents saved successfully');
-            // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
-            const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus`, null, {
-                params: {
-                    novelId: novelId,
-                    status: 'COMPLETED'
-                }
-            });
-
-            if (statusResponse.status === 200) {
-                console.log('Novel status updated successfully');
-            } else {
-                throw new Error('Failed to update novel status');
-            }
-
-        } catch (error) {
-            console.error('Error saving novel contents:', error);
-        }
-    };
-
     return (
         <div>
             <Helmet>
@@ -523,50 +488,191 @@ const WriteNovelForm = () => {
                 <meta name="description" content="BlueMemories WriteNovel Page"/>
             </Helmet>
             <Wrapper>
-                <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave} novelId={novelId} onComplete={handleSaveComplete}></WriteMenuBar>
+                <WriteMenuBar visible={handleCoverBtnClick} novelId={novelId} ></WriteMenuBar>
                 <BodyContainer>
-                    <BeforePageBtn onClick={handlePrevPage}></BeforePageBtn>
+                    <BeforePageBtn isActive={prevPageBtnActive} disabled={!prevPageBtnActive} onClick={handlePrevPageSetting}></BeforePageBtn>
                     <WriteContainer>
                         <LeftImageCreateContainer>
-                            <CreateImageButton onClick={handleLeftButtonClick}></CreateImageButton>
-                            <DeleteImageButton onClick={LeftHandleDeleteImage}></DeleteImageButton>
+                            <CreateImageButton onClick={handleImageOverlayA}></CreateImageButton>
+                            <DeleteImageButton onClick={handleDeleteContentsA}></DeleteImageButton>
                         </LeftImageCreateContainer>
                         <WritePage></WritePage>
                         <WriteText
                             placeholder="글을 작성하거나 그림을 생성해보세요"
                             value={textA}
-                            // onInput={handleInput(setTextA)}
-                            // onChange={(e)=>setTextA(e.target.value)}
-                            onChange={(e) => hadleTextChange(e, currentPageIndex, setTextA)}
-                            hidden={leftDisabled}></WriteText>
-                        {leftImage && <Image src={leftImage} alt="Selected Image" />}
+                            onChange={(e) => handleTextChange(e, currentPage, setTextA)}
+                            hidden={stateImageA}
+                           ></WriteText>
+                        {imageA && imageA !== 'null' && imageA !== '' && <Image src={imageA} alt="Image" />}
                         <WriteText
                             placeholder="글을 작성하거나 그림을 생성해보세요"
-                            value={textB}
-                            // onInput={handleInput(setTextB)}
                             marginLeft={'53.2%'}
-                            // onChange={(e)=>setTextB(e.target.value)}
-                            onChange={(e) => hadleTextChange(e, currentPageIndex+1, setTextB)}
-                            hidden={rightDisabled}></WriteText>
-                        {rightImage && <Image marginLeft={'51.7%'} src={rightImage} alt="Selected Image" />}
+                            value={textB}
+                            onChange={(e) => handleTextChange(e, currentPage+1, setTextB)}
+                            hidden={stateImageB}
+                           ></WriteText>
+                        {imageB && imageB !== 'null' && imageB !== '' && <Image marginLeft={'51.7%'} src={imageB} alt="Image" />}
                         <RightImageCreateContainer>
-                            <CreateImageButton onClick={handleRightButtonClick}></CreateImageButton>
-                            <DeleteImageButton onClick={RightHandleDeleteImage}></DeleteImageButton>
+                            <CreateImageButton onClick={handleImageOverlayB}></CreateImageButton>
+                            <DeleteImageButton onClick={handleDeleteContentsB}></DeleteImageButton>
                         </RightImageCreateContainer>
-                        <LeftPageNumber>{currentPageIndex + 1}</LeftPageNumber>
-                        <RightPageNumber>{currentPageIndex + 2}</RightPageNumber>
+                        <LeftPageNumber>{pageNumberA}</LeftPageNumber>
+                        <RightPageNumber>{pageNumberB}</RightPageNumber>
                     </WriteContainer>
-                    <AfterePageBtn isActive={nextPageBtnActive} disabled={!nextPageBtnActive} onClick={handleAddPages}></AfterePageBtn>
+                    <AfterePageBtn isActive={nextPageBtnActive} disabled={!nextPageBtnActive} onClick={handleNextPageSetting}></AfterePageBtn>
                 </BodyContainer>
                 <ImageOverlay
-                    visible={novelOverlayState}
-                    setVisible={setNovelOverlayState}
-                    onImageRegister={handleImageRegister}
+                    visible={imageOverlayState}
+                    setVisible={setImageOverlayState}
+                    onImageRegister={handleImageOverlaySrc}
                 ></ImageOverlay>
-                <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible} novelId={novelId}></NovelCoverOverlay>
+                <NovelCoverOverlay visible={coverOverlayState} setVisible={setCoverOverlayState} novelId={novelId}></NovelCoverOverlay>
             </Wrapper>
         </div>
     );
+
+
+
+
+
+
+//     /**[저장하고 나가기]
+//      * pages[] 내용을 novelContent에 덮어 씌우기 &
+//      * novel stastus TEMPORARY => IN_COMPLETED 로 변경
+//      */
+//     const handleSave = async () => {
+//         try {
+//             for (const page of pages) {
+//                 const formData = new FormData();
+//                 formData.append('novelId', novelId);
+//                 pages.forEach((page, index) => {
+//                     formData.append('pageNumber', page.pageNumber);
+//                     formData.append('textContent', page.text);
+//                     formData.append('image', page.image || new Blob([]));
+//                 });
+//
+//                 const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
+//                     headers: {
+//                         'Content-Type': 'multipart/form-data',
+//                     },
+//                 });
+//
+//                 if (response.status !== 200) {
+//                     throw new Error('Failed to save novel contents');
+//                 }
+//             }
+//             console.log('Novel contents saved successfully');
+//             // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
+//             const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus/inComplete`, null, {
+//                 params: {
+//                     novelId: novelId,
+//                     status: 'IN_COMPLETED'
+//                 }
+//             });
+//
+//             if (statusResponse.status === 200) {
+//                 console.log('Novel status updated successfully');
+//             } else {
+//                 throw new Error('Failed to update novel status');
+//             }
+//
+//         } catch (error) {
+//             console.error('Error saving novel contents:', error);
+//         }
+//     };
+//
+//     /**[책 완성하기]
+//      * pages[] 내용을 novelContent에 덮어 씌우기 &
+//      * novel stastus TEMPORARY/IN_COMPLETED => COMPLETED 로 변경
+//      */
+//     const handleSaveComplete = async () => {
+//         try {
+//             for (const page of pages) {
+//                 const formData = new FormData();
+//                 formData.append('novelId', novelId);
+//                 pages.forEach((page, index) => {
+//                     formData.append('pageNumber', page.pageNumber);
+//                     formData.append('textContent', page.text);
+//                     formData.append('image', page.image || new Blob([]));
+//                 });
+//
+//                 const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
+//                     headers: {
+//                         'Content-Type': 'multipart/form-data',
+//                     },
+//                 });
+//
+//                 if (response.status !== 200) {
+//                     throw new Error('Failed to save novel contents');
+//                 }
+//             }
+//             console.log('Novel contents saved successfully');
+//             // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
+//             const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus`, null, {
+//                 params: {
+//                     novelId: novelId,
+//                     status: 'COMPLETED'
+//                 }
+//             });
+//
+//             if (statusResponse.status === 200) {
+//                 console.log('Novel status updated successfully');
+//             } else {
+//                 throw new Error('Failed to update novel status');
+//             }
+//
+//         } catch (error) {
+//             console.error('Error saving novel contents:', error);
+//         }
+//     };
+
+    // return (
+    //     <div>
+    //         <Helmet>
+    //             <title>WriteNovel</title>
+    //             <meta name="description" content="BlueMemories WriteNovel Page"/>
+    //         </Helmet>
+    //         <Wrapper>
+    //             <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave} novelId={novelId} onComplete={handleSaveComplete}></WriteMenuBar>
+    //             <BodyContainer>
+    //                 <BeforePageBtn onClick={handlePrevPage}></BeforePageBtn>
+    //                 <WriteContainer>
+    //                     <LeftImageCreateContainer>
+    //                         <CreateImageButton onClick={handleLeftButtonClick}></CreateImageButton>
+    //                         <DeleteImageButton onClick={LeftHandleDeleteImage}></DeleteImageButton>
+    //                     </LeftImageCreateContainer>
+    //                     <WritePage></WritePage>
+    //                     <WriteText
+    //                         placeholder="글을 작성하거나 그림을 생성해보세요"
+    //                         value={textA}
+    //                         onChange={(e) => hadleTextChange(e, currentPageIndex, setTextA)}
+    //                         hidden={leftDisabled}></WriteText>
+    //                     {leftImage && <Image src={leftImage} alt="Selected Image" />}
+    //                     <WriteText
+    //                         placeholder="글을 작성하거나 그림을 생성해보세요"
+    //                         value={textB}
+    //                         marginLeft={'53.2%'}
+    //                         onChange={(e) => hadleTextChange(e, currentPageIndex+1, setTextB)}
+    //                         hidden={rightDisabled}></WriteText>
+    //                     {rightImage && <Image marginLeft={'51.7%'} src={rightImage} alt="Selected Image" />}
+    //                     <RightImageCreateContainer>
+    //                         <CreateImageButton onClick={handleRightButtonClick}></CreateImageButton>
+    //                         <DeleteImageButton onClick={RightHandleDeleteImage}></DeleteImageButton>
+    //                     </RightImageCreateContainer>
+    //                     <LeftPageNumber>{currentPageIndex + 1}</LeftPageNumber>
+    //                     <RightPageNumber>{currentPageIndex + 2}</RightPageNumber>
+    //                 </WriteContainer>
+    //                 <AfterePageBtn isActive={nextPageBtnActive} disabled={!nextPageBtnActive} onClick={handleAddPages}></AfterePageBtn>
+    //             </BodyContainer>
+    //             <ImageOverlay
+    //                 visible={novelOverlayState}
+    //                 setVisible={setNovelOverlayState}
+    //                 onImageRegister={handleImageRegister}
+    //             ></ImageOverlay>
+    //             <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible} novelId={novelId}></NovelCoverOverlay>
+    //         </Wrapper>
+    //     </div>
+    // );
 };
 
 export default WriteNovelForm;

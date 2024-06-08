@@ -57,17 +57,16 @@ const PromptTextarea = styled.textarea`
         font-family: gangwonedusaeeum, sans-serif; //대체폰트
     }
 `;
-const CoverPrompt=()=>{
-    const {stableCoverPrompt, setStableCoverPrompt} = useContext(Context);
+const CoverPrompt=({stablePrompt, setStablePrompt})=>{
     const handlePrompt = (event) => {
         const value=event.target.value;
-        setStableCoverPrompt(value); // 선택된 텍스트로 상태 업데이트
+        setStablePrompt(value); // 선택된 텍스트로 상태 업데이트
     };
     return(
         <ImagePromptTextContainer>
             <PromptTitle>Prompt</PromptTitle>
             <PromptTextarea
-                value={stableCoverPrompt}
+                value={stablePrompt}
                 onChange={handlePrompt} />
         </ImagePromptTextContainer>
     )

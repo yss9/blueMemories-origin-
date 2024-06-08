@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -124,5 +125,15 @@ public class NovelController {
     public ResponseEntity<String> deleteTemporaryNovels(@RequestParam("memberId") Long memberId) {
         novelService.deleteTemporaryNovelsByMemberId(memberId);
         return ResponseEntity.ok("Temporary novels deleted successfully");
+    }
+
+    /** NovelCoverOverlay.js에서 초기값 가져올 때 사용
+     * [표지 설정]
+     */
+    @GetMapping("cover/{id}")
+    public ResponseEntity<NovelDTO> getNovelById(@PathVariable Long id) {
+        Optional<NovelDTO> novelDTO = novelService.getNovelById(id);
+        return novelDTO.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

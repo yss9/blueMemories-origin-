@@ -79,15 +79,6 @@ const ImageUploader = ({onImageSelected}) => {
         const file = e.target.files[0];
         if (file && onImageSelected) {
             onImageSelected(file);
-            // const reader = new FileReader();
-            // reader.onloadend = () => {
-            //     onImageSelected(reader.result);
-            // };
-            // reader.onerror = (error) => {
-            //     // 오류 처리 로직
-            //     console.error('File reading error: ', error);
-            // };
-            // reader.readAsDataURL(file);
         }
     };
 

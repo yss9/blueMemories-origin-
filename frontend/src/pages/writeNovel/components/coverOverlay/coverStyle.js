@@ -102,16 +102,16 @@ const DropdownContent = styled.div`
     }
 `;
 
-const ImageStyleDropDown=()=>{
+const ImageStyleDropDown=({stableStyle, setStableStyle})=>{
     const [isOpen, setIsOpen] = useState(false);
-    const {stableCoverStyle, setStableCoverStyle}=useContext(Context);
+
     // 드롭다운 항목 선택 핸들러
     const handleSelect = (text) => {
-        setStableCoverStyle(text); // 선택된 텍스트로 상태 업데이트
+        setStableStyle(text); // 선택된 텍스트로 상태 업데이트
         setIsOpen(false); // 드롭다운 닫기
     };
     // DropdownTextButton에 표시할 값
-    const displayedStyle = stableCoverStyle.replace('-art', '');
+    const displayedStyle = stableStyle.replace('-art', '');
 
     return (
         <ImageStyleContainer>
