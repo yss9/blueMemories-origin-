@@ -38,7 +38,8 @@ export const loadImageFromBackend = async (prompt,style,aspect_ratio)=>{
         );
 
         const blob = new Blob([response.data], { type: 'image/jpeg' });
-        return URL.createObjectURL(blob); // 생성된 이미지의 URL 반환
+        // return URL.createObjectURL(blob); // 생성된 이미지의 URL 반환
+        return new File([blob], 'generated-image.jpg', {type: 'image/jpeg'});
 
     } catch (error) {
         console.error('Error generating image:', error);

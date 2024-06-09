@@ -34,6 +34,8 @@ const MenuBtn=styled.button`
     width: auto;
     /*색상*/
     background: none;
+    cursor: pointer;
+    user-select: none;
 `;   
 
 const MenuBar = () => {

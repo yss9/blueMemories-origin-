@@ -12,52 +12,57 @@ import StorageDiaryPage from "./pages/storageDiary/StorageDiaryPage";
 import StorageExchangeDiaryPage from './pages/storageExchangeDiary/StorageExchangeDiaryPage';
 import StorageRecommendPage from './pages/storageRecommend/StorageRecommendPage';
 import WriteNovelPage from "./pages/writeNovel/WriteNovelPage";
+import ViewNovelPage from "./pages/writeNovel/ViewNovelPage";
 import WriteDrawBookPage from './pages/writeDrawBook/WriteDrawBookPage';
+import ViewBookPage from "./pages/writeDrawBook/ViewBookPage";
 
 import {Helmet} from "react-helmet";
 import CreateDiaryPage from "./pages/storageDiary/CreateDiaryPage";
 import {StyleProvider} from "./pages/Context/Context";
-import WrittenDiaryForm from "./pages/storageDiary/WrittenDiaryPage";
 
 function App() {
 
     return (
-        <StyleProvider>
-            <BrowserRouter>
-                <Helmet
-                    titleTemplate='%s - BlueMemories'
-                    defaultTitle='BlueMemories'
-                >
-                    <meta name="description" content="A BlueMemories application"/>
-                </Helmet>
-                <Routes>
-                    {/* main */}
-                    <Route path="/" element={<MainPage />} />
-                    {/* <SignIn /> */}
-                    <Route path="/register" element={<RegisterPage />} />
-                    {/* <LogIn /> */}
-                    <Route path="/login" element={<LoginPage />} />
-                    {/* <Introduce /> */}
-                    <Route path="/introduce" element={<IntroducePage />} />
-                    {/* <StorageNovel /> */}
-                    <Route path="/storageNovel" element={<StorageNovelPage />} />
-                    {/* <StorageDrawBook /> */}
-                    <Route path="/storageDrawBook" element={<StorageDrawBookPage />} />
-                    {/* <StorageDiary /> */}
-                    <Route path="/storageDiary" element={<StorageDiaryPage />} />
-                    {/* <StorageExchangeDiary /> */}
-                    <Route path="/storageExchangeDiary" element={<StorageExchangeDiaryPage />} />
-                    {/* <StorageRecommend /> */}
-                    <Route path="/storageRecommend" element={<StorageRecommendPage />} />
-                    {/* <WriteNovel /> */}
-                    <Route path="/WriteNovel" element={<WriteNovelPage />} />
-                    {/* <WriteDrawBook /> */}
-                    <Route path="/WriteDrawBook" element={<WriteDrawBookPage />} />
-                    {/* <DiaryTest /> */}
-                    <Route path="/diaryWrite" element={<CreateDiaryPage />} />
-                </Routes>
-            </BrowserRouter>
-        </StyleProvider>
+            <StyleProvider>
+                <BrowserRouter>
+                    <Helmet
+                        titleTemplate='%s - BlueMemories'
+                        defaultTitle='BlueMemories'
+                    >
+                        <meta name="description" content="A BlueMemories application"/>
+                    </Helmet>
+                    <Routes>
+                        {/* main */}
+                        <Route path="/" element={<MainPage />} />
+                        {/* <SignIn /> */}
+                        <Route path="/register" element={<RegisterPage />} />
+                        {/* <LogIn /> */}
+                        <Route path="/login" element={<LoginPage />} />
+                        {/* <Introduce /> */}
+                        <Route path="/introduce" element={<IntroducePage />} />
+                        {/* <StorageNovel /> */}
+                        <Route path="/storageNovel" element={<StorageNovelPage />} />
+                        {/* <StorageDrawBook /> */}
+                        <Route path="/storageDrawBook" element={<StorageDrawBookPage />} />
+                        {/* <StorageDiary /> */}
+                        <Route path="/storageDiary" element={<StorageDiaryPage />} />
+                        {/* <StorageExchangeDiary /> */}
+                        <Route path="/storageExchangeDiary" element={<StorageExchangeDiaryPage />} />
+                        {/* <StorageRecommend /> */}
+                        <Route path="/storageRecommend" element={<StorageRecommendPage />} />
+                        {/* <WriteNovel /> */}
+                        <Route path="/WriteNovel" element={<WriteNovelPage />} />
+                        {/* <ViewNovel /> */}
+                        <Route path="/ViewNovel" element={<ViewNovelPage />} />
+                        {/* <WriteDrawBook /> */}
+                        <Route path="/WriteBook" element={<WriteDrawBookPage />} />
+                        {/* <ViewBook /> */}
+                        <Route path="/ViewBook" element={<ViewBookPage />} />
+                        {/* <DiaryTest /> */}
+                        <Route path="/diaryWrite" element={<CreateDiaryPage />} />
+                    </Routes>
+                </BrowserRouter>
+            </StyleProvider>
     );
 }
 
