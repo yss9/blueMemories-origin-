@@ -7,6 +7,7 @@ import NovelCoverOverlay from "./components/coverOverlay/NovelCoverOverlay";
 import {Context} from "../Context/Context";
 import {useLocation} from "react-router";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const Wrapper = styled.div`
     width:100%;
@@ -186,6 +187,7 @@ const RightPageNumber=styled.span`
 `;
 
 const WriteNovelForm = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const { novelId } = location.state || { novelId: null };  //navigate로 받은 novelId
     //novelContents list 저장
@@ -211,7 +213,8 @@ const WriteNovelForm = () => {
     const [selectCreateBtn, setSelectCreateBtn]=useState('left');
     //책 표지 오버레이 상태
     const [coverOverlayState, setCoverOverlayState] = useState(false);
-
+    // 책 표지 초기값 이후 수정된 값들을 저장
+    const [cover, setCover]=useState(null);
     /**
      * novelContents db에서 novel id와 일치하는 값들 가져오기(List)
      * 'novelContents[]' 에 저장
@@ -474,13 +477,113 @@ const WriteNovelForm = () => {
         });
     };
 
-
+    /** [책 표지 visible 설정]
+     * 책 완성 버튼 눌렀을 때 alert -> coverOverlay visible
+     */
     const handleCoverBtnClick = (data) => {
         // 책 표지 overlay 내림
         setCoverOverlayState(true);
         //이미지 생성 화면 올림
         setImageOverlayState(false);
     };
+
+    /**['임시저장', '저장하고 나가기'] && ['책 완성']
+     * pages[] 내용을 novelContent에 덮어 씌우기
+     * & cover[] 내용을 novel에 덮어 씌우기 + stastus: status 로 변경
+     * status 매개변수 값에 따라 in_complete or complete
+     * */
+    const handleSave = async (status) => {
+        try {
+            for (const page of pages) {
+                const formData = new FormData();
+                formData.append('novelId', novelId);
+                pages.forEach((page, index) => {
+                    formData.append('pageNumber', page.pageNumber);
+                    formData.append('textContent', page.textContent);
+                    formData.append('image', page.image || new Blob([]));
+                });
+
+                const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                if (response.status !== 200) {
+                    throw new Error('Failed to save novel contents');
+                }
+            }
+            console.log('Novel contents saved successfully');
+            // Novel DB
+            // => cover[] 내용 + IN_COMPLETED로 변경
+            console.log("title: "+cover.title);
+            const formData = new FormData();
+            formData.append('novelId', novelId);
+            formData.append('title', cover.title);
+            formData.append('titleX', cover.titleX);
+            formData.append('titleY', cover.titleY);
+            formData.append('titleSize', cover.titleSize);
+            formData.append('coverImage', cover.coverImage);
+            formData.append('status', status);
+
+            const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateNovelCover`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            if (statusResponse.status === 200) {
+                console.log('Novel status updated successfully');
+            } else {
+                throw new Error('Failed to update novel status');
+            }
+
+        } catch (error) {
+            console.error('Error saving novel contents:', error);
+        }
+    };
+
+    const handleSaveInComplete = async () => {
+        await handleSave('IN_COMPLETED'); // 책 작성 중
+    }
+    /**['책 완성']
+     * pages[] 내용을 novelContent에 덮어 씌우기 &
+     * & cover[] 내용을 novel에 덮어 씌우기 + stastus: COMPLETED 로 변경
+     *
+     * if(둘다 수정 x 면 ){
+     *     알림창 "제목과 표지를 생성해 주세요." => 확인버튼 => 책 표지 cover visible
+     * }
+     * else if(cover_image만 수정 x 면){
+     *     알림창 "표지를 생성해 주세요." => 확인버튼 => 책 표지 cover visible
+     * }
+     * else if(title만 수정 x 면){
+     *     알림창 "제목을 입력해 주세요." => 확인버튼 => 책 표지 cover visible
+     * }
+     * else (전부 수정되었다면){
+     *     "완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?"
+     * }
+     */
+    const handleSaveComplete = async () => {
+        if (cover.title === 'untitled' && (cover.coverImage === null)) {
+            alert('책제목과 책표지를 생성해 주세요.');
+            setCoverOverlayState(true);
+        } else if (!cover.coverImage || cover.coverImage === '') {
+            alert('책표지를 생성해 주세요.');
+            setCoverOverlayState(true);
+        } else if (cover.title === 'untitled'){
+            alert('책제목을 입력해 주세요.');
+            setCoverOverlayState(true);
+        }
+        else {
+            const userConfirmed = window.confirm("완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?");
+            if (userConfirmed) { //"확인 버튼 클릭한 경우"
+                await handleSave('COMPLETED'); // 책 완성
+                navigate("/storageNovel");
+            }
+        }
+
+    }
+
+
     return (
         <div>
             <Helmet>
@@ -488,7 +591,7 @@ const WriteNovelForm = () => {
                 <meta name="description" content="BlueMemories WriteNovel Page"/>
             </Helmet>
             <Wrapper>
-                <WriteMenuBar visible={handleCoverBtnClick} novelId={novelId} ></WriteMenuBar>
+                <WriteMenuBar visible={handleCoverBtnClick} onInComplete={handleSaveInComplete} onComplete={handleSaveComplete} novelId={novelId} ></WriteMenuBar>
                 <BodyContainer>
                     <BeforePageBtn isActive={prevPageBtnActive} disabled={!prevPageBtnActive} onClick={handlePrevPageSetting}></BeforePageBtn>
                     <WriteContainer>
@@ -526,153 +629,10 @@ const WriteNovelForm = () => {
                     setVisible={setImageOverlayState}
                     onImageRegister={handleImageOverlaySrc}
                 ></ImageOverlay>
-                <NovelCoverOverlay visible={coverOverlayState} setVisible={setCoverOverlayState} novelId={novelId}></NovelCoverOverlay>
+                <NovelCoverOverlay visible={coverOverlayState} setVisible={setCoverOverlayState} novelId={novelId} cover={cover} setCover={setCover}></NovelCoverOverlay>
             </Wrapper>
         </div>
     );
-
-
-
-
-
-
-//     /**[저장하고 나가기]
-//      * pages[] 내용을 novelContent에 덮어 씌우기 &
-//      * novel stastus TEMPORARY => IN_COMPLETED 로 변경
-//      */
-//     const handleSave = async () => {
-//         try {
-//             for (const page of pages) {
-//                 const formData = new FormData();
-//                 formData.append('novelId', novelId);
-//                 pages.forEach((page, index) => {
-//                     formData.append('pageNumber', page.pageNumber);
-//                     formData.append('textContent', page.text);
-//                     formData.append('image', page.image || new Blob([]));
-//                 });
-//
-//                 const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
-//                     headers: {
-//                         'Content-Type': 'multipart/form-data',
-//                     },
-//                 });
-//
-//                 if (response.status !== 200) {
-//                     throw new Error('Failed to save novel contents');
-//                 }
-//             }
-//             console.log('Novel contents saved successfully');
-//             // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
-//             const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus/inComplete`, null, {
-//                 params: {
-//                     novelId: novelId,
-//                     status: 'IN_COMPLETED'
-//                 }
-//             });
-//
-//             if (statusResponse.status === 200) {
-//                 console.log('Novel status updated successfully');
-//             } else {
-//                 throw new Error('Failed to update novel status');
-//             }
-//
-//         } catch (error) {
-//             console.error('Error saving novel contents:', error);
-//         }
-//     };
-//
-//     /**[책 완성하기]
-//      * pages[] 내용을 novelContent에 덮어 씌우기 &
-//      * novel stastus TEMPORARY/IN_COMPLETED => COMPLETED 로 변경
-//      */
-//     const handleSaveComplete = async () => {
-//         try {
-//             for (const page of pages) {
-//                 const formData = new FormData();
-//                 formData.append('novelId', novelId);
-//                 pages.forEach((page, index) => {
-//                     formData.append('pageNumber', page.pageNumber);
-//                     formData.append('textContent', page.text);
-//                     formData.append('image', page.image || new Blob([]));
-//                 });
-//
-//                 const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
-//                     headers: {
-//                         'Content-Type': 'multipart/form-data',
-//                     },
-//                 });
-//
-//                 if (response.status !== 200) {
-//                     throw new Error('Failed to save novel contents');
-//                 }
-//             }
-//             console.log('Novel contents saved successfully');
-//             // 소설 상태를 TEMPORARY에서 IN_COMPLETED로 변경하는 로직
-//             const statusResponse = await axios.post(`http://localhost:8080/api/novels/updateStatus`, null, {
-//                 params: {
-//                     novelId: novelId,
-//                     status: 'COMPLETED'
-//                 }
-//             });
-//
-//             if (statusResponse.status === 200) {
-//                 console.log('Novel status updated successfully');
-//             } else {
-//                 throw new Error('Failed to update novel status');
-//             }
-//
-//         } catch (error) {
-//             console.error('Error saving novel contents:', error);
-//         }
-//     };
-
-    // return (
-    //     <div>
-    //         <Helmet>
-    //             <title>WriteNovel</title>
-    //             <meta name="description" content="BlueMemories WriteNovel Page"/>
-    //         </Helmet>
-    //         <Wrapper>
-    //             <WriteMenuBar onClick={handleCoverBtnClick} onSave={handleSave} novelId={novelId} onComplete={handleSaveComplete}></WriteMenuBar>
-    //             <BodyContainer>
-    //                 <BeforePageBtn onClick={handlePrevPage}></BeforePageBtn>
-    //                 <WriteContainer>
-    //                     <LeftImageCreateContainer>
-    //                         <CreateImageButton onClick={handleLeftButtonClick}></CreateImageButton>
-    //                         <DeleteImageButton onClick={LeftHandleDeleteImage}></DeleteImageButton>
-    //                     </LeftImageCreateContainer>
-    //                     <WritePage></WritePage>
-    //                     <WriteText
-    //                         placeholder="글을 작성하거나 그림을 생성해보세요"
-    //                         value={textA}
-    //                         onChange={(e) => hadleTextChange(e, currentPageIndex, setTextA)}
-    //                         hidden={leftDisabled}></WriteText>
-    //                     {leftImage && <Image src={leftImage} alt="Selected Image" />}
-    //                     <WriteText
-    //                         placeholder="글을 작성하거나 그림을 생성해보세요"
-    //                         value={textB}
-    //                         marginLeft={'53.2%'}
-    //                         onChange={(e) => hadleTextChange(e, currentPageIndex+1, setTextB)}
-    //                         hidden={rightDisabled}></WriteText>
-    //                     {rightImage && <Image marginLeft={'51.7%'} src={rightImage} alt="Selected Image" />}
-    //                     <RightImageCreateContainer>
-    //                         <CreateImageButton onClick={handleRightButtonClick}></CreateImageButton>
-    //                         <DeleteImageButton onClick={RightHandleDeleteImage}></DeleteImageButton>
-    //                     </RightImageCreateContainer>
-    //                     <LeftPageNumber>{currentPageIndex + 1}</LeftPageNumber>
-    //                     <RightPageNumber>{currentPageIndex + 2}</RightPageNumber>
-    //                 </WriteContainer>
-    //                 <AfterePageBtn isActive={nextPageBtnActive} disabled={!nextPageBtnActive} onClick={handleAddPages}></AfterePageBtn>
-    //             </BodyContainer>
-    //             <ImageOverlay
-    //                 visible={novelOverlayState}
-    //                 setVisible={setNovelOverlayState}
-    //                 onImageRegister={handleImageRegister}
-    //             ></ImageOverlay>
-    //             <NovelCoverOverlay visible={coverVisible} setVisible={setCoverVisible} novelId={novelId}></NovelCoverOverlay>
-    //         </Wrapper>
-    //     </div>
-    // );
 };
 
 export default WriteNovelForm;

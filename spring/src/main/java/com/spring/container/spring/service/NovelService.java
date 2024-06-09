@@ -12,10 +12,9 @@ public interface NovelService {
     Novel createNovel(Novel novel);
     List<Novel> getNovelsByMemberId(Long memberId);
     List<NovelDTO> getAllNovelsById(Long id);
-    void replaceNovel(Long novelId, String title, byte[] coverImage, int titleX, int titleY, int titleSize);
-    void updateStatus(Long novelId, NovelStatus novelStatus);
     List<NovelDTO> getIncompleteNovelsByMemberId(Long memberId);
     List<NovelDTO> getCompleteNovelsByMemberId(Long memberId);
     void deleteTemporaryNovelsByMemberId(Long memberId);
     Optional<NovelDTO> getNovelById(Long id);
+    void updateNovel(Long novelId, String title, byte[] coverImage, int titleX, int titleY, int titleSize, NovelStatus status);
 }

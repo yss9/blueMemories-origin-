@@ -166,11 +166,9 @@ const ImageCreateBtn = styled.div`
         cursor:pointer;
     }
 `;
-const NovelCoverOverlay=({visible,setVisible,novelId})=>{
+const NovelCoverOverlay=({visible,setVisible,novelId,cover,setCover})=>{
     //db 초기값 저장
     const [novelCover,setNovelCover]=useState(null);
-    // 초기값 이후 수정된 값들을 저장
-    const [cover, setCover]=useState(null);
     // 제목 변수
     const [coverTitle, setCoverTitle]=useState('');
     const [coverTitleX, setCoverTitleX]=useState(0);
@@ -334,30 +332,6 @@ const NovelCoverOverlay=({visible,setVisible,novelId})=>{
             cover.coverImage=image64.split(',')[1];
         }
         handleClose();
-        //밑의 코드는 저장하고 나가기 또는 임시저장 버튼에서 실행
-        // const title_x = parseInt(position.x);
-        // const title_y = parseInt(position.y);
-        // try {
-        //     const formData = new FormData();
-        //     formData.append('novelId', novelId);
-        //     formData.append('title', coverTitle);
-        //     formData.append('coverImage', stableCoverImage|| new Blob([]));
-        //     formData.append('titleX', title_x);
-        //     formData.append('titleY', title_y);
-        //     formData.append('titleSize', coverTitlePxSize);
-        //     const response = await axios.post(`http://localhost:8080/api/novels/replace`, formData, {
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data',
-        //         },
-        //     });
-        //     if (response.status !== 200) {
-        //         throw new Error('Failed to save novel contents');
-        //     }
-        //     console.log('Novel contents saved successfully');
-        //     handleClose();
-        // } catch (error) {
-        //     console.error('Error saving novel contents:', error);
-        // }
     };
     //file => base64 형변환
     const convertFileToBase64 = (file) => {

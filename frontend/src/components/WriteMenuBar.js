@@ -62,72 +62,25 @@ const MenuItem = styled.button`
     
 `;
 //로그인 했을 때 네비게이션 바
-const WriteMenuBar=({visible, onSave, novelId, onComplete})=>{
+const WriteMenuBar=({visible, onInComplete, onComplete})=>{
     const navigate = useNavigate();
     const goToStorageNovel=()=>{
         navigate("/storageNovel");
     }
 
     const handleSaveOut=()=>{
-        onSave();
+        onInComplete();
         goToStorageNovel();
     }
-
-    /**
-     * [책 완성 버튼]
-     * novel db에서 cover_image, title 가져옴
-     * if(둘다 수정 x 면 ){
-     *     알림창 "제목과 표지를 생성해 주세요." => 확인버튼 => 책 표지 cover visible
-     * }
-     * else if(cover_image만 수정 x 면){
-     *     알림창 "표지를 생성해 주세요." => 확인버튼 => 책 표지 cover visible
-     * }
-     * else if(title만 수정 x 면){
-     *     알림창 "제목을 입력해 주세요." => 확인버튼 => 책 표지 cover visible
-     * }
-     * else (전부 수정되었다면){
-     *     "완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?"
-     * }
-     */
-    const handleComplete = async () => {
-
-        try {
-            const response = await axios.get(`http://localhost:8080/api/novels/complete/${novelId}`);
-            const novel = response.data;
-            novel.forEach(novel => {
-                if (novel.title === 'untitled' && (novel.coverImage === null)) {
-                    alert('책제목과 책표지를 생성해 주세요.');
-                    visible();
-                } else if (!novel.coverImage || novel.coverImage === '') {
-                    alert('책표지를 생성해 주세요.');
-                    visible();
-                } else if (novel.title === 'untitled'){
-                    alert('책제목을 입력해 주세요.');
-                    visible();
-                }
-                else {
-                    const userConfirmed = window.confirm("완성한 책은 수정할 수 없습니다. 책 작성을 완료하시겠습니까?");
-                    if (userConfirmed) { //"확인 버튼 클릭한 경우"
-                        // updateNovelStatus(novelId,'COMPLETED'); //novel의 status를 completed로 변경
-                        onComplete();
-                        navigate("/storageNovel");
-                    }
-                }
-            });
-
-        } catch (error) {
-            console.error('Error fetching novel:', error);
-        }
-    };
 
     return (
         <ImageContainer>
             <TopImage></TopImage>
             <MenuBarContainer>
                 <MenuGroup>
-                    <MenuItem onClick={handleComplete}>책 완성</MenuItem>
+                    <MenuItem onClick={onComplete}>책 완성</MenuItem>
                     <MenuItem onClick={visible}>책 표지</MenuItem>
-                    <MenuItem onClick={onSave}>임시저장</MenuItem>
+                    <MenuItem onClick={onInComplete}>임시저장</MenuItem>
                 </MenuGroup>
                 <MenuGroup>
                     <MenuItem onClick={handleSaveOut}>저장하고 나가기</MenuItem>

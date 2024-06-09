@@ -76,29 +76,26 @@ public class NovelServiceImpl implements NovelService {
 
     @Override
     @Transactional
-    public void replaceNovel(Long novelId, String title, byte[] coverImage, int titleX, int titleY, int titleSize) {
+    public void updateNovel(Long novelId, String title, byte[] coverImage, int titleX, int titleY, int titleSize, NovelStatus status){
         Optional<Novel> optionalNovel = novelRepository.findById(novelId);//novelId랑 일치하는거 가져옴
         if(optionalNovel.isPresent()){//null방지
             Novel novel = optionalNovel.get();
-            novel.setTitle(title);
-            novel.setCoverImage(coverImage);
-            novel.setTitleX(titleX);
-            novel.setTitleY(titleY);
-            novel.setTitleSize(titleSize);
-            novelRepository.save(novel);
-        }
-        else{
-            throw new IllegalAccessError("Novel with ID " + novelId + " not found");
-        }
-    }
-
-    @Override
-    @Transactional
-    public void updateStatus(Long novelId, NovelStatus novelStatus) {
-        Optional<Novel> optionalNovel = novelRepository.findById(novelId);//novelId랑 일치하는거 가져옴
-        if(optionalNovel.isPresent()) {//null방지
-            Novel novel = optionalNovel.get();
-            novel.setStatus(novelStatus);
+            if(title != null){
+                novel.setTitle(title);
+            }
+            if(coverImage != null) {
+                novel.setCoverImage(coverImage);
+            }
+            if(titleX != 0){
+                novel.setTitleX(titleX);
+            }
+            if(titleY != 0){
+                novel.setTitleY(titleY);
+            }
+            if(titleSize != 0){
+                novel.setTitleSize(titleSize);
+            }
+            novel.setStatus(status);
             novelRepository.save(novel);
         }
         else{

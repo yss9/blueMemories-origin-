@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -62,59 +63,26 @@ public class NovelController {
         return ResponseEntity.ok(novelDTOs);
     }
 
-    /** [novel id와 일치하는 데이터 덮어 씌우기]
-     * writeNovelPage.js 에서 '책 표지 -> 등록' 버튼 눌렀을 때
-     * title, cover_image, titleX, titleY 정보 덮어씌우기
+    /** ['임시 저장', '저장하고 나가기', '책 완성'] - writeNovelPage.js
+     * 소설 표지 데이터 저장 = cover[] 내용을 novel에 덮어 씌우기
+     * @coverImage: base64로 인코딩된 이미지를 받아오기 때문에 Blob으로 변환 필요
      */
-    @PostMapping("/replace")
+    @PostMapping("/updateNovelCover")
     public ResponseEntity<String> replaceContents(@RequestParam("novelId") Long novelId,
                                                   @RequestParam("title") String title,
-                                                  @RequestParam(value = "coverImage", required = false) MultipartFile coverImage,
+                                                  @RequestParam(value = "coverImage", required = false) String coverImage,
                                                   @RequestParam("titleX") int titleX,
                                                   @RequestParam("titleY") int titleY,
-                                                  @RequestParam("titleSize") int titleSize) {
+                                                  @RequestParam("titleSize") int titleSize,
+                                                  @RequestParam("status") NovelStatus status) {
         try {
             //파일이 존재하면 byte[] 로 변환, 비었다면 null 반환
-            byte[] coverImageBytes = coverImage != null ? coverImage.getBytes() : null;
-            novelService.replaceNovel(novelId, title, coverImageBytes, titleX, titleY, titleSize);
+            byte[] coverImageBytes = (coverImage != null && !coverImage.isEmpty()) ? Base64.getDecoder().decode(coverImage) : null;
+            novelService.updateNovel(novelId, title, coverImageBytes, titleX, titleY, titleSize, status);
             return ResponseEntity.ok("Novel replaced successfully");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Error replacing novel: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
-    }
-
-    /**[novel status => inComplete로 update]
-     * writeNovelPage.js 에서 '저장하고 나가기 ' 버튼 눌렀을 때
-     */
-    @PostMapping("/updateStatus/inComplete")
-    public ResponseEntity<String> replaceInContents(@RequestParam("novelId") Long novelId,
-                                                  @RequestParam("status") NovelStatus status) {
-        try{
-            novelService.updateStatus(novelId, status);
-            return ResponseEntity.ok("Novel replaced successfully");
-        }
-        catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-
-    }
-
-    /**[novel status => complete로 update]
-     * writeNovelPage.js 에서 '책 완성 ' 버튼 눌렀을 때
-     */
-    @PostMapping("/updateStatus")
-    public ResponseEntity<String> replaceContents(@RequestParam("novelId") Long novelId,
-                                                  @RequestParam("status") NovelStatus status) {
-        try{
-            novelService.updateStatus(novelId, status);
-            return ResponseEntity.ok("Novel replaced successfully");
-        }
-        catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-
     }
 
     /**
