@@ -1,10 +1,9 @@
 import {Helmet} from "react-helmet";
 import styled from 'styled-components';
 import React, {useState, useEffect} from 'react';
-import {ViewMenuBar } from '../../components/WriteMenuBar';
+import {BookViewMenuBar} from '../../components/WriteMenuBar';
 import {useLocation} from "react-router";
 import axios from "axios";
-
 const Wrapper = styled.div`
     width:100%;
     height:100vh;
@@ -13,16 +12,18 @@ const Wrapper = styled.div`
     flex-direction:column;
     align-items: center; /* 수직 중앙 정렬 */
 `;
+
 const BodyContainer=styled.div`
     width: 80%;
     height:100%;
-    margin-bottom:1%;
+    margin-bottom:5%;
     /*item정렬*/
     display: flex;
     justify-content: space-between;/* 수평  정렬 */
     flex-direction: row;
     align-items: center; /* 수직 중앙 정렬 */
 `;
+
 const BeforePageBtn = styled.button`
     background: url(${props => props.isActive ? "/resourcesPng/writeNovelPage/beforePageBtn.png" : "/resourcesPng/writeNovelPage/disabledBeforePageBtn.png"}) no-repeat;
     background-size: contain;
@@ -45,64 +46,64 @@ const AfterePageBtn = styled.button`
     /*마우스 HOVER 설정*/
     cursor: ${props => (props.disabled ? 'default' : 'pointer')};
 `;
-
-const WriteContainer = styled.div`
+const MainContentsContainer = styled.div`
     width: 90%;
     height: 40vw;
     /*item 정렬*/
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     position:relative;
     justify-content: center;/* 수평  정렬 */
     align-items: center; /* 수직 중앙 정렬 */
 `;
-const WritePage = styled.div`
-    background: url("/resourcesPng/writeNovelPage/whitePage.png") no-repeat center;
+const WriteContainer = styled.div`
+    background: url("/resourcesPng/writeDrawBookPage/writeDrawWhitePage.png") no-repeat center;
     background-size: contain;
     /*스타일*/
-    border:none;
-    outline:none;
+    border: none;
     /*크기*/
-    width: 55vw;
-    height: 40vw;
-    /*레이어*/
-    position:absolute;
+    width: 97%;
+    height: 25vw;
+    /*item*/
+    display: flex;
+    flex-direction: row;
+    position: relative;
+`;
+const Image = styled.img`
+    width:48%;
+    height:89.5%;
+    margin-top: 1.8%;
+    margin-left:1%;
+    /*LAYER*/
+    position: absolute;
     z-index: 1;
 `;
-const WriteText = styled.div`
-    width: 22.5vw;
-    height: 32vw;
+const WriteText =styled.div`
+    width:40%;
+    height:70%;
+    margin-top: 5%;
+    margin-left:55%;
     /*스타일*/
     border: none;
     outline:none;
     resize: none;
     overflow: hidden; /* 스크롤바 숨김 */
-    background-color: transparent;
     /*텍스트 설정*/
-    font-size: 0.8vw;
-    font-family: BokkLight, sans-serif; //대체폰트
-    /*레이어*/
-    position:absolute;
-    z-index: 3;
-    /*위치*/
-    top:10%;
-    left: ${(props) => props.marginLeft || '15.2%'};
-`;
-const Image=styled.img`
-    width: 25vw;
-    height: 37vw;
-    border:none;
-    outline:none;
-    /*레이어*/
-    position:absolute;
-    z-index: 2;
-    left:${(props)=>props.marginLeft||'13.5%'};
-    opacity:0.9;
-    object-fit: cover;
+    font-size: 1.5vw;
+    font-family: gangwonedusaeeum, sans-serif; //대체폰트
+    &:focus {
+        border: none; // 클릭했을 때 테두리 없앰
+        outline:none;
+        resize: none;
+        overflow: hidden; /* 스크롤바 숨김 */
+        /*텍스트 설정*/
+        font-size: 1.5vw;
+        font-family: gangwonedusaeeum, sans-serif; //대체폰트
+    }  
 `;
 const LeftPageNumber=styled.span`
-    left:15%;
-    bottom:5%;
+    left:3%;
+    bottom:7%;
     //padding:2%;
     /*텍스트 설정*/
     font-size: 0.8vw;
@@ -111,10 +112,11 @@ const LeftPageNumber=styled.span`
     position:absolute;
     z-index: 4;
     align-content: center;
+
 `;
 const RightPageNumber=styled.span`
-    right:15%;
-    bottom:5%;
+    right:3%;
+    bottom:7%;
     //padding:2%;
     /*텍스트 설정*/
     font-size: 0.8vw;
@@ -125,17 +127,15 @@ const RightPageNumber=styled.span`
     align-content: center;
 `;
 
-const ViewNovelForm = () => {
+const ViewBookForm = () => {
     const location = useLocation();
-    const {novelId}=location.state || {}; //navigate로 받은 novelId
-    //novelContents list 저장
-    const [novelContents,setNovelContents]=useState([]);
+    const {bookId}=location.state || {}; //navigate로 받은 bookId
+    //bookContents list 저장
+    const [bookContents,setBookContents]=useState([]);
     //텍스트, 이미지, 페이지 번호 초기화
-    const [currentPage, setCurrentPage]=useState(0); //novels의 index역할
-    const [textA, setTextA]=useState('');
-    const [textB, setTextB]=useState('');
-    const [imageA, setImageA]=useState(null);
-    const [imageB, setImageB]=useState(null);
+    const [currentPage, setCurrentPage]=useState(0); //books의 index역할
+    const [text, setText]=useState('');
+    const [image, setImage]=useState(null);
     const [pageNumberA, setPageNumberA]=useState(1);
     const [pageNumberB, setPageNumberB]=useState(2);
     //페이지 넘김 버튼 비/활성화
@@ -143,60 +143,52 @@ const ViewNovelForm = () => {
     const [prevPageBtnActive, setPrevPageBtnActive] = useState(false);
 
     /**
-     * novelContents db에서 novel id와 일치하는 값들 가져오기(List)
-     * 'novelContents[]' 에 저장
+     * bookContents db에서 book id와 일치하는 값들 가져오기(List)
+     * 'bookContents[]' 에 저장
      */
-    const fetchNovelContents = async (novelId)=>{
+    const fetchBookContents = async (bookId)=>{
         try{
-            const response = await axios.get(`http://localhost:8080/api/novelContents/view?novelId=${novelId}`);
-            console.log('Success fetching novel contents');
+            const response = await axios.get(`http://localhost:8080/api/bookContents/view?bookId=${bookId}`);
+            console.log('Success fetching book contents');
             return response.data;
         }catch(error){
-            console.log('Error fetching novel contents: ',error);
+            console.log('Error fetching book contents: ',error);
             return [];
         }
     }
     useEffect(()=>{
-        if(novelId){
+        if(bookId){
             const fetchContents = async () =>{
-                const data =await fetchNovelContents(novelId);
-                setNovelContents(data);
+                const data =await fetchBookContents(bookId);
+                setBookContents(data);
             };
             fetchContents();
         }
-    },[novelId]);
+    },[bookId]);
     /**
-     * [text, image, pageNumber]변수들 'novelContents[]' 값으로 초기화
+     * [text, image, pageNumber]변수들 'bookContents[]' 값으로 초기화
      */
     useEffect(()=>{
-        if(novelContents.length>0){
-            const handleSetTextAndImageA=()=>{
-                setTextA(novelContents[currentPage]?.textContent || '');
-                if(novelContents[currentPage].image){
-                    setImageA(`data:image/jpeg;base64,${novelContents[currentPage].image}`);
+        if(bookContents.length>0){
+            const handleSetImage=async () => {
+                if (bookContents[currentPage].image) {
+                    setImage(`data:image/jpeg;base64,${bookContents[currentPage].image}`);
+                } else {
+                    setImage('');
                 }
-                else{
-                    setImageA('');
-                }
-                setPageNumberA(novelContents[currentPage].pageNumber);
+                setPageNumberA(bookContents[currentPage].pageNumber);
             };
-            const handleSetTextAndImageB=()=> {
-                setTextB(novelContents[currentPage + 1]?.textContent || '');
-                if(novelContents[currentPage+1].image){
-                    setImageB(`data:image/jpeg;base64,${novelContents[currentPage+1].image}`);
-                }
-                else{
-                    setImageB('');
-                }
-                setPageNumberB(novelContents[currentPage+1].pageNumber);
+            const handleSetText=()=> {
+                setText(bookContents[currentPage + 1]?.textContent || '');
+                setPageNumberB(bookContents[currentPage+1].pageNumber);
             };
-            handleSetTextAndImageA();
-            handleSetTextAndImageB();
+            handleSetImage();
+            handleSetText();
         }
-    },[currentPage,novelContents]);
+    },[currentPage,bookContents,image,text]);
     /**
      * pageNextBtn 설정
-     * if(현재 페이지 + 2 < novelContents.length) => nextBtn 활성화
+     * if(현재 페이지 + 2 < bookContents.length) => nextBtn 활성화
      * ---------------------------
      * pagePrevBtn 설정
      * if(현재 페이지 === 0 ) => prevBtn 비활성화
@@ -206,7 +198,7 @@ const ViewNovelForm = () => {
     useEffect(()=>{
         if(currentPage+1){
             const handleNextPageButton=()=>{
-                if(currentPage + 2< novelContents.length){ //currentPage는 0부터 시작이기 때문에 2를 더해줌
+                if(currentPage + 2< bookContents.length){ //currentPage는 0부터 시작이기 때문에 2를 더해줌
                     setNextPageBtnActive(true);
                 }
                 else{
@@ -224,7 +216,7 @@ const ViewNovelForm = () => {
             handleNextPageButton();
             handlePrevPageButton();
         }
-    },[currentPage,novelContents]);
+    },[currentPage,bookContents]);
     /**
      * pageNextBtn 클릭했을 때 실행되는 함수
      * currentPage++ 해줌.
@@ -242,27 +234,27 @@ const ViewNovelForm = () => {
     return (
         <div>
             <Helmet>
-                <title>WriteNovel</title>
-                <meta name="description" content="BlueMemories WriteNovel Page"/>
+                <title>WriteDrawBook</title>
+                <meta name="description" content="BlueMemories WriteBook Page"/>
             </Helmet>
+
             <Wrapper>
-                <ViewMenuBar></ViewMenuBar>
+                <BookViewMenuBar></BookViewMenuBar>
                 <BodyContainer>
                     <BeforePageBtn isActive={prevPageBtnActive} disabled={!prevPageBtnActive} onClick={handlePrevPageSetting}></BeforePageBtn>
-                    <WriteContainer>
-                        <WritePage></WritePage>
-                        <WriteText>{textA}</WriteText>
-                        {imageA && imageA !== 'null' && imageA !== '' && <Image src={imageA} alt="Image" />}
-                        <WriteText marginLeft={'53.2%'}>{textB}</WriteText>
-                        {imageB && imageB !== 'null' && imageB !== '' && <Image marginLeft={'51.7%'} src={imageB} alt="Image" />}
-                        <LeftPageNumber>{pageNumberA}</LeftPageNumber>
-                        <RightPageNumber>{pageNumberB}</RightPageNumber>
-                    </WriteContainer>
+                    <MainContentsContainer>
+                        <WriteContainer>
+                            {image && image !== 'null' && image !== '' && <Image src={image} alt="Selected Image" />}
+                            <WriteText>{text}</WriteText>
+                            <LeftPageNumber>{pageNumberA}</LeftPageNumber>
+                            <RightPageNumber>{pageNumberB}</RightPageNumber>
+                        </WriteContainer>
+                    </MainContentsContainer>
                     <AfterePageBtn isActive={nextPageBtnActive} disabled={!nextPageBtnActive} onClick={handleNextPageSetting}></AfterePageBtn>
                 </BodyContainer>
             </Wrapper>
         </div>
     );
 };
-export default ViewNovelForm;
+export default ViewBookForm;
 

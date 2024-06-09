@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 import ImageStyleDropDown from "./imageStyle";
-import ImagePrompt from "./imagePrompt";
-import ImageUploader from "../imageFileInput";
+import ImagePrompt from "../../../../components/imagePrompt";
+import ImageUploader from "../../../../components/imageFileInput";
 import DragAndDrop from "../ImageDragAndDrop";
-import React, {useContext, useState} from "react";
-import {Context} from "../../../Context/Context";
+import React, {useState} from "react";
 import {loadImageFromBackend} from "../../../API/stableApi";
 
 const Overlay = styled.div`

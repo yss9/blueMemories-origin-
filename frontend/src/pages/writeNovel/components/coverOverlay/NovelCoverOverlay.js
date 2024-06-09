@@ -1,15 +1,13 @@
 import styled from 'styled-components';
-import ImageStyleDropDown from "./coverStyle";
-import ImagePrompt from "./coverPrompt";
-import ImageUploader from "../imageFileInput";
+import ImageStyleDropDown from "../../../../components/coverStyle";
+import ImagePrompt from "../../../../components/coverPrompt";
+import ImageUploader from "../../../../components/imageFileInput";
 import DragAndDrop from "../ImageDragAndDrop";
-import TitlePrompt from "./TitleTextInput";
-import TitleSize from "./TitleSizeControl";
-import React, {useContext, useEffect, useRef, useState} from "react";
-import {Context} from "../../../Context/Context";
+import TitlePrompt from "../../../../components/TitleTextInput";
+import TitleSize from "../../../../components/TitleSizeControl";
+import React, {useEffect, useRef, useState} from "react";
 import {loadImageFromBackend} from "../../../API/stableApi";
 import axios from "axios";
-import {useLocation} from "react-router";
 
 const Overlay = styled.div`
     background: url("/resourcesPng/writeNovelPage/makingImageBackground.png") no-repeat;
@@ -175,7 +173,7 @@ const NovelCoverOverlay=({visible,setVisible,novelId,cover,setCover})=>{
     const [coverTitleY, setCoverTitleY]=useState(0);
     const [coverTitleSize, setCoverTitleSize]=useState(5);
     // image, prompt 변수
-    const [stableStyle,setStableStyle]=useState('fantasy');
+    const [stableStyle,setStableStyle]=useState('fantasy-art');
     const [stablePrompt,setStablePrompt]=useState('');
     const [imageFile,setImageFile]=useState(null);
     const [imageUrl, setImageUrl]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
@@ -360,7 +358,6 @@ const NovelCoverOverlay=({visible,setVisible,novelId,cover,setCover})=>{
                     onMouseUp={handleMouseUp}
                     onMouseMove={handleMouseMove}
                     onMouseDown={handleMouseDown}>
-
                     <Title
                         ref={titleRef}
                         onMouseUp={handleMouseUp}

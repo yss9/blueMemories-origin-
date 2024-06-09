@@ -33,7 +33,6 @@ const ImageUploadText=styled.div`
     margin-top:1vw;
 `;
 const DragAndDrop = ({onImageSelected}) => {
-    const [image, setImage] = useState(null);
 
     const handleDragOver = (e) => {
         e.preventDefault(); // 기본 이벤트를 방지
@@ -44,7 +43,6 @@ const DragAndDrop = ({onImageSelected}) => {
         const files = e.dataTransfer.files; // 드롭한 파일 목록
         if (files && files.length > 0) {
             const file = files[0];
-            setImage(file);
             if(onImageSelected) {
                 onImageSelected(file);
             }

@@ -109,5 +109,55 @@ const ViewMenuBar=()=>{
         </ImageContainer>
     );
 };
-export {WriteMenuBar,ViewMenuBar};
+
+//로그인 했을 때 네비게이션 바
+const BookWriteMenuBar=({visible, onInComplete, onComplete})=>{
+    const navigate = useNavigate();
+    const goToStorageBook=()=>{
+        navigate("/storageDrawBook");
+    }
+
+    const handleSaveOut=()=>{
+        onInComplete();
+        goToStorageBook();
+    }
+
+    return (
+        <ImageContainer>
+            <TopImage></TopImage>
+            <MenuBarContainer>
+                <MenuGroup>
+                    <MenuItem onClick={onComplete}>책 완성</MenuItem>
+                    <MenuItem onClick={visible}>책 표지</MenuItem>
+                    <MenuItem onClick={onInComplete}>임시저장</MenuItem>
+                </MenuGroup>
+                <MenuGroup>
+                    <MenuItem onClick={handleSaveOut}>저장하고 나가기</MenuItem>
+                </MenuGroup>
+            </MenuBarContainer>
+        </ImageContainer>
+    );
+};
+
+
+const BookViewMenuBar=()=>{
+    const navigate=useNavigate();
+    const handleViewOut=()=>{
+        navigate('/storageDrawBook');
+    }
+    return (
+        <ImageContainer>
+            <TopImage></TopImage>
+            <MenuBarContainer>
+                <MenuGroup>
+                    <MenuItem></MenuItem>
+                </MenuGroup>
+                <MenuGroup>
+                    <MenuItem onClick={handleViewOut}>나가기</MenuItem>
+                </MenuGroup>
+            </MenuBarContainer>
+        </ImageContainer>
+    );
+};
+export {WriteMenuBar,ViewMenuBar,BookWriteMenuBar,BookViewMenuBar};
 

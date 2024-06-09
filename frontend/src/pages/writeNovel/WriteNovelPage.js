@@ -1,10 +1,9 @@
 import {Helmet} from "react-helmet";
 import styled, {css} from 'styled-components';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import { WriteMenuBar } from '../../components/WriteMenuBar';
 import ImageOverlay from "./components/imageOverlay/ImageOverlay";
 import NovelCoverOverlay from "./components/coverOverlay/NovelCoverOverlay";
-import {Context} from "../Context/Context";
 import {useLocation} from "react-router";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
@@ -492,6 +491,22 @@ const WriteNovelForm = () => {
      * & cover[] 내용을 novel에 덮어 씌우기 + stastus: status 로 변경
      * status 매개변수 값에 따라 in_complete or complete
      * */
+    function base64ToBlob(base64, mime) {
+        const byteChars = atob(base64);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteChars.length; offset += 512) {
+            const slice = byteChars.slice(offset, offset + 512);
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+
+        return new Blob(byteArrays, { type: mime });
+    }
     const handleSave = async (status) => {
         try {
             for (const page of pages) {
@@ -500,9 +515,13 @@ const WriteNovelForm = () => {
                 pages.forEach((page, index) => {
                     formData.append('pageNumber', page.pageNumber);
                     formData.append('textContent', page.textContent);
-                    formData.append('image', page.image || new Blob([]));
+                    if(page.image){
+                        const blob = base64ToBlob(page.image, 'image/jpeg'); // 이미지 형식에 맞게 수정
+                        formData.append('image', blob);
+                    }else{
+                        formData.append('image', new Blob([]));
+                    }
                 });
-
                 const response = await axios.post(`http://localhost:8080/api/novelContents/replace`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',

@@ -19,8 +19,6 @@ public class NovelServiceImpl implements NovelService {
 
     @Autowired
     private NovelRepository novelRepository;
-    @Autowired
-    private NovelContentRepository novelContentRepository;
 
     @Override
     public Novel createNovel(Novel novel) {

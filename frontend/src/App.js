@@ -14,12 +14,11 @@ import StorageRecommendPage from './pages/storageRecommend/StorageRecommendPage'
 import WriteNovelPage from "./pages/writeNovel/WriteNovelPage";
 import ViewNovelPage from "./pages/writeNovel/ViewNovelPage";
 import WriteDrawBookPage from './pages/writeDrawBook/WriteDrawBookPage';
+import ViewBookPage from "./pages/writeDrawBook/ViewBookPage";
 
 import {Helmet} from "react-helmet";
 import CreateDiaryPage from "./pages/storageDiary/CreateDiaryPage";
 import {StyleProvider} from "./pages/Context/Context";
-import { AuthProvider } from './pages/Context/AuthContext';
-import WrittenDiaryForm from "./pages/storageDiary/WrittenDiaryPage";
 
 function App() {
 
@@ -56,7 +55,9 @@ function App() {
                         {/* <ViewNovel /> */}
                         <Route path="/ViewNovel" element={<ViewNovelPage />} />
                         {/* <WriteDrawBook /> */}
-                        <Route path="/WriteDrawBook" element={<WriteDrawBookPage />} />
+                        <Route path="/WriteBook" element={<WriteDrawBookPage />} />
+                        {/* <ViewBook /> */}
+                        <Route path="/ViewBook" element={<ViewBookPage />} />
                         {/* <DiaryTest /> */}
                         <Route path="/diaryWrite" element={<CreateDiaryPage />} />
                     </Routes>

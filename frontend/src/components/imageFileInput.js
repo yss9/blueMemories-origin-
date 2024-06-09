@@ -52,7 +52,6 @@ const FileInputIconButton=styled.label`
 // 숨겨진 실제 파일 인풋
 const HiddenFileInput = styled.input`
     display: none;
-    //background: none;
     width:100%;
     background-color: transparent; /* 배경색 투명 */
     border: none; /* 테두리 제거 */
@@ -63,13 +62,6 @@ const HiddenFileInput = styled.input`
 
 `;
 
-// // 이미지 프리뷰 스타일링
-// const ImagePreview = styled.img`
-//     max-width: 100%;
-//     max-height: 300px;
-//     margin-top: 20px;
-// `;
-
 const ImageUploader = ({onImageSelected}) => {
     const fileInputRef = React.useRef();
     const handleButtonClick = () => {
@@ -78,15 +70,7 @@ const ImageUploader = ({onImageSelected}) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file && onImageSelected) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                onImageSelected(reader.result);
-            };
-            reader.onerror = (error) => {
-                // 오류 처리 로직
-                console.error('File reading error: ', error);
-            };
-            reader.readAsDataURL(file);
+            onImageSelected(file);
         }
     };
 

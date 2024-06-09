@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { LoggedInNavigationBar } from '../../components/NavigationBar';
 import { BookListItemContainer } from '../../components/BookList';
 import { StoargeTextBtnContainer } from '../../components/StorageTextBtn';
-import {useEffect, useState} from "react";
-import axios from "axios";
 import {useAuth} from "../Context/AuthContext";
 
 const Wrapper = styled.div`
@@ -37,9 +35,6 @@ const ListBackgroundImg=styled.div`
 `;
 
 const StorageNovelForm = () => {
-    const {user} = useAuth();// userID
-    const userID = user.id;
-
     return (
         <div>
             <Helmet>
