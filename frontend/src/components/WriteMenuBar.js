@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import React, {useState} from 'react';
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const ImageContainer=styled.div`
     width:100%;
@@ -60,42 +62,102 @@ const MenuItem = styled.button`
     
 `;
 //로그인 했을 때 네비게이션 바
-const WriteMenuBar=({onClick})=>{
-    // const navigate = useNavigate();
-    // const goToMain=()=>{
-    //     navigate("/");
-    // }
-    // const goToIntroduce=()=>{
-    //     navigate("/introduce");
-    // }
-    // const goToStorageNovel=()=>{
-    //     navigate("/storageNovel");
-    // }
-    // const goToStorageExchangeDiary=()=>{
-    //     navigate("/storageExchangeDiary");
-    // }
-    // const goToStorageDiary=()=>{
-    //     navigate("/storageDiary");
-    // }
-    // const goToStorageDrawBook=()=>{
-    //     navigate("/storageDrawBook");
-    // }
+const WriteMenuBar=({visible, onInComplete, onComplete})=>{
+    const navigate = useNavigate();
+    const goToStorageNovel=()=>{
+        navigate("/storageNovel");
+    }
+
+    const handleSaveOut=()=>{
+        onInComplete();
+        goToStorageNovel();
+    }
 
     return (
         <ImageContainer>
             <TopImage></TopImage>
             <MenuBarContainer>
                 <MenuGroup>
-                    <MenuItem>책 완성</MenuItem>
-                    <MenuItem onClick={onClick}>책 표지</MenuItem>
-                    <MenuItem>임시저장</MenuItem>
+                    <MenuItem onClick={onComplete}>책 완성</MenuItem>
+                    <MenuItem onClick={visible}>책 표지</MenuItem>
+                    <MenuItem onClick={onInComplete}>임시저장</MenuItem>
                 </MenuGroup>
                 <MenuGroup>
-                    <MenuItem>저장하고 나가기</MenuItem>
+                    <MenuItem onClick={handleSaveOut}>저장하고 나가기</MenuItem>
                 </MenuGroup>
             </MenuBarContainer>
         </ImageContainer>
     );
 };
-export {WriteMenuBar};
+
+const ViewMenuBar=()=>{
+    const navigate=useNavigate();
+    const handleViewOut=()=>{
+        navigate('/storageNovel');
+    }
+    return (
+        <ImageContainer>
+            <TopImage></TopImage>
+            <MenuBarContainer>
+                <MenuGroup>
+                    <MenuItem></MenuItem>
+                </MenuGroup>
+                <MenuGroup>
+                    <MenuItem onClick={handleViewOut}>나가기</MenuItem>
+                </MenuGroup>
+            </MenuBarContainer>
+        </ImageContainer>
+    );
+};
+
+//로그인 했을 때 네비게이션 바
+const BookWriteMenuBar=({visible, onInComplete, onComplete})=>{
+    const navigate = useNavigate();
+    const goToStorageBook=()=>{
+        navigate("/storageDrawBook");
+    }
+
+    const handleSaveOut=()=>{
+        onInComplete();
+        goToStorageBook();
+    }
+
+    return (
+        <ImageContainer>
+            <TopImage></TopImage>
+            <MenuBarContainer>
+                <MenuGroup>
+                    <MenuItem onClick={onComplete}>책 완성</MenuItem>
+                    <MenuItem onClick={visible}>책 표지</MenuItem>
+                    <MenuItem onClick={onInComplete}>임시저장</MenuItem>
+                </MenuGroup>
+                <MenuGroup>
+                    <MenuItem onClick={handleSaveOut}>저장하고 나가기</MenuItem>
+                </MenuGroup>
+            </MenuBarContainer>
+        </ImageContainer>
+    );
+};
+
+
+const BookViewMenuBar=()=>{
+    const navigate=useNavigate();
+    const handleViewOut=()=>{
+        navigate('/storageDrawBook');
+    }
+    return (
+        <ImageContainer>
+            <TopImage></TopImage>
+            <MenuBarContainer>
+                <MenuGroup>
+                    <MenuItem></MenuItem>
+                </MenuGroup>
+                <MenuGroup>
+                    <MenuItem onClick={handleViewOut}>나가기</MenuItem>
+                </MenuGroup>
+            </MenuBarContainer>
+        </ImageContainer>
+    );
+};
+export {WriteMenuBar,ViewMenuBar,BookWriteMenuBar,BookViewMenuBar};
 

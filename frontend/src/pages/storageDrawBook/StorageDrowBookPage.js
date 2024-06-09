@@ -1,7 +1,7 @@
 import {Helmet} from "react-helmet";
 import styled from 'styled-components';
 import { LoggedInNavigationBar } from '../../components/NavigationBar';
-import { BookListItemContainer } from '../../components/BookList';
+import { BookListItemContainer } from './components/BookListBook';
 import { StoargeTextBtnContainer } from '../../components/StorageTextBtn';
 
 const Wrapper = styled.div`

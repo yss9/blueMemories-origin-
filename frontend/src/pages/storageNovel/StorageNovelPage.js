@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { LoggedInNavigationBar } from '../../components/NavigationBar';
 import { BookListItemContainer } from '../../components/BookList';
 import { StoargeTextBtnContainer } from '../../components/StorageTextBtn';
+import {useAuth} from "../Context/AuthContext";
 
 const Wrapper = styled.div`
     width:100%;

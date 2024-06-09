@@ -1,12 +1,10 @@
 package com.spring.container.spring;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.container.spring.service.MemberServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -18,7 +16,7 @@ public class Application {
 	}
 
 	@Bean
-	public MemberServiceImpl memberService(){
+	public MemberServiceImpl memberService() {
 		return new MemberServiceImpl();
 	}
 
@@ -33,6 +31,5 @@ public class Application {
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);
 	}
-
 
 }

@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 import ImageStyleDropDown from "./imageStyle";
-import ImagePrompt from "./imagePrompt";
-import ImageUploader from "../imageFileInput";
+import ImagePrompt from "../../../../components/imagePrompt";
+import ImageUploader from "../../../../components/imageFileInput";
 import DragAndDrop from "../ImageDragAndDrop";
-import React, {useContext, useState} from "react";
-import {Context} from "../../../Context/Context";
+import React, {useState} from "react";
 import {loadImageFromBackend} from "../../../API/stableApi";
 
 const Overlay = styled.div`
@@ -115,51 +114,62 @@ const ImageCreateBtn = styled.div`
     }
 `;
 const ImageOverlay=({visible, setVisible,onImageRegister})=>{
-    //contextAPI: style-preset
-    const {stableImage, setStableImage}=useContext(Context);
-    // 이미지가 선택되었을 때 호출될 함수
-    const handleImageSelected = (imageUrl) => {
-        setStableImage(imageUrl);
+    const [stableStyle,setStableStyle]=useState('fantasy');
+    const [stablePrompt,setStablePrompt]=useState('');
+    const [imageFile,setImageFile]=useState(null);
+    const [imageUrl, setImageUrl]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
+
+    /** [업로드, 드래그드롭 => 이미지 설정]
+     * imageUploader, DragAndDrop에서 사용할 함수
+     */
+    const handleImageSelected = (file) => {
+        setImageFile(file);
+        const url=URL.createObjectURL(file);
+        setImageUrl(url);
     };
 
-    //contextAPI: style-preset
-    const {stableStyle}=useContext(Context);
-    //contextAPI: prompt
-    const {stablePrompt} = useContext(Context);
-    // const encodedPrompt = encodeURIComponent(stablePrompt);//구글 번역api 안거치고 바로 stable diffusion api사용할때는 encoding값 넘겨야한다.
-    //stableDiffusion API formData
+    /** ['AI 그림 생성하기' 버튼]
+     * stableAPI 호출
+     */
     const loadImageFromApi = async () => {
         try {
-            const url = await loadImageFromBackend(stablePrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
-            setStableImage(url); // 생성된 이미지 URL 상태에 저장
+            const file = await loadImageFromBackend(stablePrompt,stableStyle,"9:16");//encodedPrompt,stableStyle
+            setImageFile(file);
+            const url=URL.createObjectURL(file);
+            setImageUrl(url);
         } catch (error) {
             console.error('Error loading image:', error);
         }
     };
 
-    //취소 버튼 -> 초기화 -> 창닫기
+    /** ['취소' 버튼]
+     * (style, prompt, image) 초기화 & 창 닫기
+     */
     const handleClose = () => {
         setVisible(false);
-        // 2초 후에 나머지 설정을 실행하도록 setTimeout 사용
-        // setTimeout(() => {
-        //     setStableStyle('fantasy-art');
-        //     setStablePrompt('');
-        //     setStableImage('/resourcesPng/writeNovelPage/imageShowPanel.png');
-        // }, 2000); // 2000 밀리초(2초)
+        setStableStyle('fantasy-art');
+        setStablePrompt('');
+        setImageUrl('/resourcesPng/writeNovelPage/imageShowPanel.png');
     };
-    //등록 버튼 -> 값 update -> 창닫기
-    //이미지 생성한거 없는 상태에서 등록 버튼 누르면 변화 x
+
+    /** ['등록' 버튼]
+     * if( imageUrl에 다른 이미지가 들어왔다면 ){
+     *     writeNovelPage.js의 handleImageOverlaySrc(file,url)실행
+     * }
+     * 창 닫기
+     */
     const handleImageUpdate=()=>{
-        if(stableImage!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
-            onImageRegister(stableImage)
+        if(imageUrl!=='/resourcesPng/writeNovelPage/imageShowPanel.png')
+            onImageRegister(imageFile,imageUrl)
         handleClose();
     };
+
     return(
         <Overlay visible={visible}>
             <MakingImageLeftContainer>
                 <ImagePromptContainer>
-                    <ImageStyleDropDown></ImageStyleDropDown>
-                    <ImagePrompt></ImagePrompt>
+                    <ImageStyleDropDown stableStyle={stableStyle} setStableStyle={setStableStyle}></ImageStyleDropDown>
+                    <ImagePrompt stablePrompt={stablePrompt} setStablePrompt={setStablePrompt}></ImagePrompt>
                     <ImageUploader onImageSelected={handleImageSelected}></ImageUploader>
                     <DragAndDrop onImageSelected={handleImageSelected}></DragAndDrop>
                 </ImagePromptContainer>
@@ -167,7 +177,7 @@ const ImageOverlay=({visible, setVisible,onImageRegister})=>{
             </MakingImageLeftContainer>
             <ImageRightContainer>
                 <ImageShowContainer>
-                    <Image src={stableImage} alt="Selected Image"></Image>
+                    <Image src={imageUrl} alt="Selected Image"></Image>
                 </ImageShowContainer>
                 <ImageCreateBtnContainer>
                     <ImageCreateBtn onClick={handleClose}>취소</ImageCreateBtn>

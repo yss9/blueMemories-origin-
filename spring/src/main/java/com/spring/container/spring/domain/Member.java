@@ -1,5 +1,7 @@
 package com.spring.container.spring.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,13 +17,14 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length=20, unique = true)
+    @Column(nullable = false, length = 20, unique = true)
     private String memberId;
 
     @Column(nullable = false, length=20)
@@ -37,4 +40,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GeneralDiary> generalDiaries = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Novel> novels = new ArrayList<>();
 }

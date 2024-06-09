@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import {useContext} from "react";
-import {Context} from "../../../Context/Context";
+import {Context} from "../pages/Context/Context";
+import {useContext, useState} from "react";
 
 const ImagePromptTextContainer= styled.div`
     width:99%;
@@ -57,8 +57,7 @@ const PromptTextarea = styled.textarea`
         font-family: gangwonedusaeeum, sans-serif; //대체폰트
     }
 `;
-const ImagePrompt=()=>{
-    const {stablePrompt, setStablePrompt} = useContext(Context);
+const ImagePrompt=({stablePrompt, setStablePrompt})=>{
     const handlePrompt = (event) => {
         const value=event.target.value;
         setStablePrompt(value); // 선택된 텍스트로 상태 업데이트

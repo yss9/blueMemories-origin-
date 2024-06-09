@@ -54,4 +54,10 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new RuntimeException("Member not found for this id :: " + id));
         memberRepository.delete(member);
     }
+
+    //MemberRepository를 통해 아이디 조회 jpa 실행
+    @Override
+    public Optional<Member> findByMemberId(String memberId) {
+        return memberRepository.findByMemberId(memberId);
+    }
 }

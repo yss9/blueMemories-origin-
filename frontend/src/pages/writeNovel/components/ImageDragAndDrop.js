@@ -33,7 +33,6 @@ const ImageUploadText=styled.div`
     margin-top:1vw;
 `;
 const DragAndDrop = ({onImageSelected}) => {
-    const [image, setImage] = useState(null);
 
     const handleDragOver = (e) => {
         e.preventDefault(); // 기본 이벤트를 방지
@@ -44,9 +43,8 @@ const DragAndDrop = ({onImageSelected}) => {
         const files = e.dataTransfer.files; // 드롭한 파일 목록
         if (files && files.length > 0) {
             const file = files[0];
-            setImage(URL.createObjectURL(file)); // 파일을 미리보기 가능한 URL로 변환
             if(onImageSelected) {
-                onImageSelected(URL.createObjectURL(file));
+                onImageSelected(file);
             }
         }
     };
@@ -58,7 +56,6 @@ const DragAndDrop = ({onImageSelected}) => {
         >
             <ImageUploadIcon></ImageUploadIcon>
             <ImageUploadText>사진을 끌어다 놓으세요</ImageUploadText>
-            {/*{image ? <img src={image} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%' }} /> : ""}*/}
         </ImageUploadContainer>
     );
 };

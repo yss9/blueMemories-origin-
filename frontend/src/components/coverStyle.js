@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import styled from 'styled-components';
-import {Context} from "../../../Context/Context";
+import {Context} from "../pages/Context/Context";
 
 //style prompt//
 const ImageStyleContainer= styled.div`
@@ -49,10 +49,10 @@ const DropdownTextButton = styled.div`
     margin-left: 5%;
     cursor: pointer;
     position: absolute;
-    top:10px;
+    top:5px;
     z-index: 1;
     /*텍스트 스타일*/
-    font-size: 2vw;
+    font-size: 2.5vw;
     font-family: gangwonedusaeeum, sans-serif; //대체폰트
     color: #80A691;
     user-select: none;
@@ -102,21 +102,21 @@ const DropdownContent = styled.div`
     }
 `;
 
-const ImageStyleDropDown=()=>{
+const ImageStyleDropDown=({stableStyle, setStableStyle})=>{
     const [isOpen, setIsOpen] = useState(false);
-    const {stableCoverStyle, setStableCoverStyle}=useContext(Context);
     // 드롭다운 항목 선택 핸들러
     const handleSelect = (text) => {
-        setStableCoverStyle(text); // 선택된 텍스트로 상태 업데이트
+        setStableStyle(text); // 선택된 텍스트로 상태 업데이트
         setIsOpen(false); // 드롭다운 닫기
     };
     // DropdownTextButton에 표시할 값
-    const displayedCoverStyle = stableCoverStyle.replace('-art', '');
+    const displayedStyle = stableStyle.replace('-art', '');
+
     return (
         <ImageStyleContainer>
             <StyleTitle>Style</StyleTitle>
             <DropdownContainer>
-                <DropdownTextButton onClick={() => setIsOpen(!isOpen)}>{displayedCoverStyle}</DropdownTextButton>
+                <DropdownTextButton onClick={() => setIsOpen(!isOpen)}>{displayedStyle}</DropdownTextButton>
                 <DropdownIconButton onClick={() => setIsOpen(!isOpen)}></DropdownIconButton>
                 <DropdownContent isOpen={isOpen}>
                     <a onClick={() => handleSelect('fantasy-art')}>fantasy</a>

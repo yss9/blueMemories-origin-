@@ -4,7 +4,7 @@ export const Context = createContext(undefined);
 
 export const StyleProvider = ({ children }) => {
     const [stableStyle, setStableStyle] = useState('fantasy-art'); //기본 style:fantasy
-    const [stableImage, setStableImage]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
+    const [imageUrl, setImageUrl]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
     const [stablePrompt, setStablePrompt]=useState('');
     const [stableCoverStyle, setStableCoverStyle] = useState('fantasy-art'); //기본 style:fantasy
     const [stableCoverImage, setStableCoverImage]=useState('/resourcesPng/writeNovelPage/imageShowPanel.png');
@@ -16,7 +16,7 @@ export const StyleProvider = ({ children }) => {
     return (
         <Context.Provider value={{
             stableStyle, setStableStyle,
-            stableImage, setStableImage,
+            imageUrl, setImageUrl,
             stablePrompt, setStablePrompt,
             stableCoverStyle, setStableCoverStyle,
             stableCoverImage, setStableCoverImage,

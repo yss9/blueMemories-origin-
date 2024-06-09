@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
 import GlobalFont from './styles/GlobalFont';
+import {AuthProvider} from "./pages/Context/AuthContext";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <GlobalFont />
+      <AuthProvider>
+          <GlobalFont />
           <App />
+      </AuthProvider>
   </React.StrictMode>
 );
 

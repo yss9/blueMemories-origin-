@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
-
 public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query(value = "select m.nickname from Member m where m.memberId = :memberId")
     String findNicknameByMemberId(@Param("memberId") String memberId);
@@ -15,4 +14,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 
 
+    Optional<Member> findByMemberId(String memberId);
 }

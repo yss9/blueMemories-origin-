@@ -13,4 +13,6 @@ public interface MemberService {
     List<Member> findAllMembers();
     Member updateMember(Long id, String pw);
     void deleteMember(Long id);
+    //로그인 아이디 조회
+    Optional<Member> findByMemberId(String memberId);
 }
