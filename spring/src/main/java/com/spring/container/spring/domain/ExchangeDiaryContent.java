@@ -17,20 +17,30 @@ public class ExchangeDiaryContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name="ExchangeDiary_Id")
+    private ExchangeDiary exchangeDiary;
+
     private Long diaryNo;
+    private String writer;
 
-    private Long sender;
+    private String year;
+    private String month;
+    private String day;
 
-    private Long receiver;
+    private String title;
+    private String weather;
 
+    @Column(nullable = false, length = 30000)
     private String content;
-    private String image;
 
-
-    private LocalDateTime writeDate;
-    private LocalDateTime updateDate;
-
+    private String image1;
 
     private String sentiment;
+
+    private Double confidenceNegative;
+    private Double confidencePositive;
+    private Double confidenceNeutral;
+
 
 }

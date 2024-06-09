@@ -1,7 +1,5 @@
 package com.spring.container.spring.controllers;
 
-import com.spring.container.spring.repository.DiaryRepository;
-import com.spring.container.spring.repository.ImageGenerationRepository;
 import com.spring.container.spring.service.ImageGenerationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -9,8 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api", method = RequestMethod.POST)

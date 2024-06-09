@@ -6,6 +6,7 @@ import Calendar from 'react-calendar';
 import './Calendar.css';
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const Wrapper = styled.div`
     width:100%;
@@ -68,7 +69,25 @@ const StorageDiaryForm = () => {
         const day = value.getDate();
         const weekdayIndex = value.getDay();
 
-        navigate('/diaryWrite', { state: { year, month, day, weekdayIndex } });
+        //navigate('/diaryWrite', { state: { year, month, day, weekdayIndex } });
+
+        axios.get(`http://localhost:8080/api/entries/${year}/${month}/${day}`)
+            .then(response => {
+                // 날짜에 해당하는 데이터가 있을 경우
+                if (response.status === 200) {
+                    navigate('/viewDiary', { state: { entry: response.data, weekdayIndex } });
+                }
+            })
+            .catch(error => {
+                // 날짜에 해당하는 데이터가 없을 경우
+                if (error.response && error.response.status === 500) {
+                    navigate('/writeDiary', { state: { year, month, day, weekdayIndex } });
+                } else {
+                    console.error('Error fetching entry:', error);
+                }
+            });
+
+
     };
     // 각 날짜 셀의 내용을 포매팅하는 함수
     const formatDay = (locale, date) => {

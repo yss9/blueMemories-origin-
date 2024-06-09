@@ -13,6 +13,7 @@ import lombok.Setter;
 public class RecommendHistory {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(mappedBy = "recommendHistory")

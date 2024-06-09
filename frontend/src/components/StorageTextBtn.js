@@ -110,7 +110,7 @@ const StoargeTextBtnContainer=({margin_top})=>{
     return (
         <TextBtnContainer>
             <TextBarImg margin_top={margin_top}></TextBarImg>
-            <TextNickName>정윤님의 기록</TextNickName>
+            <TextNickName>User님의 기록</TextNickName>
             <MenuContainer>
                 <MenuBtn onClick={goToStorageDiary}>일기</MenuBtn>
                 <MenuItemCountContainer onClick={goToStorageDiary}>

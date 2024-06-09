@@ -29,7 +29,7 @@ public class FileStorageService {
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return targetLocation.toString();
+            return fileName;
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file. Please try again!", e);
         }

@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public interface MemberService {
     Member createMember(Member member);
-    Optional<Member> findMember(Long id);
+    Optional<Member> findMemberById(Long id);
+    Optional<Member> findMemberByMemberId(String memberId);
+    String findNicknameByMemberId(String memberId);
     List<Member> findAllMembers();
     Member updateMember(Long id, String pw);
     void deleteMember(Long id);
