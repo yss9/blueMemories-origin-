@@ -2,17 +2,28 @@ package com.spring.container.spring.controllers;
 
 import com.spring.container.spring.domain.GeneralDiaryContent;
 import com.spring.container.spring.domain.Member;
+import com.spring.container.spring.service.DiaryServiceImpl;
 import com.spring.container.spring.service.FileStorageService;
 import com.spring.container.spring.service.MemberServiceImpl;
 import com.spring.container.spring.service.SentimentAnalysisService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class DiaryController {
 
     @Autowired
@@ -24,6 +35,8 @@ public class DiaryController {
     @Autowired
     private MemberServiceImpl memberService;
 
+    @Autowired
+    private DiaryServiceImpl diaryService;
 
     @PostMapping("/posting")
     public GeneralDiaryContent saveDiaryContent(
@@ -37,7 +50,7 @@ public class DiaryController {
     ) {
         // 파일 저장
         String filePath = fileStorageService.storeFile(file);
-        Optional<Member> member = memberService.findMember(1L);
+        Optional<Member> member = memberService.findMemberById(1L);
         Member member1 = member.get();
 
         // GeneralDiaryContent 객체 생성
@@ -57,8 +70,29 @@ public class DiaryController {
         return sentimentAnalysisService.createDiaryContent(generalDiaryContent);
     }
 
-    @GetMapping("/{id}/diarys")
-    public void getDiarys(@PathVariable Long id){
-        // 여기에서 id를 기반으로 일기 목록 조회 로직 구현
+    @GetMapping("/entries/{year}/{month}/{day}")
+    public GeneralDiaryContent getEntryByDate(@PathVariable("year") String year, @PathVariable("month") String month, @PathVariable("day") String day) {;
+        return diaryService.generalDiaryContent(year,month,day);
     }
+
+    private final Path rootLocation = Paths.get("C:\\Users\\Admin\\Desktop\\spring\\blueMemories\\uploads");
+
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+        try {
+            Path file = rootLocation.resolve(filename);
+            Resource resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                throw new RuntimeException("Could not read the file!");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Could not read the file: " + e.getMessage());
+        }
+    }
+
 }

@@ -1,11 +1,15 @@
 package com.spring.container.spring.service;
 
-import com.spring.container.spring.repository.DiaryListRepository;
+import com.spring.container.spring.domain.GeneralDiaryContent;
+import com.spring.container.spring.repository.GeneralDiaryContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class RecommendService {
@@ -21,31 +25,67 @@ public class RecommendService {
     2.1 다이어리를 작성해야 추천받을 수 있다고 뜸
      */
     @Autowired
-    private DiaryListRepository diaryListRepository;
+    private GeneralDiaryContentRepository generalDiaryContentRepository;
 
-    private final WebClient webClient;
+    @Autowired
+    private OpenAIService openAIService;
 
-    @Value("${yt_api.key}")
-    private String ytKey;
+    @Autowired
+    private DiaryServiceImpl diaryService;
 
-    @Value("${gpt_api.key}")
-    private String gptKey;
 
-    @Value("${gpt_api.model}")
-    private String model;
-    private String messages;
 
-    public RecommendService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://api.openai.com/v1").build();
+    public List<String> RecommendSearch(String year, String month, String day){
+        GeneralDiaryContent generalDiaryContent = diaryService.generalDiaryContent(year, month, day);
+        String confidenceNegative = Double.toString(generalDiaryContent.getConfidenceNegative());
+        String confidenceNeutral = Double.toString(generalDiaryContent.getConfidenceNeutral());
+        String confidencePositive = Double.toString(generalDiaryContent.getConfidencePositive());
+
+        String prompt = "감정 수치가 부정 : " + confidenceNegative + "%, 중립 : " + confidenceNeutral +", 긍정 : " + confidencePositive +
+                "일 때 들을만한 노래 두곡과 유튜브에서 볼만한 동영상 검색어 2가지를 추천해줘"+
+                "답변은 1. 노래 : 노래제목 - 가수 , 2. 노래 : 노래제목 - 가수 , 3. 검색어 : 검색어결과, 4. 검색어 : 검색어결과 의 형태로 제공해줘" ;
+
+        Mono<String> chatResponse = openAIService.getChatResponse(prompt);
+        String response = chatResponse.block();
+        System.out.println("response = " + response);
+
+
+        List<String> songs = new ArrayList<>();
+        List<String> searches = new ArrayList<>();
+        List<String> results = new ArrayList<>();
+        // 정규 표현식을 사용하여 노래와 검색어를 추출
+        Pattern songPattern = Pattern.compile("노래 : ([^\\-]+) - ([^\n]+)");
+        Pattern searchPattern = Pattern.compile("검색어 : ([^\n]+)");
+
+        // 노래를 추출
+        Matcher songMatcher = songPattern.matcher(response);
+        while (songMatcher.find()) {
+            songs.add(songMatcher.group(1).trim() + " - " + songMatcher.group(2).trim());
+        }
+
+        // 검색어를 추출
+        Matcher searchMatcher = searchPattern.matcher(response);
+        while (searchMatcher.find()) {
+            searches.add(searchMatcher.group(1).trim());
+        }
+
+        // 결과 출력
+        System.out.println("노래 리스트:");
+        for (String song : songs) {
+            results.add(song);
+            System.out.println(song);
+
+        }
+
+        System.out.println("\n검색어 리스트:");
+        for (String search : searches) {
+            results.add(search);
+            System.out.println(search);
+        }
+
+        return results;
     }
 
-//    public Mono<String> getChatResponse(String prompt) {
-//        return webClient.post()
-//                .uri("/chat/completions")
-//                .header("Authorization", gptKey)
-//                .bodyValue(new ChatRequest("gpt-3.5-turbo", prompt))
-//                .retrieve()
-//                .bodyToMono(String.class);
-//    }
+
 
 }

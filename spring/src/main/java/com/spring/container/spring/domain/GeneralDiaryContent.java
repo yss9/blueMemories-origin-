@@ -27,7 +27,7 @@ public class GeneralDiaryContent {
     private String title;
     private String weather;
 
-    @Column(nullable = false, length = 300)
+    @Column(nullable = false, length = 30000)
     private String content;
 
     private String image1;

@@ -17,7 +17,10 @@ import WriteDrawBookPage from './pages/writeDrawBook/WriteDrawBookPage';
 import {Helmet} from "react-helmet";
 import CreateDiaryPage from "./pages/storageDiary/CreateDiaryPage";
 import {StyleProvider} from "./pages/Context/Context";
-import WrittenDiaryForm from "./pages/storageDiary/WrittenDiaryPage";
+import WrittenDiaryForm from "./pages/storageDiary/ViewDiaryPage";
+import CreateExchangeDiaryPage from "./pages/storageExchangeDiary/CreateExchangeDiaryPage";
+import ViewExchangeDiaryPage from "./pages/storageExchangeDiary/ViewExchangeDiaryPage";
+import DetailPage from "./pages/storageExchangeDiary/ExPage";
 
 function App() {
 
@@ -53,8 +56,16 @@ function App() {
                     <Route path="/WriteNovel" element={<WriteNovelPage />} />
                     {/* <WriteDrawBook /> */}
                     <Route path="/WriteDrawBook" element={<WriteDrawBookPage />} />
-                    {/* <DiaryTest /> */}
-                    <Route path="/diaryWrite" element={<CreateDiaryPage />} />
+                    {/* <WriteDiary /> */}
+                    <Route path="/writeDiary" element={<CreateDiaryPage />} />
+                    {/* <ViewDiary /> */}
+                    <Route path="/viewDiary" element={<WrittenDiaryForm />} />
+                    {/* <CreateExchangeDiary /> */}
+                    <Route path="/writeExchangeDiary" element={<CreateExchangeDiaryPage />} />
+                    {/* <ViewDiary /> */}
+                    <Route path="/viewExchangeDiary" element={<ViewExchangeDiaryPage />} />
+                    {/* <ViewDiary /> */}
+                    <Route path="/ex" element={<DetailPage />} />
                 </Routes>
             </BrowserRouter>
         </StyleProvider>

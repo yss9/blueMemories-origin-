@@ -1,11 +1,16 @@
 package com.spring.container.spring.controllers;
 
+import com.spring.container.spring.service.OpenAIService;
 import com.spring.container.spring.service.RecommendService;
+import com.spring.container.spring.service.YouTubeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -14,19 +19,20 @@ public class RecommendController {
     @Autowired
     private RecommendService recommendService;
 
-//    @PostMapping("/chat")
-//    public Mono<String> chat(@RequestBody ChatRequest chatRequest) {
-//        return openAIService.getChatResponse(chatRequest.getPrompt());
-//    }
+    @Autowired
+    private OpenAIService openAIService;
 
-    @GetMapping("/test")
-    public String test(){
-        LocalDate today = LocalDate.now();
+    @Autowired
+    private YouTubeService youTubeService;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        String formattedDate = today.format(formatter);
-
-        return formattedDate;
+    @GetMapping("/search")
+    public Mono<List<String>> searchVideos() {
+        LocalDate currentDate = LocalDate.now();
+        String year = String.valueOf(currentDate.getYear());
+        String month = String.valueOf(currentDate.getMonthValue());
+        String day = String.valueOf(currentDate.getDayOfMonth());
+        List<String> queries = recommendService.RecommendSearch(year, month, day);
+        return youTubeService.searchVideos(queries);
     }
+
 }
