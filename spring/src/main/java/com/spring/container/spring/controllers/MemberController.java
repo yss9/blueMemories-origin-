@@ -19,13 +19,13 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class MemberController {
 
-    //@Autowired
-    //private MemberService memberService;
+//    @Autowired
+//    private MemberService memberService;
 
     @Autowired
     private MemberServiceImpl memberService;
 
-    @PostMapping
+    @PostMapping("/register")
     public Member createMember(@RequestBody Member member) {
         return memberService.createMember(member);
     }
