@@ -98,11 +98,10 @@
 ### 🔄 데이터 처리 및 서비스 흐름도
 ```mermaid
 graph TD
-    %% 스타일 정의
-    classDef client fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef server fill:#fff3e0,stroke:#e65100,stroke-width:2px;
-    classDef db fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    classDef ai fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef client fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000;
+    classDef server fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    classDef db fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#000000;
+    classDef ai fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000000;
 
     subgraph Client_Layer [🎨 Client Layer]
         React[React.js Application]:::client
@@ -122,7 +121,6 @@ graph TD
     end
 
     subgraph AI_External_Services [☁️ External API Services]
-
         Clova["Naver Clova Sentiment\n(Emotion Analysis)"]:::ai
         GPT["ChatGPT API\n(Prompt & Keyword Gen)"]:::ai
         YT["YouTube Data API\n(Content Search)"]:::ai
