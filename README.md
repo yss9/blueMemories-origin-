@@ -40,20 +40,12 @@
 
 ## ✨ 주요 기능 (Key Features)
 
-
-
 | 기능 (Feature) | 설명 (Description) |
-
 | :--- | :--- |
-
 | **📊 AI 감정 분석** | 작성된 일기를 분석하여 **긍정/중립/부정** 수치로 시각화하여 사용자에게 제공합니다. |
-
 | **🎬 힐링 콘텐츠** | 분석된 오늘의 기분에 맞춰 **유튜브(YouTube)** 영상(음악, 영상)을 자동으로 사용자에게 추천합니다. |
-
 | **🤝 교환 일기** | 친구, 연인 또는 익명 사용자와 일기를 교환하며 **감정 기반의 소통**을 할 수 있습니다. |
-
 | **🧸 그림책 창작** | 내 이야기의 문맥을 AI 그림 생성으로, 어울리는 삽화(일러스트)를 생성해 이야기의 생동감을 더해줍니다. |
-
 | **📖 소설책 집필** | 내가 직접 소설을 쓰고, 이야기 분위기에 맞는 이미지를 텍스트로 작성하여 AI 이미지 생성을 통해 **표지 이미지**를 생성하여 전자책을 만듭니다. |
 
 
@@ -91,22 +83,17 @@
 ### 🤖 AI & Analytics
 
 | 구분 | 사용 기술 | 용도 |
-
 | :--- | :--- | :--- |
-
 | **LLM** | **OpenAI API (GPT-3.5)** | 텍스트 분석, 동영상 추천 검색어 생성 |
-
 | **Sentiment Analysis** | **Clova Sentiment** | 문장 감정 분석 |
-
 | **Image Gen** | **Stable Diffusion** | 그림책 삽화 및 표지 생성 |
-
 | **Data** | **YouTube Data API v3** | 맞춤형 동영상 추천 |
 
 
 
 ## 🏗️ 시스템 아키텍처 (System Architecture)
 
-**BlueMemories**는 React 프론트엔드와 Spring Boot 백엔드를 중심으로 구성되어 있으며, 다양한 외부 API를 사용하여 서비스를 제공합니다.
+**BlueMemories**는 React 프론트엔드와 Spring Boot 백엔드를 중심으로 구성되어 있으며, 다양한 외부 API를 사용합니다.
 
 ### 🔄 데이터 처리 및 서비스 흐름도
 ```mermaid
@@ -159,26 +146,19 @@ graph TD
 
 ## 📱 화면 예시 (Screenshots)
 
-
 ### 1️⃣ 감정 분석 및 추천
 
 | 메인 대시보드 | 콘텐츠 추천 화면 |
-
 | :---: | :---: |
-
-| <img width="2127" height="1422" alt="로그인메인페이지" src="https://github.com/user-attachments/assets/2378bb31-5a5a-4ab2-be2f-b884abac449b" />
-| <img width="2382" height="1483" alt="오늘의 추천" src="https://github.com/user-attachments/assets/a9a25d46-e53c-4b7f-85cd-69c8a1e90dd8" /> |
-
-
+| <img width="400" alt="로그인메인페이지" src="https://github.com/user-attachments/assets/2378bb31-5a5a-4ab2-be2f-b884abac449b" /> | <img width="400" alt="오늘의 추천" src="https://github.com/user-attachments/assets/a9a25d46-e53c-4b7f-85cd-69c8a1e90dd8" /> |
 
 ### 2️⃣ AI 창작 스튜디오
 
 | AI 그림책 생성 | 소설 표지 생성 |
-
 | :---: | :---: |
+| <img width="400" alt="동화책완성예시" src="https://github.com/user-attachments/assets/63919f6f-ea88-432b-a389-43c1871ac821" /> | <img width="400" alt="소설작성예시2" src="https://github.com/user-attachments/assets/46109fa9-cf14-4f74-92cf-567e1d5bb497" /> |
 
-|<img width="2477" height="1457" alt="동화책완성예시" src="https://github.com/user-attachments/assets/63919f6f-ea88-432b-a389-43c1871ac821" />|
-|<img width="2475" height="1453" alt="소설작성예시2" src="https://github.com/user-attachments/assets/46109fa9-cf14-4f74-92cf-567e1d5bb497" />|
+
 
 
 
