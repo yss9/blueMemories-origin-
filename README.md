@@ -1,95 +1,76 @@
-📘 BlueMemories (블루메모리즈)
+# 📘 BlueMemories
 
-당신의 감정을 기록하고, AI와 함께 새로운 이야기를 만들어가는 플랫폼
+> **당신의 감정을 기록하고, AI와 함께 새로운 이야기를 만들어가는 플랫폼**
 
-📝 프로젝트 소개 (Introduction)
+## 📖 목차 (Table of Contents)
 
-BlueMemories는 사용자의 일상을 기록하는 것을 넘어, AI 기술을 활용해 감정을 시각화하고 창작 활동으로 연결해주는 웹 플랫폼입니다.
+1. [프로젝트 소개](#-프로젝트-소개-introduction)
+2. [주요 기능](#-주요-기능-key-features)
+3. [기술 스택](#-기술-스택-tech-stack)
+4. [시스템 아키텍처](#-시스템-아키텍처-system-architecture)
+5. [화면 예시](#-화면-예시-screenshots)
 
-단순히 텍스트로 남겨지는 일기가 아니라, NLP(자연어 처리) 모델이 그날의 감정을 분석하여 수치화하고, 사용자의 기분에 딱 맞는 콘텐츠를 추천합니다. 더 나아가, 사용자는 자신의 이야기를 바탕으로 AI와 협업하여 그림책이나 소설을 창작하고 다른 사람들과 감정을 공유할 수 있습니다.
+## 📝 프로젝트 소개 (Introduction)
 
-📂 발표 자료 (Project Presentation)
+**BlueMemories**는 사용자의 일상을 기록하는 것을 넘어, **AI 감정 분석 기술**을 활용해 감정을 시각화하고 창작 활동으로 연결해주는 웹 플랫폼입니다.
 
-프로젝트에 대한 더 자세한 기획 의도와 기술적 고민이 담긴 발표 자료입니다.
+단순한 일기장을 넘어, **NLP(자연어 처리) 모델**이 당신의 하루를 분석하여 위로와 공감을 건넸습니다. 나아가 당신의 이야기가 **그림책**이 되고, **소설**이 되는 마법 같은 경험을 제공합니다.
 
-📄 발표 자료 PDF 보러가기 (PPT를 PDF로 변환하여 업로드 후 링크를 연결하세요)
+## ✨ 주요 기능 (Key Features)
 
-✨ 주요 기능 (Key Features)
+| 기능 (Feature) | 설명 (Description) |
+| :--- | :--- |
+| **📊 AI 감정 분석** | 작성된 일기를 분석하여 **긍정/중립/부정** 수치로 시각화하고, 감정 변화 추이를 그래프로 제공합니다. |
+| **🎬 힐링 콘텐츠** | 분석된 기분에 맞춰 **유튜브(YouTube)** 영상(음악, 영상 등)을 자동으로 큐레이션하여 추천합니다. |
+| **🤝 교환 일기** | 친구, 연인 또는 익명 사용자와 일기를 교환하며 **감정 기반의 소통**을 할 수 있습니다. |
+| **🧸 그림책 창작** | 내 이야기의 문맥을 AI가 파악하여, 어울리는 **삽화(일러스트)**를 자동으로 생성해 줍니다. |
+| **📖 소설책 집필** | 내 일기를 소재로 소설을 쓰고, 이야기 분위기에 맞는 **표지 이미지**를 생성하여 전자책을 만듭니다. |
 
-1. 📊 AI 감정 분석 대시보드
+## 🛠 기술 스택 (Tech Stack)
 
-사용자가 작성한 일기를 AI가 실시간으로 분석합니다.
+이미지 뱃지 없이도 직관적으로 보이도록 정리했습니다.
 
-긍정(Positive) / 중립(Neutral) / 부정(Negative)의 감정 비율을 수치와 그래프로 시각화하여 보여줍니다.
+### 🎨 Frontend
+- **Core:** `React`, `JavaScript`
+- **Styling:** `CSS3`, `Styled-Components`, `figma`
 
-나의 감정 변화 추이를 한눈에 파악할 수 있습니다.
+### ⚙️ Backend
+- **Language & Framework:** `Java`, `Spring Boot`
+- **Database:** `MySQL`
+- **API:** RESTful Architecture
 
-2. 🎬 맞춤형 힐링 콘텐츠 제공
+### ☁️ Infrastructure
+- **Container:** `Docker`, `Docker Compose`
+- **Environment:** Local Development
 
-분석된 감정 데이터(Sentiment Analysis)를 기반으로 그날의 기분에 가장 적합한 유튜브(YouTube) 영상을 큐레이션하여 제공합니다.
+### 🤖 AI & Analytics
+| 구분 | 사용 기술 | 용도 |
+| :--- | :--- | :--- |
+| **LLM** | **OpenAI API (GPT-3.5)** | 텍스트 분석, 소설 창작 보조 |
+| **Image Gen** | **Stable Diffusion** | 그림책 삽화 및 표지 생성 |
+| **Data** | **YouTube Data API v3** | 맞춤형 동영상 추천 |
 
-우울할 때는 위로가 되는 음악을, 기쁠 때는 신나는 영상을 추천합니다.
-
-3. 🤝 소셜 기능: 교환 일기
-
-친구나 연인, 혹은 익명의 사용자와 일기를 교환하며 서로의 하루를 공유할 수 있습니다.
-
-감정 기반의 소통을 통해 공감대를 형성합니다.
-
-4. 🎨 AI 기반 창작 스튜디오 (Creative Studio)
-
-사용자의 기록은 곧 훌륭한 이야기의 소재가 됩니다. 생성형 AI를 활용해 누구나 작가가 될 수 있습니다.
-
-🧸 그림책 만들기: 작성한 스토리에 어울리는 삽화를 AI 이미지 생성 모델이 그려줍니다.
-
-📖 소설책 집필: 소설 텍스트 작성과 더불어, 이야기의 분위기를 담은 표지 이미지를 AI가 생성하여 나만의 전자책을 완성할 수 있습니다.
-
-🛠 기술 스택 (Tech Stack)
-
-Frontend
-
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/React-61DAFB%3Fstyle%3Dflat-square%26logo%3DReact%26logoColor%3Dblack"/> <img src="https://www.google.com/search?q=https://img.shields.io/badge/JavaScript-F7DF1E%3Fstyle%3Dflat-square%26logo%3Djavascript%26logoColor%3Dblack"/>
-
-Backend
-
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Java-007396%3Fstyle%3Dflat-square%26logo%3DJava%26logoColor%3Dwhite"/> <img src="https://www.google.com/search?q=https://img.shields.io/badge/Spring_Boot-6DB33F%3Fstyle%3Dflat-square%26logo%3DSpringBoot%26logoColor%3Dwhite"/> <img src="https://www.google.com/search?q=https://img.shields.io/badge/MySQL-4479A1%3Fstyle%3Dflat-square%26logo%3DMySQL%26logoColor%3Dwhite"/>
-
-Infrastructure & DevOps
-
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Docker-2496ED%3Fstyle%3Dflat-square%26logo%3DDocker%26logoColor%3Dwhite"/> <img src="https://www.google.com/search?q=https://img.shields.io/badge/Docker_Compose-2496ED%3Fstyle%3Dflat-square%26logo%3DDocker%26logoColor%3Dwhite"/>
-
-External APIs & Models
-
-LLM (Large Language Model): OpenAI API (GPT-3.5 Turbo)
-
-Image Generation: Stable Diffusion
-
-Media: YouTube Data API v3
-
-🏗️ 시스템 아키텍처 (System Architecture)
-
-(PPT에 있는 아키텍처 다이어그램이나 서비스 흐름도 이미지를 이곳에 넣으면 좋습니다)
-
-📱 화면 예시 (Screenshots)
-
-(PPT 장표 중 깔끔하게 나온 UI 목업이 있다면 캡처해서 아래에 넣어주세요)
-
-메인 대시보드 (감정 분석)
-
-콘텐츠 추천
+## 🏗️ 시스템 아키텍처 (System Architecture)
 
 
+![System Architecture Placeholder](https://via.placeholder.com/800x400?text=Insert+System+Architecture+Here)
 
+## 📱 화면 예시 (Screenshots)
 
+### 1️⃣ 감정 분석 및 추천
+| 메인 대시보드 | 콘텐츠 추천 화면 |
+| :---: | :---: |
+| ![Dashboard](https://via.placeholder.com/400x250?text=Dashboard) | ![Recommendation](https://via.placeholder.com/400x250?text=Youtube+Recommendation) |
 
-AI 그림책 생성
+### 2️⃣ AI 창작 스튜디오
+| AI 그림책 생성 | 소설 표지 생성 |
+| :---: | :---: |
+| ![PictureBook](https://via.placeholder.com/400x250?text=Picture+Book+Maker) | ![NovelCover](https://via.placeholder.com/400x250?text=Novel+Cover+Maker) |
 
-소설책 표지 생성
+## 📂 발표 자료
 
+이 프로젝트에 대한 더 자세한 내용은 아래 발표 자료를 통해 확인하실 수 있습니다.
+- [📄 **발표 자료(PDF) 다운로드**](./assets/presentation.pdf)
 
-
-
-
-📄 License
-
+## 📄 License
 This project is licensed under the MIT License.
